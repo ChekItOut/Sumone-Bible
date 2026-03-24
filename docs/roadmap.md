@@ -207,20 +207,29 @@ lib/
 
 ### 2.1 테마 설정 (`app/theme.dart`)
 
+**디자인 컨셉**: 모던한 도서 앱 UI 참조
+- 부드러운 slate blue 배경 (#78909C)
+- 큰 카드 중심 디자인 (24px 둥근 모서리)
+- 넉넉한 여백과 부드러운 그림자
+
 ```dart
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // 컬러 팔레트
-  static const Color primaryColor = Color(0xFF6B4DE8); // 보라색
-  static const Color secondaryColor = Color(0xFFFFB84D); // 오렌지
+  // 컬러 팔레트 (Updated 2026-03-24)
+  static const Color primaryColor = Color(0xFF6B4DE8); // 보라색 (영적)
+  static const Color secondaryColor = Color(0xFFFFC857); // 노란색 (빛, 별)
   static const Color accentColor = Color(0xFFFF6B9D); // 핑크 (하트)
 
-  static const Color backgroundLight = Color(0xFFFFFFFF);
+  static const Color backgroundLight = Color(0xFF78909C); // Slate blue
   static const Color backgroundDark = Color(0xFF121212);
 
-  static const Color textPrimaryLight = Color(0xFF1A1A1A);
+  static const Color surfaceLight = Color(0xFFFFFFFF); // 카드 배경
+  static const Color surfaceDark = Color(0xFF1E1E1E);
+
+  static const Color textPrimaryLight = Color(0xFF1A1A1A); // 카드 위 텍스트
   static const Color textSecondaryLight = Color(0xFF666666);
+  static const Color textOnBackgroundLight = Color(0xFFFFFFFF); // 배경 위 텍스트
 
   static const Color textPrimaryDark = Color(0xFFFFFFFF);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
@@ -269,27 +278,27 @@ class AppTheme {
       ),
     ),
 
-    // 버튼 테마
+    // 버튼 테마 (더 둥근 모서리)
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
-        elevation: 0,
+        elevation: 2,
       ),
     ),
 
-    // 카드 테마
+    // 카드 테마 (큰 둥근 모서리 + 부드러운 그림자)
     cardTheme: CardTheme(
-      elevation: 0,
+      elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24), // 24px!
       ),
-      color: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.05),
+      color: surfaceLight,
+      shadowColor: Colors.black.withOpacity(0.08),
     ),
 
     // 입력 필드 테마
@@ -388,6 +397,21 @@ fonts:
       - asset: fonts/NotoSerifKR-Medium.ttf
         weight: 500
 ```
+
+#### 디자인 가이드라인 (스크린샷 참조)
+
+**핵심 원칙**:
+1. **Card-First Design**: 모든 주요 컨텐츠는 카드로 감싸기
+2. **Generous Spacing**: 넉넉한 여백 (16-24px padding)
+3. **Soft Shadows**: 부드러운 그림자 (elevation 2-4)
+4. **Rounded Corners**: 큰 둥근 모서리 (24px)
+5. **Color Contrast**: 배경(slate blue) vs 카드(흰색) 명확한 대비
+
+**컴포넌트별 가이드**:
+- **카드**: borderRadius 24px, elevation 4, white background
+- **버튼**: borderRadius 16px, height 48-56px
+- **아이콘**: 20-24px (일반), 32-48px (강조)
+- **여백**: 카드 내부 16-24px, 카드 간 16px, 섹션 간 24-32px
 
 ### 2.3 애니메이션 가이드
 

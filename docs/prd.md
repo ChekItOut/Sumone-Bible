@@ -671,20 +671,26 @@ PUT    /notifications/settings  # 알림 설정 변경
 1. **Simplicity**: 복잡하지 않고 직관적
 2. **Warmth**: 따뜻하고 감성적인 느낌
 3. **Sacred + Modern**: 성경의 경건함 + 모던한 UX
+4. **Card-First Design**: 큰 카드 중심의 시각적 계층 구조
+5. **Soft & Calm**: 부드러운 색상과 넉넉한 여백으로 평온함 전달
 
 ### 7.2 컬러 팔레트
 
+**디자인 참조**: 모던한 도서 앱 UI (부드러운 slate blue 배경 + 흰색 카드)
+
 #### 라이트 모드
 - **Primary**: #6B4DE8 (보라색 - 영적, 고귀함)
-- **Secondary**: #FFB84D (따뜻한 오렌지)
-- **Background**: #FFFFFF
-- **Text Primary**: #1A1A1A
+- **Secondary**: #FFC857 (따뜻한 노란색 - 빛, 별)
+- **Background**: #78909C (Slate Blue-Grey - 부드럽고 차분함)
+- **Surface (Card)**: #FFFFFF (흰색 - 깔끔하고 명확한 구분)
+- **Text on Background**: #FFFFFF (흰색 - 배경 위에서 잘 보임)
+- **Text on Card**: #1A1A1A (어두운 회색 - 가독성)
 - **Text Secondary**: #666666
-- **Accent**: #FF6B9D (하트 색상)
+- **Accent**: #FF6B9D (핑크 - 하트, 사랑)
 
 #### 다크 모드
 - **Primary**: #8B6EF7
-- **Secondary**: #FFB84D
+- **Secondary**: #FFC857
 - **Background**: #121212
 - **Surface**: #1E1E1E
 - **Text Primary**: #FFFFFF
@@ -701,6 +707,41 @@ PUT    /notifications/settings  # 알림 설정 변경
 - **Body**: 16px (Regular)
 - **Caption**: 14px (Regular)
 - **성경 구절**: 18px (Medium)
+
+### 7.3.1 컴포넌트 스타일 (스크린샷 기반)
+
+#### 카드 (Card)
+- **배경색**: #FFFFFF (흰색)
+- **모서리**: 24px 둥근 모서리 (매우 부드러운 느낌)
+- **그림자**: Elevation 4, 블랙 8% 투명도
+- **패딩**: 16-24px (내부 여백 넉넉하게)
+- **여백**: 카드 간 16px 간격
+
+#### 버튼
+- **Primary 버튼**:
+  - 배경: #6B4DE8 (보라색)
+  - 텍스트: #FFFFFF
+  - 모서리: 16px
+  - 높이: 48-56px
+  - Elevation: 2
+
+- **Secondary 버튼**:
+  - 배경: 투명 또는 #F5F5F5
+  - 텍스트: #6B4DE8
+  - 테두리: 1px solid #6B4DE8
+  - 모서리: 16px
+
+#### 아이콘 & 이모지
+- **하트 (좋아요)**: #FF6B9D (핑크)
+- **별 (평점/스트릭)**: #FFC857 (노란색)
+- **불꽃 (스트릭)**: #FF6B4D (주황-빨강)
+- **크기**: 20-24px (일반), 32-48px (강조)
+
+#### 레이아웃
+- **여백**: 넉넉한 padding (16-24px)
+- **카드 간격**: 16px
+- **섹션 간격**: 24-32px
+- **스크롤**: 부드러운 수직/수평 스크롤
 
 ### 7.4 핵심 화면 와이어프레임
 

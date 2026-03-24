@@ -7,19 +7,24 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // ==================== 컬러 팔레트 ====================
 
-  // Primary Colors
+  // Primary Colors (성경/영적 주제)
   static const Color primaryColor = Color(0xFF6B4DE8); // 보라색 (영적, 고귀함)
-  static const Color secondaryColor = Color(0xFFFFB84D); // 오렌지 (따뜻함)
-  static const Color accentColor = Color(0xFFFF6B9D); // 핑크 (하트 색상)
+  static const Color secondaryColor = Color(0xFFFFC857); // 따뜻한 노란색 (별, 빛)
+  static const Color accentColor = Color(0xFFFF6B9D); // 핑크 (하트, 사랑)
 
-  // Background Colors
-  static const Color backgroundLight = Color(0xFFFFFFFF);
+  // Background Colors (스크린샷 참조: 부드러운 slate blue)
+  static const Color backgroundLight = Color(0xFF78909C); // Slate blue-grey
   static const Color backgroundDark = Color(0xFF121212);
   static const Color surfaceDark = Color(0xFF1E1E1E);
 
+  // Surface Colors (카드 배경)
+  static const Color surfaceLight = Color(0xFFFFFFFF); // 흰색 카드
+  static const Color surfaceLightSecondary = Color(0xFFF5F5F5); // 보조 카드
+
   // Text Colors
-  static const Color textPrimaryLight = Color(0xFF1A1A1A);
+  static const Color textPrimaryLight = Color(0xFF1A1A1A); // 카드 위 텍스트
   static const Color textSecondaryLight = Color(0xFF666666);
+  static const Color textOnBackgroundLight = Color(0xFFFFFFFF); // 배경 위 텍스트 (흰색)
   static const Color textPrimaryDark = Color(0xFFFFFFFF);
   static const Color textSecondaryDark = Color(0xFFB0B0B0);
 
@@ -32,9 +37,12 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: primaryColor,
       secondary: secondaryColor,
-      surface: backgroundLight,
+      surface: surfaceLight, // 카드는 흰색
+      background: backgroundLight, // 배경은 slate blue
       error: Colors.red.shade400,
     ),
+
+    scaffoldBackgroundColor: backgroundLight, // 전체 배경
 
     // 텍스트 테마
     // TODO: Phase 0.3 - 폰트 추가 후 fontFamily 복원
@@ -75,23 +83,24 @@ class AppTheme {
       ),
     ),
 
-    // 버튼 테마
+    // 버튼 테마 (스크린샷 참조: 더 둥근 모서리)
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
+        shadowColor: Colors.black.withValues(alpha: 0.1),
       ),
     ),
 
-    // 카드 테마
+    // 카드 테마 (스크린샷 참조: 큰 둥근 모서리 + 부드러운 그림자)
     cardTheme: CardThemeData(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: Colors.white,
-      shadowColor: Colors.black.withValues(alpha: 0.05),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      color: surfaceLight,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
     ),
 
     // 입력 필드 테마
@@ -108,12 +117,17 @@ class AppTheme {
       ),
     ),
 
-    // AppBar 테마
+    // AppBar 테마 (배경과 동일한 색상, 텍스트는 흰색)
     appBarTheme: const AppBarTheme(
-      backgroundColor: backgroundLight,
-      foregroundColor: textPrimaryLight,
+      backgroundColor: backgroundLight, // Slate blue
+      foregroundColor: textOnBackgroundLight, // 흰색
       elevation: 0,
-      centerTitle: true,
+      centerTitle: false, // iOS 스타일 (좌측 정렬)
+      titleTextStyle: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w600,
+        color: textOnBackgroundLight,
+      ),
     ),
   );
 
