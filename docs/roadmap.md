@@ -1105,9 +1105,11 @@ class GptApiDatasource {
 - [✅] .env 파일 설정
 
 #### Task 0.3: 외부 API 준비
-- [ ] Bible API 테스트
-- [ ] Gemini API 키 발급
-- [ ] Firebase 프로젝트 생성 (FCM)
+- [ ] Bible API 테스트 (https://bible.helloao.org/api)
+- [ ] Gemini API 키 발급 (https://aistudio.google.com/apikey)
+- [ ] .env 파일에 API 키 추가
+
+참고: Firebase는 Phase 5.1 (푸시 알림)에서 설정 예정
 
 ---
 
