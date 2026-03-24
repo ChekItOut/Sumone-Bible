@@ -29,9 +29,10 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
-  # 알림
-  firebase_core: ^2.24.2
-  firebase_messaging: ^14.7.9
+  # 알림 (Phase 5.1에서 추가 예정)
+  # TODO: Phase 5.1 - Firebase 설정 완료 후 주석 해제
+  # firebase_core: ^2.24.2
+  # firebase_messaging: ^14.7.9
   flutter_local_notifications: ^16.3.0
 
   # UI/UX
