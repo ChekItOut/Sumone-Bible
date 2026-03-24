@@ -1117,9 +1117,7 @@ class GptApiDatasource {
 
 #### Task 1.1: 인증 시스템
 - [ ] Supabase Auth 통합
-- [ ] 이메일 로그인/회원가입 UI
-- [ ] Google 로그인 (OAuth)
-- [ ] Apple 로그인 (iOS)
+- [ ] Google 로그인 (OAuth) - 메인 로그인 방식
 - [ ] 로그인 상태 관리 (Riverpod)
 
 #### Task 1.2: 온보딩 플로우
@@ -1348,7 +1346,7 @@ class GptApiDatasource {
 daily_verse_card와 streak_widget을 포함한 home_screen.dart를 작성해."
 
 # 예시: Backend 통합 에이전트 생성
-"Supabase Auth를 통합해줘. 이메일 로그인, Google OAuth, Apple OAuth를 구현하고
+"Supabase Auth를 통합해줘. Google OAuth를 구현하고
 AuthProvider로 상태를 관리해."
 
 # 예시: AI 통합 에이전트 생성
