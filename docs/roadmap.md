@@ -1097,10 +1097,10 @@ class GptApiDatasource {
 - [✅] 테마 설정 (theme.dart)
 - [✅] 라우팅 설정 (routes.dart)
 
-#### Task 0.2: Supabase 설정
+#### Task 0.2: Supabase 설정 ✅
 - [✅] Supabase 프로젝트 생성
-- [ ] 데이터베이스 테이블 생성 (SQL 실행) - 사용자 대기 중
-- [ ] RLS 정책 설정 - 사용자 대기 중
+- [✅] 데이터베이스 테이블 생성 (SQL 실행)
+- [✅] RLS 정책 설정
 - [✅] Supabase Flutter SDK 초기화
 - [✅] .env 파일 설정
 
