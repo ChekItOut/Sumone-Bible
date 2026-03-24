@@ -148,22 +148,29 @@ Bible SumOne은 크리스천 커플을 위한 성경 나눔 앱입니다. 매일
 
 **UI/UX**:
 - 로그인 화면: Google 로그인 버튼 1개
-- 간단한 프로필 설정 (이름, 관계 단계)
+- 간단한 프로필 설정 (이름, 성별, 관계 단계)
 
 #### F-002: 프로필 설정
 **우선순위**: P0
-**설명**: 이름, 프로필 사진, 관계 단계 설정
+**설명**: 이름, 성별, 프로필 사진, 관계 단계 설정
 
 **데이터 모델**:
 ```typescript
 interface UserProfile {
   user_id: string;
   name: string;
+  gender: 'male' | 'female';
   profile_image_url?: string;
   relationship_stage: 'dating' | 'engaged' | 'married';
   created_at: timestamp;
 }
 ```
+
+**UI/UX**:
+- 이름 입력 필드
+- 성별 선택 (남성/여성 라디오 버튼)
+- 관계 단계 선택 (연애 중/약혼/신혼 드롭다운)
+- 프로필 사진 업로드 (선택사항)
 
 #### F-003: 커플 매칭
 **우선순위**: P0
