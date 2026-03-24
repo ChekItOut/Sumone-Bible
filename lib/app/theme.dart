@@ -38,11 +38,10 @@ class AppTheme {
       primary: primaryColor,
       secondary: secondaryColor,
       surface: surfaceLight, // 카드는 흰색
-      background: backgroundLight, // 배경은 slate blue
       error: Colors.red.shade400,
     ),
 
-    scaffoldBackgroundColor: backgroundLight, // 전체 배경
+    scaffoldBackgroundColor: backgroundLight, // 전체 배경 (slate blue)
 
     // 텍스트 테마
     // TODO: Phase 0.3 - 폰트 추가 후 fontFamily 복원
