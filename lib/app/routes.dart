@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import '../presentation/screens/splash/splash_screen.dart';
 
 /// Bible SumOne 앱 라우팅 설정
 ///
@@ -15,8 +16,7 @@ class AppRouter {
       GoRoute(
         path: '/',
         name: 'splash',
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        builder: (context, state) => const SplashScreen(),
       ),
 
       // ==================== 인증 ====================
