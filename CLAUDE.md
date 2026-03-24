@@ -2043,6 +2043,291 @@ A: 네, Task tool로 생성된 에이전트는 모든 파일에 접근 가능합
 **변경 히스토리**:
 - v1.0 (2026-03-24): 초안 작성
 - v1.1 (2026-03-24): 에이전트 시스템 추가 (섹션 17)
+- v1.2 (2026-03-24): Claude Code 필수 워크플로우 규칙 추가 (섹션 19)
+
+---
+
+## 19. Claude Code 필수 워크플로우 규칙 ⭐
+
+**CRITICAL**: 이 섹션의 규칙은 **모든 작업에서 예외 없이** 준수해야 합니다.
+
+### 19.1 Roadmap 진행 상황 업데이트 (필수!)
+
+#### 규칙: Task/Phase 완료 시 ✅ 표시
+
+**언제 적용하는가**:
+- ✅ docs/roadmap.md의 Task 항목 완료 시
+- ✅ Phase의 모든 Task 완료 시
+- ✅ 체크리스트 항목 완료 시
+
+**어떻게 적용하는가**:
+
+```markdown
+# ❌ 잘못된 예 (완료했는데 표시 안 함)
+#### Task 0.2: Supabase 설정
+- [ ] Supabase 프로젝트 생성
+- [ ] 데이터베이스 테이블 생성 (SQL 실행)
+- [ ] RLS 정책 설정
+
+# ✅ 올바른 예 (완료 즉시 ✅ 표시)
+#### Task 0.2: Supabase 설정
+- [✅] Supabase 프로젝트 생성
+- [✅] 데이터베이스 테이블 생성 (SQL 실행)
+- [✅] RLS 정책 설정
+```
+
+**프로세스**:
+1. Task 또는 항목 완료
+2. **즉시** docs/roadmap.md 파일 열기
+3. 해당 항목 찾기
+4. `[ ]` → `[✅]` 변경
+5. 파일 저장
+
+**Phase 완료 표시**:
+```markdown
+# ✅ Phase 전체 완료 시
+### Phase 0: 프로젝트 셋업 (Week 1) ✅
+
+#### Task 0.1: 프로젝트 초기화 ✅
+- [✅] Flutter 프로젝트 생성
+- [✅] pubspec.yaml에 모든 패키지 추가
+
+#### Task 0.2: Supabase 설정 ✅
+- [✅] Supabase 프로젝트 생성
+- [✅] 데이터베이스 테이블 생성
+```
+
+**왜 중요한가**:
+- ✅ 프로젝트 진행 상황 실시간 파악
+- ✅ 다음 작업 우선순위 결정
+- ✅ 팀원 간 중복 작업 방지
+- ✅ 프로젝트 완성도 추적
+
+---
+
+### 19.2 Git Commit 워크플로우 (필수!)
+
+#### 규칙: 작업 완료 시 자동 커밋
+
+**언제 커밋하는가**:
+
+**✅ 커밋해야 하는 시점**:
+1. **기능 구현 완료 시**
+   - 새로운 파일 생성 완료
+   - 기존 파일 수정 완료
+   - 테스트 작성 완료
+
+2. **설정 변경 완료 시**
+   - .env 파일 업데이트
+   - pubspec.yaml 변경
+   - 라우팅 추가
+
+3. **문서 업데이트 완료 시**
+   - docs/roadmap.md 체크리스트 업데이트
+   - README.md 수정
+   - 주석 추가
+
+4. **리팩토링 완료 시**
+   - 코드 구조 변경
+   - 파일 이동/이름 변경
+
+5. **버그 수정 완료 시**
+   - 버그 픽스 완료
+   - 관련 테스트 추가
+
+**커밋 프로세스**:
+
+```bash
+# Step 1: 변경 사항 확인
+git status
+
+# Step 2: 변경 파일 스테이징
+git add <파일명>  # 또는 git add . (신중하게!)
+
+# Step 3: 커밋 메시지 작성 (한국어)
+git commit -m "커밋 메시지
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+```
+
+**커밋 메시지 규칙**:
+
+```bash
+# ✅ 좋은 예
+git commit -m "feat: Supabase 클라이언트 설정 및 초기화 추가
+
+- lib/core/constants/supabase_client.dart 생성
+- main.dart에 Supabase.initialize() 추가
+- .env 파일에 API 키 설정
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+# ✅ 좋은 예 (간단한 수정)
+git commit -m "fix: 로그인 버튼 색상 수정
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+# ❌ 나쁜 예
+git commit -m "수정"  # 무엇을 수정했는지 모름
+git commit -m "WIP"  # 불명확
+git commit -m "ㅇㅇ"  # 의미 없음
+```
+
+**커밋 메시지 prefix**:
+- `feat:` 새로운 기능 추가
+- `fix:` 버그 수정
+- `refactor:` 코드 리팩토링
+- `docs:` 문서 수정
+- `style:` 코드 스타일 변경 (포맷팅)
+- `test:` 테스트 추가/수정
+- `chore:` 기타 변경 사항 (빌드, 패키지 등)
+
+**커밋 타이밍**:
+
+```
+작업 시작
+  ↓
+코드 작성
+  ↓
+flutter analyze 통과
+  ↓
+dart format 적용
+  ↓
+✅ git commit  ← 여기서 커밋!
+  ↓
+다음 작업 시작
+```
+
+**예외: 커밋하지 않는 경우**:
+- ❌ 코드가 작동하지 않을 때
+- ❌ 테스트가 실패할 때
+- ❌ flutter analyze 에러가 있을 때
+- ❌ 임시 실험 코드
+
+**왜 중요한가**:
+- ✅ 작업 이력 추적 가능
+- ✅ 문제 발생 시 롤백 가능
+- ✅ 협업 시 변경 사항 공유
+- ✅ 코드 리뷰 용이
+
+---
+
+### 19.3 워크플로우 체크리스트
+
+**모든 작업 완료 시 확인**:
+
+```
+[ ] 1. 코드 품질 확인
+    [ ] flutter analyze 통과
+    [ ] dart format 적용
+    [ ] 네이밍 규칙 준수
+
+[ ] 2. 문서 업데이트
+    [ ] docs/roadmap.md 체크리스트 ✅ 표시
+    [ ] 필요시 주석 추가
+
+[ ] 3. Git 커밋
+    [ ] git status 확인
+    [ ] 변경 파일 스테이징
+    [ ] 명확한 커밋 메시지 작성
+    [ ] Co-Authored-By 추가
+    [ ] git commit 실행
+
+[ ] 4. 다음 단계 확인
+    [ ] roadmap.md에서 다음 Task 확인
+    [ ] 의존성 확인
+```
+
+---
+
+### 19.4 자동화 스크립트 (선택사항)
+
+**빠른 커밋 스크립트**:
+
+```bash
+# commit.sh (Git Bash)
+#!/bin/bash
+
+# 사용법: ./commit.sh "feat: 커밋 메시지"
+
+if [ -z "$1" ]; then
+  echo "❌ 커밋 메시지를 입력하세요"
+  echo "사용법: ./commit.sh \"feat: 메시지\""
+  exit 1
+fi
+
+echo "📝 변경 사항 확인..."
+git status
+
+echo ""
+echo "✅ 스테이징 중..."
+git add .
+
+echo ""
+echo "💬 커밋 메시지: $1"
+git commit -m "$1
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+echo ""
+echo "🎉 커밋 완료!"
+git log -1 --oneline
+```
+
+**사용 예시**:
+```bash
+chmod +x commit.sh
+./commit.sh "feat: 홈 화면 UI 구현 완료"
+```
+
+---
+
+### 19.5 FAQ
+
+**Q: 작은 수정(1-2줄)도 커밋해야 하나요?**
+A: 네! 작은 수정도 의미 있는 변경이라면 커밋하세요. 단, 여러 개의 작은 수정을 모아서 한 번에 커밋할 수도 있습니다.
+
+**Q: roadmap.md 업데이트를 잊었어요!**
+A: 지금 즉시 업데이트하고 별도로 커밋하세요:
+```bash
+git add docs/roadmap.md
+git commit -m "docs: Phase 0.2 완료 상태 업데이트
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+```
+
+**Q: 커밋 메시지를 잘못 작성했어요!**
+A: 마지막 커밋이라면 수정 가능합니다:
+```bash
+git commit --amend
+```
+단, 이미 push한 커밋은 수정하지 마세요!
+
+**Q: 여러 Task를 한꺼번에 완료했어요. 커밋을 어떻게 하나요?**
+A: Task별로 별도 커밋하세요. 하나의 거대한 커밋보다 여러 개의 작은 커밋이 좋습니다.
+
+---
+
+### 19.6 Quick Reference (빠른 참조)
+
+**작업 완료 후 3단계**:
+
+```
+1️⃣ 문서 업데이트
+   docs/roadmap.md → [ ] 를 [✅]로 변경
+
+2️⃣ 코드 검증
+   flutter analyze
+   dart format .
+
+3️⃣ Git 커밋
+   git add .
+   git commit -m "prefix: 메시지
+
+   Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+```
+
+**Claude Code는 이 규칙을 항상 준수합니다! 🤖✅**
 
 ---
 
