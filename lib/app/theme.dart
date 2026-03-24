@@ -37,16 +37,17 @@ class AppTheme {
     ),
 
     // 텍스트 테마
+    // TODO: Phase 0.3 - 폰트 추가 후 fontFamily 복원
     textTheme: const TextTheme(
       // Headline (제목)
       headlineLarge: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: textPrimaryLight,
       ),
       headlineMedium: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: textPrimaryLight,
@@ -54,19 +55,19 @@ class AppTheme {
 
       // Body (본문)
       bodyLarge: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 16,
         color: textPrimaryLight,
       ),
       bodyMedium: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 14,
         color: textSecondaryLight,
       ),
 
       // 성경 구절 전용 (세리프)
       displayLarge: TextStyle(
-        fontFamily: 'Noto Serif KR',
+        // fontFamily: 'Noto Serif KR', // TODO: 폰트 추가 후 활성화
         fontSize: 18,
         height: 1.8, // 줄 간격
         fontWeight: FontWeight.w500,
@@ -129,33 +130,34 @@ class AppTheme {
       error: Colors.red.shade300,
     ),
 
+    // TODO: Phase 0.3 - 폰트 추가 후 fontFamily 복원
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: textPrimaryDark,
       ),
       headlineMedium: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: textPrimaryDark,
       ),
 
       bodyLarge: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 16,
         color: textPrimaryDark,
       ),
       bodyMedium: TextStyle(
-        fontFamily: 'Pretendard',
+        // fontFamily: 'Pretendard', // TODO: 폰트 추가 후 활성화
         fontSize: 14,
         color: textSecondaryDark,
       ),
 
       displayLarge: TextStyle(
-        fontFamily: 'Noto Serif KR',
+        // fontFamily: 'Noto Serif KR', // TODO: 폰트 추가 후 활성화
         fontSize: 18,
         height: 1.8,
         fontWeight: FontWeight.w500,
