@@ -582,15 +582,14 @@ flutter:
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 
-# Bible API
-BIBLE_API_URL=https://bible.helloao.org/api
-
 # Gemini API
 GEMINI_API_KEY=your-gemini-api-key
 GEMINI_API_URL=https://generativelanguage.googleapis.com/v1beta
 
 # GPT API (프리미엄 기능 - 추후)
 GPT_API_KEY=your-gpt-api-key
+
+# 참고: 성경 데이터는 로컬 JSON 파일 사용 (assets/data/bible.json)
 ```
 
 ---
@@ -813,7 +812,7 @@ serve(async (req) => {
     const topics = ['love', 'forgiveness', 'gratitude', 'communication', 'faith']
     const topic = topics[new Date().getDay() % topics.length]
 
-    // 4. 성경 구절 가져오기 (Bible API)
+    // 4. 로컬 성경 구절 가져오기 (Supabase 테이블 또는 Storage)
     const bibleVerses = {
       love: { book: '고린도전서', chapter: 13, start: 4, end: 7 },
       forgiveness: { book: '에베소서', chapter: 4, start: 32, end: 32 },
@@ -821,10 +820,26 @@ serve(async (req) => {
     }
 
     const verseRef = bibleVerses[topic]
-    const bibleResponse = await fetch(
-      `https://bible.helloao.org/api/KRV/${verseRef.book}/${verseRef.chapter}:${verseRef.start}-${verseRef.end}`
-    )
-    const bibleData = await bibleResponse.json()
+
+    // Option 1: Supabase 테이블에서 조회 (권장)
+    const { data: verses, error: verseError } = await supabaseClient
+      .from('bible_verses')
+      .select('text')
+      .eq('book', verseRef.book)
+      .eq('chapter', verseRef.chapter)
+      .gte('verse_number', verseRef.start)
+      .lte('verse_number', verseRef.end)
+
+    if (verseError) throw verseError
+
+    const bibleText = verses.map(v => v.text).join(' ')
+
+    // Option 2: Supabase Storage에서 JSON 파일 조회
+    // const { data: bibleJson } = await supabaseClient.storage
+    //   .from('bible-data')
+    //   .download('bible.json')
+    // const bibleData = JSON.parse(await bibleJson.text())
+    // const bibleText = bibleData[verseRef.book][verseRef.chapter][verseRef.start]
 
     // 5. Gemini API로 질문 생성
     const geminiResponse = await fetch(
@@ -837,7 +852,7 @@ serve(async (req) => {
             parts: [{
               text: `당신은 크리스천 커플을 위한 성경 공부 가이드입니다.
 
-성경 구절: ${bibleData.text}
+성경 구절: ${bibleText}
 
 위 말씀을 읽은 커플이 서로 나눌 수 있는 대화 질문 1개를 생성하세요.
 요구사항:
@@ -864,7 +879,7 @@ serve(async (req) => {
         chapter: verseRef.chapter,
         verse_start: verseRef.start,
         verse_end: verseRef.end,
-        text_korean: bibleData.text,
+        text_korean: bibleText,
         question_korean: question,
         topic: topic
       })
@@ -901,101 +916,95 @@ SELECT cron.schedule(
 
 ---
 
-## 5. 성경 API 통합
+## 5. 로컬 성경 데이터 통합
 
-### 5.1 Bible API Datasource
+### 5.1 Bible Data Service (로컬 JSON 기반)
 
 ```dart
-// lib/data/datasources/bible_api_datasource.dart
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// lib/data/services/bible_data_service.dart
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
-class BibleApiDatasource {
-  final Dio _dio;
-  final String baseUrl = dotenv.env['BIBLE_API_URL'] ?? '';
+class BibleDataService {
+  Map<String, dynamic>? _bibleData;
+  Map<String, dynamic>? _topicsData;
 
-  BibleApiDatasource(this._dio);
-
-  /// 성경 구절 조회
-  /// [translation]: 번역본 (KRV, NIV 등)
-  /// [book]: 책 이름 (예: 요한복음)
-  /// [chapter]: 장
-  /// [verseStart]: 시작 절
-  /// [verseEnd]: 끝 절 (선택)
-  Future<Map<String, dynamic>> getVerse({
-    required String translation,
-    required String book,
-    required int chapter,
-    required int verseStart,
-    int? verseEnd,
-  }) async {
+  /// 앱 시작 시 JSON 데이터 로드
+  Future<void> initialize() async {
     try {
-      final verseRange = verseEnd != null
-        ? '$verseStart-$verseEnd'
-        : '$verseStart';
+      // 전체 성경 데이터 로드
+      final bibleJsonString = await rootBundle.loadString('assets/data/bible.json');
+      _bibleData = json.decode(bibleJsonString);
 
-      final url = '$baseUrl/$translation/$book/$chapter:$verseRange';
+      // 주제별 구절 매핑 로드
+      final topicsJsonString = await rootBundle.loadString('assets/data/verse_topics.json');
+      _topicsData = json.decode(topicsJsonString);
 
-      final response = await _dio.get(url);
-
-      if (response.statusCode == 200) {
-        return response.data;
-      } else {
-        throw Exception('Failed to load verse');
-      }
+      print('성경 데이터 로드 완료');
     } catch (e) {
-      throw Exception('Bible API Error: $e');
+      print('성경 데이터 로드 실패: $e');
+      rethrow;
     }
   }
 
-  /// 로컬 캐시에서 먼저 조회, 없으면 API 호출
-  Future<String> getVerseWithCache({
-    required String reference, // "요한복음 3:16"
-    required String translation,
-  }) async {
-    // 1. Supabase bible_cache에서 조회
-    final cachedVerse = await _getCachedVerse(reference, translation);
-
-    if (cachedVerse != null) {
-      return cachedVerse;
+  /// 성경 구절 조회 (reference: "요한복음 3:16-17")
+  Future<String> getVerse(String reference) async {
+    if (_bibleData == null) {
+      await initialize();
     }
 
-    // 2. 캐시 없으면 API 호출
-    final parts = _parseReference(reference);
-    final verseData = await getVerse(
-      translation: translation,
-      book: parts['book']!,
-      chapter: int.parse(parts['chapter']!),
-      verseStart: int.parse(parts['verseStart']!),
-      verseEnd: parts['verseEnd'] != null ? int.parse(parts['verseEnd']!) : null,
-    );
+    try {
+      final parts = _parseReference(reference);
+      final book = parts['book']!;
+      final chapter = parts['chapter']!;
+      final verseStart = int.parse(parts['verseStart']!);
+      final verseEnd = parts['verseEnd'] != null
+        ? int.parse(parts['verseEnd']!)
+        : verseStart;
 
-    // 3. 캐시에 저장
-    await _cacheVerse(reference, translation, verseData['text']);
+      final verses = <String>[];
 
-    return verseData['text'];
+      for (int verse = verseStart; verse <= verseEnd; verse++) {
+        final verseText = _bibleData?[book]?[chapter]?[verse.toString()];
+        if (verseText != null) {
+          verses.add(verseText);
+        }
+      }
+
+      return verses.join(' ');
+    } catch (e) {
+      print('구절 조회 실패: $e');
+      return '성경 구절을 찾을 수 없습니다.';
+    }
   }
 
-  Future<String?> _getCachedVerse(String reference, String translation) async {
-    // Supabase에서 조회 구현
-    return null; // TODO: 구현
+  /// 주제별 구절 가져오기
+  Future<List<Map<String, dynamic>>> getVersesByTopic(String topic) async {
+    if (_topicsData == null) {
+      await initialize();
+    }
+
+    final topicVerses = _topicsData?[topic] as List<dynamic>?;
+    if (topicVerses == null) return [];
+
+    return topicVerses.map((v) => v as Map<String, dynamic>).toList();
   }
 
-  Future<void> _cacheVerse(String reference, String translation, String text) async {
-    // Supabase에 저장 구현
-    // TODO: 구현
-  }
-
+  /// reference 파싱
   Map<String, String> _parseReference(String reference) {
     // "요한복음 3:16-17" → { book: "요한복음", chapter: "3", verseStart: "16", verseEnd: "17" }
     final regex = RegExp(r'(.+)\s(\d+):(\d+)(?:-(\d+))?');
     final match = regex.firstMatch(reference);
 
+    if (match == null) {
+      throw FormatException('잘못된 성경 구절 형식: $reference');
+    }
+
     return {
-      'book': match!.group(1)!,
+      'book': match.group(1)!,
       'chapter': match.group(2)!,
       'verseStart': match.group(3)!,
-      'verseEnd': match.group(4),
+      'verseEnd': match.group(4) ?? match.group(3)!,
     };
   }
 }
@@ -1124,8 +1133,8 @@ class GptApiDatasource {
 - [✅] Supabase Flutter SDK 초기화
 - [✅] .env 파일 설정
 
-#### Task 0.3: 외부 API 준비 ✅
-- [✅] Bible API URL 설정 (https://bible.helloao.org/api)
+#### Task 0.3: 외부 API 및 로컬 데이터 준비 ✅
+- [✅] 로컬 성경 JSON 데이터 준비 (assets/data/bible.json)
 - [✅] Gemini API 키 발급 (https://aistudio.google.com/apikey)
 - [✅] .env 파일에 API 키 추가
 - [✅] Firebase 제거 (Supabase + 로컬 알림으로 통일)
@@ -1155,10 +1164,11 @@ class GptApiDatasource {
 
 ### Phase 2: 일일 말씀 시스템 (Week 3-4)
 
-#### Task 2.1: 성경 API 통합
-- [ ] BibleApiDatasource 구현
-- [ ] 성경 구절 조회 기능
-- [ ] 로컬 캐싱 (Supabase bible_cache)
+#### Task 2.1: 로컬 성경 데이터 통합
+- [ ] BibleDataService 구현 (로컬 JSON 기반)
+- [ ] 성경 구절 조회 기능 (assets/data/bible.json)
+- [ ] 주제별 구절 매핑 (verse_topics.json)
+- [ ] 메모리 캐싱 및 최적화
 - [ ] 에러 핸들링
 
 #### Task 2.2: AI 질문 생성
@@ -1317,12 +1327,13 @@ class GptApiDatasource {
 
 **생성 시점**: Phase 0.2, 1.1, 3.3
 
-#### Agent 3: Bible API Agent
-**역할**: 성경 API 통합
+#### Agent 3: Bible Data Agent
+**역할**: 로컬 성경 데이터 통합
 **태스크**:
-- BibleApiDatasource 구현
-- 캐싱 로직
+- BibleDataService 구현 (JSON 기반)
+- 메모리 캐싱 로직
 - 에러 핸들링
+- 주제별 구절 매핑
 
 **생성 시점**: Phase 2.1
 
@@ -1372,6 +1383,10 @@ daily_verse_card와 streak_widget을 포함한 home_screen.dart를 작성해."
 # 예시: Backend 통합 에이전트 생성
 "Supabase Auth를 통합해줘. Google OAuth를 구현하고
 AuthProvider로 상태를 관리해."
+
+# 예시: 로컬 성경 데이터 통합 에이전트 생성
+"로컬 JSON 파일을 사용하여 성경 구절을 조회하는 BibleDataService를
+구현해줘. assets/data/bible.json에서 데이터를 로드하고 메모리에 캐싱해."
 
 # 예시: AI 통합 에이전트 생성
 "Gemini API를 사용하여 성경 구절 기반 질문을 생성하는 GeminiApiDatasource를

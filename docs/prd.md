@@ -203,13 +203,13 @@ interface Couple {
 **설명**: 매일 자정에 모든 커플을 위한 말씀 & 질문 생성
 
 **기술 스펙**:
-- **성경 API**: bible.helloao.org
+- **성경 데이터**: 로컬 JSON 파일 (assets/data/bible.json)
 - **AI API**: Gemini 1.5 Flash
 - **실행 방식**: Supabase Edge Function (Cron Job)
 
 **알고리즘**:
 1. 주제 선택 (사랑, 용서, 감사, 소통 등 - 로테이션)
-2. 성경 API에서 해당 주제 관련 구절 조회
+2. 로컬 JSON 파일에서 해당 주제 관련 구절 조회 (verse_topics.json)
 3. Gemini API에 구절 + 커플 상태 → 질문 생성 요청
 4. 생성된 질문 검증 (신학적 적절성 필터)
 5. DB에 저장
@@ -254,40 +254,45 @@ interface DailyVerse {
 }
 ```
 
-#### F-005: 성경 API 통합
+#### F-005: 로컬 성경 데이터 통합
 **우선순위**: P0
-**설명**: bible.helloao.org API를 사용하여 성경 구절 조회
+**설명**: 로컬 JSON 파일을 사용하여 성경 구절 조회 (인터넷 연결 불필요)
 
-**API 엔드포인트**:
+**데이터 구조**:
 ```
-GET https://bible.helloao.org/api/KRV/고린도전서/13:4-7
+assets/data/
+├── bible.json           # 전체 성경 데이터 (개역개정)
+├── bible_metadata.json  # 책 정보, 장/절 수
+└── verse_topics.json    # 주제별 구절 매핑
 ```
 
-**응답 예시**:
+**JSON 예시**:
 ```json
 {
-  "book": "고린도전서",
-  "chapter": 13,
-  "verses": [
-    { "verse": 4, "text": "사랑은 오래 참고 사랑은 온유하며..." },
-    { "verse": 5, "text": "무례히 행하지 아니하며..." }
-  ]
+  "고린도전서": {
+    "13": {
+      "4": "사랑은 오래 참고 사랑은 온유하며 시기하지 아니하며...",
+      "5": "무례히 행하지 아니하며 자기의 유익을 구하지 아니하며...",
+      "6": "불의를 기뻐하지 아니하며 진리와 함께 기뻐하고",
+      "7": "모든 것을 참으며 모든 것을 믿으며 모든 것을 바라며 모든 것을 견디느니라"
+    }
+  }
 }
 ```
 
-**캐싱 전략**:
-1. 첫 조회 시 Supabase `bible_cache` 테이블에 저장
-2. 이후 로컬 조회
-3. 7일 후 캐시 만료 (선택적)
+**로딩 전략**:
+1. 앱 시작 시 JSON 파일을 메모리에 로드
+2. 빠른 조회를 위해 메모리 캐싱
+3. 인터넷 연결 불필요 (완전 오프라인 지원)
 
 **데이터 모델**:
 ```typescript
-interface BibleCache {
-  cache_id: string;
-  reference: string; // "고린도전서 13:4-7"
-  translation: string; // "KRV", "NIV", etc.
-  text: string;
-  cached_at: timestamp;
+interface BibleVerse {
+  book: string;        // "고린도전서"
+  chapter: number;     // 13
+  verse: number;       // 4
+  text: string;        // "사랑은 오래 참고..."
+  translation: string; // "KRV" (개역개정)
 }
 ```
 
@@ -956,8 +961,8 @@ USING (
 ### B. 참고 자료
 - [Supabase 문서](https://supabase.com/docs)
 - [Gemini API 문서](https://ai.google.dev/docs)
-- [Bible API](https://bible.helloao.org/)
 - [Flutter 가이드](https://flutter.dev/docs)
+- [로컬 성경 데이터](assets/data/bible.json) - 개역개정 전체 성경
 
 ---
 

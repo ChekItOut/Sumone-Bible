@@ -629,40 +629,46 @@ try {
 }
 ```
 
-### 7.2 성경 API 사용 규칙
+### 7.2 로컬 성경 데이터 사용 규칙
 
-**캐싱 필수**:
+**로컬 JSON 파일 기반**:
 ```dart
-// ✅ 항상 캐시 확인 후 API 호출
+// ✅ 로컬 JSON에서 성경 구절 조회
 Future<String> getVerse(String reference) async {
-  // 1. 캐시 확인
-  final cached = await _getCachedVerse(reference);
-  if (cached != null) return cached;
+  // 1. JSON 파일에서 조회
+  final verse = await _getVerseFromJson(reference);
 
-  // 2. API 호출
-  final verse = await _fetchFromApi(reference);
+  if (verse != null) return verse;
 
-  // 3. 캐시 저장
-  await _cacheVerse(reference, verse);
-
-  return verse;
+  // 2. Fallback: 기본 메시지
+  return '성경 구절을 찾을 수 없습니다.';
 }
 ```
 
-**API 실패 대비**:
+**데이터 로딩 최적화**:
 ```dart
-// ✅ Fallback 제공
-Future<String> getVerse(String reference) async {
+// ✅ 앱 시작 시 JSON 데이터 로드
+Future<void> initializeBibleData() async {
   try {
-    return await _fetchFromApi(reference);
+    final jsonString = await rootBundle.loadString('assets/data/bible.json');
+    final bibleData = json.decode(jsonString);
+    // 메모리에 캐싱하여 빠른 접근
+    _cachedBibleData = bibleData;
   } catch (e) {
-    // 캐시에서라도 제공
-    final cached = await _getCachedVerse(reference);
-    if (cached != null) return cached;
-
-    // 최후의 수단: 기본 메시지
-    return '성경 구절을 불러올 수 없습니다. 인터넷 연결을 확인해주세요.';
+    logger.error('성경 데이터 로드 실패: $e');
   }
+}
+
+// ✅ 메모리 캐시에서 빠르게 조회
+Future<String?> _getVerseFromJson(String reference) async {
+  if (_cachedBibleData == null) {
+    await initializeBibleData();
+  }
+
+  // reference 파싱 (예: "요한복음 3:16")
+  final parts = _parseReference(reference);
+
+  return _cachedBibleData?[parts['book']]?[parts['chapter']]?[parts['verse']];
 }
 ```
 
