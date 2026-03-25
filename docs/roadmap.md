@@ -506,10 +506,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
-  # 알림
-  firebase_core: ^2.24.2
-  firebase_messaging: ^14.7.9
+  # 로컬 알림
   flutter_local_notifications: ^16.3.0
+  timezone: ^0.9.2  # 로컬 알림 스케줄링용
 
   # UI/UX
   flutter_svg: ^2.0.9
@@ -592,9 +591,6 @@ GEMINI_API_URL=https://generativelanguage.googleapis.com/v1beta
 
 # GPT API (프리미엄 기능 - 추후)
 GPT_API_KEY=your-gpt-api-key
-
-# Firebase
-FIREBASE_PROJECT_ID=your-project-id
 ```
 
 ---
@@ -1128,12 +1124,11 @@ class GptApiDatasource {
 - [✅] Supabase Flutter SDK 초기화
 - [✅] .env 파일 설정
 
-#### Task 0.3: 외부 API 준비
-- [ ] Bible API 테스트 (https://bible.helloao.org/api)
-- [ ] Gemini API 키 발급 (https://aistudio.google.com/apikey)
-- [ ] .env 파일에 API 키 추가
-
-참고: Firebase는 Phase 5.1 (푸시 알림)에서 설정 예정
+#### Task 0.3: 외부 API 준비 ✅
+- [✅] Bible API URL 설정 (https://bible.helloao.org/api)
+- [✅] Gemini API 키 발급 (https://aistudio.google.com/apikey)
+- [✅] .env 파일에 API 키 추가
+- [✅] Firebase 제거 (Supabase + 로컬 알림으로 통일)
 
 ---
 
@@ -1226,16 +1221,21 @@ class GptApiDatasource {
 
 ### Phase 5: 알림 시스템 (Week 8)
 
-#### Task 5.1: 푸시 알림
-- [ ] FCM 통합
-- [ ] 알림 권한 요청
-- [ ] 매일 오전 9시 알림 (Supabase Edge Function)
-- [ ] 알림 메시지 커스터마이징
+**NOTE**: Firebase 제거 - Supabase + 로컬 알림으로 통일
 
-#### Task 5.2: 로컬 알림
+#### Task 5.1: 로컬 알림 구현
 - [ ] flutter_local_notifications 설정
-- [ ] 알림 클릭 시 앱 열기
-- [ ] 알림 설정 UI (시간 변경, ON/OFF)
+- [ ] timezone 패키지 초기화
+- [ ] 알림 권한 요청 (iOS, Android)
+- [ ] 매일 오전 9시 알림 스케줄링
+- [ ] 알림 클릭 시 앱 열기 (딥링크)
+- [ ] 앱 시작 시 자동 재스케줄링
+
+#### Task 5.2: 알림 설정 UI
+- [ ] 알림 ON/OFF 토글
+- [ ] 알림 시간 선택 (TimePicker)
+- [ ] 설정 변경 시 스케줄 업데이트
+- [ ] Supabase에 사용자 알림 설정 저장
 
 ---
 
@@ -1269,7 +1269,7 @@ class GptApiDatasource {
 - [ ] 에러 핸들링 개선
 
 #### Task 7.3: 베타 테스트
-- [ ] TestFlight/Firebase App Distribution
+- [ ] TestFlight (iOS) / Google Play Console 내부 테스트 (Android)
 - [ ] 20-30 커플 초대
 - [ ] 피드백 수집
 - [ ] 버그 수정
@@ -1336,11 +1336,11 @@ class GptApiDatasource {
 **생성 시점**: Phase 2.2
 
 #### Agent 5: Notification Agent
-**역할**: 푸시 알림 구현
+**역할**: 로컬 알림 구현
 **태스크**:
-- FCM 설정
-- 로컬 알림
-- Supabase Edge Function (알림 전송)
+- flutter_local_notifications 설정
+- 로컬 알림 스케줄링
+- 알림 설정 UI
 
 **생성 시점**: Phase 5.1, 5.2
 
@@ -1480,17 +1480,14 @@ void main() {
 
 #### 개발 (Development)
 - Supabase: 개발 프로젝트
-- Firebase: 개발 프로젝트
 - API: 테스트 키
 
 #### 스테이징 (Staging)
 - Supabase: 스테이징 프로젝트
-- Firebase: 스테이징 프로젝트
 - API: 실제 키 (제한된 할당량)
 
 #### 프로덕션 (Production)
 - Supabase: 프로덕션 프로젝트
-- Firebase: 프로덕션 프로젝트
 - API: 실제 키
 
 ### 10.2 배포 체크리스트

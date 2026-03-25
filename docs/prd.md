@@ -296,8 +296,8 @@ interface BibleCache {
 **설명**: 매일 오늘의 말씀 도착 알림
 
 **기술 스펙**:
-- Firebase Cloud Messaging (FCM)
-- Supabase Edge Function Cron Job
+- flutter_local_notifications (로컬 알림 스케줄링)
+- timezone 패키지 (정확한 시간 스케줄링)
 
 **알림 시간**:
 - 기본: 오전 9시
@@ -659,8 +659,7 @@ GET    /streaks/me           # 내 스트릭 정보
 
 #### Notifications
 ```
-POST   /notifications/register  # FCM 토큰 등록
-PUT    /notifications/settings  # 알림 설정 변경
+PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 ```
 
 ---

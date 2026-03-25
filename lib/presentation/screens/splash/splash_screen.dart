@@ -30,10 +30,7 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const Text(
                 'Color Palette',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white70,
-                ),
+                style: TextStyle(fontSize: 20, color: Colors.white70),
               ),
 
               const SizedBox(height: 32),
@@ -136,10 +133,7 @@ class SplashScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     '💡 색상 코드를 탭하면 클립보드에 복사됩니다',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.white70),
                   ),
                 ),
               ),
@@ -215,10 +209,7 @@ class SplashScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.grey.shade200,
-                  width: 1,
-                ),
+                border: Border.all(color: Colors.grey.shade200, width: 1),
               ),
             ),
             const SizedBox(width: 16),
@@ -269,11 +260,7 @@ class SplashScreen extends StatelessWidget {
             ),
 
             // 복사 아이콘
-            Icon(
-              Icons.copy,
-              size: 20,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.copy, size: 20, color: Colors.grey.shade400),
           ],
         ),
       ),
@@ -338,11 +325,7 @@ class SplashScreen extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(
-                    Icons.favorite,
-                    size: 18,
-                    color: AppTheme.accentColor,
-                  ),
+                  Icon(Icons.favorite, size: 18, color: AppTheme.accentColor),
                   SizedBox(width: 4),
                   Text(
                     '235',
@@ -353,11 +336,7 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 12),
-                  Icon(
-                    Icons.star,
-                    size: 18,
-                    color: AppTheme.secondaryColor,
-                  ),
+                  Icon(Icons.star, size: 18, color: AppTheme.secondaryColor),
                   SizedBox(width: 4),
                   Text(
                     '3.5',

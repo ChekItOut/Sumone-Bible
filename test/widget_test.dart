@@ -9,11 +9,7 @@ import 'package:bible_sumone/app/app.dart';
 void main() {
   testWidgets('App should load without crashing', (WidgetTester tester) async {
     // ProviderScope로 감싸서 앱 빌드
-    await tester.pumpWidget(
-      const ProviderScope(
-        child: BibleSumOneApp(),
-      ),
-    );
+    await tester.pumpWidget(const ProviderScope(child: BibleSumOneApp()));
 
     // 앱이 정상적으로 로드되는지 확인
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

@@ -42,7 +42,6 @@ class AppTheme {
     ),
 
     scaffoldBackgroundColor: backgroundLight, // 전체 배경 (slate blue)
-
     // 텍스트 테마
     // TODO: Phase 0.3 - 폰트 추가 후 fontFamily 복원
     textTheme: const TextTheme(

@@ -224,7 +224,7 @@
 
 **기술적 과제**:
 - Supabase Realtime Subscriptions 구현
-- FCM (Firebase Cloud Messaging) 통합
+- flutter_local_notifications 로컬 알림 스케줄링
 - 배터리 최적화
 
 **우선순위**: P0 (MVP 필수)
