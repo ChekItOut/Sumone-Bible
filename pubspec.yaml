@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:  # Material/Cupertino 다국어 지원
+    sdk: flutter
 
   # 상태 관리
   flutter_riverpod: ^2.5.1
@@ -48,7 +50,7 @@ dependencies:
   confetti: ^0.7.0  # 마일스톤 축하 애니메이션
 
   # 유틸리티
-  intl: ^0.19.0  # 날짜 포맷팅
+  intl: ^0.20.2  # 날짜 포맷팅 (flutter_localizations 호환)
   url_launcher: ^6.2.2  # 외부 링크
   share_plus: ^7.2.1  # 공유 기능
   image_picker: ^1.0.7  # 프로필 사진

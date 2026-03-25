@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'theme.dart';
 import 'routes.dart';
@@ -21,12 +22,17 @@ class BibleSumOneApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system, // TODO: Phase 6에서 사용자 설정 반영
-      // 라우팅
-      routerConfig: AppRouter.router,
-
       // 로케일 (다국어 지원 준비)
       locale: const Locale('ko', 'KR'),
       supportedLocales: const [Locale('ko', 'KR'), Locale('en', 'US')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate, // Material 위젯 다국어
+        GlobalWidgetsLocalizations.delegate, // 기본 위젯 다국어
+        GlobalCupertinoLocalizations.delegate, // Cupertino 위젯 다국어
+      ],
+
+      // 라우팅
+      routerConfig: AppRouter.router,
     );
   }
 }
