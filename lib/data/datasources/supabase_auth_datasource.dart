@@ -208,6 +208,38 @@ class SupabaseAuthDataSource {
     });
   }
 
+  /// 사용자 메타데이터 업데이트
+  ///
+  /// [metadata]: 업데이트할 메타데이터 (name, relationship_stage 등)
+  ///
+  /// Throws:
+  /// - [app_exceptions.AuthException]: 업데이트 실패
+  Future<UserModel> updateUserMetadata(Map<String, dynamic> metadata) async {
+    try {
+      final response = await _client.auth.updateUser(
+        UserAttributes(data: metadata),
+      );
+
+      if (response.user == null) {
+        throw const app_exceptions.AuthException(
+          'Update user metadata failed - no user returned',
+          code: 'update-failed',
+        );
+      }
+
+      return UserModel.fromSupabaseUser(response.user!);
+    } on app_exceptions.AuthException {
+      rethrow;
+    } on SocketException {
+      throw const app_exceptions.NetworkException();
+    } catch (e) {
+      throw app_exceptions.AuthException(
+        'Update user metadata failed',
+        originalError: e,
+      );
+    }
+  }
+
   /// Supabase 에러 메시지를 앱의 에러 코드로 매핑
   String _mapSupabaseErrorCode(String message) {
     final lowerMessage = message.toLowerCase();

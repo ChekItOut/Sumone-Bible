@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import '../presentation/screens/splash/splash_screen.dart';
+import '../presentation/screens/onboarding/onboarding_screen.dart';
+import '../presentation/screens/onboarding/profile_setup_screen.dart';
 
 /// Bible SumOne 앱 라우팅 설정
 ///
@@ -19,20 +21,24 @@ class AppRouter {
         builder: (context, state) => const SplashScreen(),
       ),
 
+      // ==================== 온보딩 ====================
+      GoRoute(
+        path: '/onboarding',
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/profile-setup',
+        name: 'profile-setup',
+        builder: (context, state) => const ProfileSetupScreen(),
+      ),
+
       // ==================== 인증 ====================
       // TODO: Phase 1에서 구현 예정
       // GoRoute(
       //   path: '/auth/login',
       //   name: 'login',
       //   builder: (context, state) => const LoginScreen(),
-      // ),
-
-      // ==================== 온보딩 ====================
-      // TODO: Phase 1에서 구현 예정
-      // GoRoute(
-      //   path: '/onboarding',
-      //   name: 'onboarding',
-      //   builder: (context, state) => const OnboardingScreen(),
       // ),
 
       // ==================== 홈 ====================

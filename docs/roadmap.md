@@ -1149,10 +1149,10 @@ class GptApiDatasource {
 - [✅] 로그인 상태 관리 (Riverpod)
 
 #### Task 1.2: 온보딩 플로우
-- [ ] 스플래시 화면
-- [ ] 온보딩 3단계 화면 (Swiper)
-- [ ] 프로필 설정 (이름, 관계 단계)
-- [ ] 상태 저장 (Supabase users 테이블)
+- [✅] 스플래시 화면 (실제 로딩 화면)
+- [✅] 온보딩 3단계 화면 (PageView)
+- [✅] 프로필 설정 (이름, 관계 단계)
+- [✅] 상태 저장 (Supabase Auth user_metadata)
 
 #### Task 1.3: 커플 매칭
 - [ ] 파트너 초대 링크 생성
