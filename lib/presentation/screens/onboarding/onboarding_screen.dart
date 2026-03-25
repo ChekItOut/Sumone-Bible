@@ -1,22 +1,30 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/constants/supabase_client.dart';
+import '../../../data/datasources/supabase_auth_datasource.dart';
 import 'widgets/onboarding_page.dart';
 
 /// 온보딩 화면
 ///
 /// 새로운 사용자를 위한 3단계 온보딩 플로우
 /// 참조: docs/prd.md 섹션 F-014
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool _isLoading = false;
+  StreamSubscription? _authSubscription;
 
   // 온보딩 페이지 데이터
   final List<Map<String, dynamic>> _pages = [
@@ -38,7 +46,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    // 웹 환경에서는 auth state changes를 리스닝하여
+    // OAuth 로그인 완료를 감지
+    if (kIsWeb) {
+      _authSubscription = supabase.auth.onAuthStateChange.listen((data) {
+        final session = data.session;
+        if (session != null && mounted) {
+          // 로그인 완료 → 프로필 설정으로 이동
+          print('✅ [Web] OAuth 로그인 완료: ${session.user.id}');
+          context.push('/profile-setup');
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    _authSubscription?.cancel();
     _pageController.dispose();
     super.dispose();
   }
@@ -56,14 +83,79 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // 마지막 페이지에서 "시작하기" 버튼 클릭
-      context.push('/profile-setup');
+      // 마지막 페이지에서 "시작하기" 버튼 클릭 → Google 로그인
+      _signInWithGoogle();
     }
   }
 
   void _skip() {
-    // 바로 프로필 설정으로 이동
-    context.push('/profile-setup');
+    // 건너뛰기 → Google 로그인
+    _signInWithGoogle();
+  }
+
+  /// Google 로그인 수행
+  ///
+  /// 웹: OAuth 페이지 리다이렉트 → authStateChanges로 완료 감지
+  /// 모바일: 네이티브 Sign-In → 즉시 완료
+  Future<void> _signInWithGoogle() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      print('🔐 Google 로그인 시작');
+      final dataSource = SupabaseAuthDataSource();
+
+      if (kIsWeb) {
+        // 웹: OAuth 플로우 시작 (전체 페이지 리다이렉트)
+        print('🌐 [Web] OAuth 플로우 시작...');
+        await dataSource.signInWithGoogle();
+
+        // NOTE: 웹에서는 페이지가 Google로 리다이렉트되므로
+        // 이 코드는 실행되지 않을 가능성이 높습니다.
+        // 로그인 후 앱으로 돌아오면 authStateChanges가 트리거됩니다.
+        print('⏳ [Web] OAuth 리다이렉트 대기 중...');
+        // 로딩 상태 유지 (페이지가 리다이렉트될 것임)
+      } else {
+        // 모바일: 네이티브 Sign-In (즉시 완료)
+        print('📱 [Mobile] 네이티브 Google Sign-In...');
+        final user = await dataSource.signInWithGoogle();
+
+        print('✅ Google 로그인 성공: ${user.id}');
+
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          // 로그인 성공 → 프로필 설정으로 이동
+          context.push('/profile-setup');
+        }
+      }
+    } catch (e) {
+      print('❌ Google 로그인 실패: $e');
+
+      // 웹에서는 OAuth 플로우 시작 실패만 에러로 표시
+      // (리다이렉트되면 이 코드는 실행되지 않음)
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              kIsWeb ? '로그인을 시작할 수 없습니다. 페이지를 새로고침하고 다시 시도해주세요.' : '로그인 실패: $e',
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -141,7 +233,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _nextPage,
+                      onPressed: _isLoading ? null : _nextPage,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryColor,
                         foregroundColor: Colors.white,
@@ -150,13 +242,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: Text(
-                        _currentPage == _pages.length - 1 ? '시작하기' : '다음',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              _currentPage == _pages.length - 1
+                                  ? 'Google로 시작하기'
+                                  : '다음',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ],

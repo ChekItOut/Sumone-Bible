@@ -116,10 +116,81 @@ class SupabaseAuthDataSource {
 
   /// Google OAuth로 로그인
   ///
+  /// 웹 환경에서는 Supabase OAuth를 직접 사용하고,
+  /// 모바일 환경에서는 google_sign_in 패키지를 사용합니다.
+  ///
   /// Throws:
   /// - [app_exceptions.AuthException]: 로그인 실패 또는 취소
   /// - [app_exceptions.NetworkException]: 네트워크 연결 실패
   Future<UserModel> signInWithGoogle() async {
+    try {
+      // 웹 환경: Supabase OAuth 사용
+      if (kIsWeb) {
+        return await _signInWithGoogleWeb();
+      }
+
+      // 모바일 환경: google_sign_in 패키지 사용
+      return await _signInWithGoogleMobile();
+    } on app_exceptions.AuthException {
+      rethrow;
+    } on SocketException {
+      throw const app_exceptions.NetworkException();
+    } catch (e) {
+      throw app_exceptions.AuthException(
+        'Google sign in failed',
+        originalError: e,
+      );
+    }
+  }
+
+  /// 웹 환경에서 Google OAuth 로그인
+  ///
+  /// Supabase의 signInWithOAuth를 사용하여 브라우저 기반 OAuth 플로우 실행
+  /// NOTE: 웹에서는 전체 페이지가 Google로 리다이렉트되고,
+  /// 로그인 후 앱으로 돌아오면 authStateChanges가 트리거됩니다.
+  Future<UserModel> _signInWithGoogleWeb() async {
+    try {
+      print('🌐 [Web] Supabase OAuth 시작...');
+
+      // Supabase OAuth 플로우 시작 (전체 페이지 리다이렉트)
+      final success = await _client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: kIsWeb ? Uri.base.toString() : null,
+        authScreenLaunchMode: LaunchMode.platformDefault,
+      );
+
+      print('📝 [Web] signInWithOAuth 호출 완료: $success');
+
+      if (!success) {
+        throw const app_exceptions.AuthException(
+          'Failed to start Google OAuth flow',
+          code: 'oauth-start-failed',
+        );
+      }
+
+      // OAuth 플로우가 시작되었음을 알리는 임시 UserModel 반환
+      // 실제로는 페이지가 리다이렉트되므로 이 코드는 실행되지 않을 수 있습니다
+      // 하지만 타입 안전성을 위해 더미 값을 반환합니다
+      return UserModel(
+        id: 'oauth-pending',
+        email: 'oauth@pending.com',
+        name: null,
+        relationshipStage: null,
+        createdAt: DateTime.now(),
+      );
+    } catch (e) {
+      if (e is app_exceptions.AuthException) rethrow;
+      throw app_exceptions.AuthException(
+        'Google sign in failed on web',
+        originalError: e,
+      );
+    }
+  }
+
+  /// 모바일 환경에서 Google OAuth 로그인
+  ///
+  /// google_sign_in 패키지를 사용하여 네이티브 Google Sign-In 실행
+  Future<UserModel> _signInWithGoogleMobile() async {
     try {
       // 1. Google Sign In 플로우 시작
       final googleUser = await googleSignIn.signIn();
@@ -158,13 +229,10 @@ class SupabaseAuthDataSource {
       }
 
       return UserModel.fromSupabaseUser(response.user!);
-    } on app_exceptions.AuthException {
-      rethrow;
-    } on SocketException {
-      throw const app_exceptions.NetworkException();
     } catch (e) {
+      if (e is app_exceptions.AuthException) rethrow;
       throw app_exceptions.AuthException(
-        'Google sign in failed',
+        'Google sign in failed on mobile',
         originalError: e,
       );
     }
@@ -245,11 +313,19 @@ class SupabaseAuthDataSource {
   /// - [app_exceptions.AuthException]: 업데이트 실패
   Future<UserModel> updateUserMetadata(Map<String, dynamic> metadata) async {
     try {
+      print('🔄 [Supabase] updateUser 호출 시작');
+      print('📊 [Supabase] metadata: $metadata');
+
       final response = await _client.auth.updateUser(
         UserAttributes(data: metadata),
       );
 
+      print('✅ [Supabase] updateUser 응답 받음');
+      print('👤 [Supabase] user: ${response.user?.id}');
+      print('📝 [Supabase] user_metadata: ${response.user?.userMetadata}');
+
       if (response.user == null) {
+        print('❌ [Supabase] 응답에 user가 없음!');
         throw const app_exceptions.AuthException(
           'Update user metadata failed - no user returned',
           code: 'update-failed',
@@ -257,11 +333,15 @@ class SupabaseAuthDataSource {
       }
 
       return UserModel.fromSupabaseUser(response.user!);
-    } on app_exceptions.AuthException {
+    } on app_exceptions.AuthException catch (e) {
+      print('❌ [Supabase] AuthException: ${e.message}');
       rethrow;
-    } on SocketException {
+    } on SocketException catch (e) {
+      print('❌ [Supabase] SocketException (네트워크 오류): $e');
       throw const app_exceptions.NetworkException();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('❌ [Supabase] 예상치 못한 오류: $e');
+      print('📚 [Supabase] StackTrace:\n$stackTrace');
       throw app_exceptions.AuthException(
         'Update user metadata failed',
         originalError: e,
