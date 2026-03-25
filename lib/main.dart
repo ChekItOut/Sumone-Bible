@@ -22,6 +22,10 @@ void main() async {
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    authOptions: const FlutterAuthClientOptions(
+      // 웹 환경에서도 세션 유지
+      authFlowType: AuthFlowType.pkce,
+    ),
   );
 
   // TODO: Phase 5.1 - Firebase 초기화

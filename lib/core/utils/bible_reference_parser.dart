@@ -96,7 +96,7 @@ class BibleReferenceParser {
 
   /// 역 매핑 (JSON 키 → 한글 이름)
   static final Map<String, String> keyToBookName = {
-    for (var entry in bookNameMap.entries) entry.value: entry.key
+    for (var entry in bookNameMap.entries) entry.value: entry.key,
   };
 
   /// 한글 참조 → JSON 키 변환
@@ -198,9 +198,7 @@ class BibleReferenceParser {
   static List<String> searchBookNames(String query) {
     if (query.isEmpty) return [];
 
-    return bookNameMap.keys
-        .where((name) => name.contains(query))
-        .toList()
+    return bookNameMap.keys.where((name) => name.contains(query)).toList()
       ..sort();
   }
 

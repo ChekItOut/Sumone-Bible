@@ -60,7 +60,9 @@ void main() {
 
       print('✅ 성공! ${verses.length}개 구절');
       for (var verse in verses) {
-        print('  ${verse.reference}: ${verse.text.substring(0, verse.text.length > 30 ? 30 : verse.text.length)}...');
+        print(
+          '  ${verse.reference}: ${verse.text.substring(0, verse.text.length > 30 ? 30 : verse.text.length)}...',
+        );
       }
       print('');
 
@@ -80,7 +82,9 @@ void main() {
 
       print('✅ 성공! ${results.length}개 결과');
       for (var verse in results) {
-        print('  ${verse.reference}: ${verse.text.substring(0, verse.text.length > 40 ? 40 : verse.text.length)}...');
+        print(
+          '  ${verse.reference}: ${verse.text.substring(0, verse.text.length > 40 ? 40 : verse.text.length)}...',
+        );
       }
       print('');
 
@@ -96,12 +100,7 @@ void main() {
       print('🧪 테스트 4: 참조 파싱');
       print('------------------------------------------');
 
-      final testCases = [
-        '요한복음 3:16',
-        '시편 23:1',
-        '고린도전서 13:4',
-        '창세기 1:1',
-      ];
+      final testCases = ['요한복음 3:16', '시편 23:1', '고린도전서 13:4', '창세기 1:1'];
 
       for (var reference in testCases) {
         final key = BibleReferenceParser.parse(reference);

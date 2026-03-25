@@ -22,6 +22,38 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   String? _selectedRelationshipStage;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // 로그인 상태 확인
+    _checkAuthStatus();
+  }
+
+  /// 로그인 상태 확인
+  Future<void> _checkAuthStatus() async {
+    try {
+      final dataSource = SupabaseAuthDataSource();
+      await dataSource.getCurrentUser();
+      print('✅ 프로필 설정 화면: 사용자 로그인 확인됨');
+    } catch (e) {
+      print('❌ 프로필 설정 화면: 사용자가 로그인되어 있지 않음');
+
+      if (mounted) {
+        // 로그인되어 있지 않으면 온보딩으로 돌아가기
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('먼저 로그인해주세요'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.orange,
+          ),
+        );
+
+        // 온보딩 화면으로 리다이렉트
+        context.go('/onboarding');
+      }
+    }
+  }
+
   // 관계 단계 옵션
   final Map<String, String> _relationshipStages = {
     'dating': '연애 중',
@@ -70,11 +102,24 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     try {
       final dataSource = SupabaseAuthDataSource();
 
-      // Supabase Auth user_metadata 업데이트
-      await dataSource.updateUserMetadata({
+      // 현재 사용자 확인 (디버깅용)
+      print('📝 프로필 저장 시작');
+      try {
+        final currentUser = await dataSource.getCurrentUser();
+        print('✅ 현재 사용자: ${currentUser.id}');
+      } catch (e) {
+        print('❌ 사용자 조회 실패: $e');
+      }
+
+      // 업데이트할 데이터 출력
+      final metadata = {
         'name': _nameController.text.trim(),
         'relationship_stage': _selectedRelationshipStage,
-      });
+      };
+      print('📤 업데이트할 메타데이터: $metadata');
+
+      // Supabase Auth user_metadata 업데이트
+      await dataSource.updateUserMetadata(metadata);
 
       // TODO: Supabase users 테이블에도 저장 (Phase 2)
       // await supabase.from('users').upsert({

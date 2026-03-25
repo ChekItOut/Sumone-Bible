@@ -113,10 +113,7 @@ class LocalBibleDataSource {
   ///
   /// NOTE: 성능 이슈 가능 (31,000개 구절 검색)
   /// 필요 시 Isolate 사용 고려
-  List<MapEntry<String, String>> searchVerses(
-    String query, {
-    int limit = 100,
-  }) {
+  List<MapEntry<String, String>> searchVerses(String query, {int limit = 100}) {
     _ensureInitialized();
 
     if (query.isEmpty) return [];

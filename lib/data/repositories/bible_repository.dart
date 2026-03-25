@@ -15,7 +15,7 @@ class BibleRepository {
   final Logger _logger = Logger();
 
   BibleRepository({LocalBibleDataSource? dataSource})
-      : _dataSource = dataSource ?? LocalBibleDataSource();
+    : _dataSource = dataSource ?? LocalBibleDataSource();
 
   /// Repository 초기화
   ///
@@ -93,11 +93,7 @@ class BibleRepository {
       final verses = <BibleVerse>[];
       for (var i = 0; i < keys.length && i < texts.length; i++) {
         final koreanRef = BibleReferenceParser.toKoreanReference(keys[i]);
-        final verse = _parseKeyToVerse(
-          keys[i],
-          texts[i],
-          koreanRef ?? keys[i],
-        );
+        final verse = _parseKeyToVerse(keys[i], texts[i], koreanRef ?? keys[i]);
         verses.add(verse);
       }
 
@@ -115,10 +111,7 @@ class BibleRepository {
   /// [limit]: 최대 결과 수
   ///
   /// Returns: [BibleVerse] 리스트
-  Future<List<BibleVerse>> searchVerses(
-    String query, {
-    int limit = 100,
-  }) async {
+  Future<List<BibleVerse>> searchVerses(String query, {int limit = 100}) async {
     try {
       _logger.i('🔍 구절 검색: "$query"');
 
@@ -126,11 +119,7 @@ class BibleRepository {
 
       final verses = results.map((entry) {
         final koreanRef = BibleReferenceParser.toKoreanReference(entry.key);
-        return _parseKeyToVerse(
-          entry.key,
-          entry.value,
-          koreanRef ?? entry.key,
-        );
+        return _parseKeyToVerse(entry.key, entry.value, koreanRef ?? entry.key);
       }).toList();
 
       _logger.i('✅ 검색 완료: ${verses.length}개 결과');
