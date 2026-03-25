@@ -69,6 +69,7 @@ dev_dependencies:
 
   # 테스트
   mockito: ^5.4.4
+  http: ^1.2.0  # Bible API 테스트용
 
   # 에셋 자동 생성
   flutter_gen_runner: ^5.4.0
@@ -80,6 +81,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/animations/
+    - assets/data/bible.json  # 한글 성경 JSON (4.9MB)
     - .env
 
   # TODO: Phase 0.3 - 폰트 파일 다운로드 및 추가

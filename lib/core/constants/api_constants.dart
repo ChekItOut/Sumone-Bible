@@ -9,18 +9,9 @@ class ApiConstants {
   static String get supabaseUrl => dotenv.env['SUPABASE_URL'] ?? '';
   static String get supabaseAnonKey => dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
-  // ==================== Bible API ====================
-  static String get bibleApiUrl =>
-      dotenv.env['BIBLE_API_URL'] ?? 'https://bible.helloao.org/api';
-
-  // 성경 API 엔드포인트
-  static String bibleVerse({
-    required String translation,
-    required String book,
-    required String reference,
-  }) {
-    return '$bibleApiUrl/$translation/$book/$reference';
-  }
+  // ==================== Bible (로컬 JSON) ====================
+  // NOTE: 로컬 JSON 파일 사용 (assets/data/bible.json)
+  // 외부 API 불필요
 
   // ==================== Gemini API ====================
   static String get geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
@@ -30,9 +21,6 @@ class ApiConstants {
 
   static String get geminiGenerateContentUrl =>
       '$geminiApiUrl/models/gemini-1.5-flash:generateContent?key=$geminiApiKey';
-
-  // ==================== GPT API (프리미엄 기능) ====================
-  static String get gptApiKey => dotenv.env['GPT_API_KEY'] ?? '';
 
   // ==================== Firebase ====================
   static String get firebaseProjectId =>
