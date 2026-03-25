@@ -1143,10 +1143,10 @@ class GptApiDatasource {
 
 ### Phase 1: 인증 및 온보딩 (Week 2)
 
-#### Task 1.1: 인증 시스템
-- [ ] Supabase Auth 통합
-- [ ] Google 로그인 (OAuth) - 메인 로그인 방식
-- [ ] 로그인 상태 관리 (Riverpod)
+#### Task 1.1: 인증 시스템 ✅
+- [✅] Supabase Auth 통합
+- [✅] Google 로그인 (OAuth) - 메인 로그인 방식
+- [✅] 로그인 상태 관리 (Riverpod)
 
 #### Task 1.2: 온보딩 플로우
 - [ ] 스플래시 화면
