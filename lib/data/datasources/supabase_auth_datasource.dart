@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,11 +16,38 @@ import '../models/user_model.dart';
 /// Repository가 이 DataSource를 사용하여 인증 작업 수행
 class SupabaseAuthDataSource {
   final SupabaseClient _client;
-  final GoogleSignIn _googleSignIn;
+  GoogleSignIn? _googleSignIn;
 
   SupabaseAuthDataSource({SupabaseClient? client, GoogleSignIn? googleSignIn})
     : _client = client ?? supabase,
-      _googleSignIn = googleSignIn ?? GoogleSignIn();
+      _googleSignIn = googleSignIn;
+
+  /// GoogleSignIn 인스턴스를 lazy하게 초기화
+  ///
+  /// 웹 환경에서는 clientId가 필요하므로 플랫폼별로 다르게 설정
+  GoogleSignIn get googleSignIn {
+    if (_googleSignIn != null) {
+      return _googleSignIn!;
+    }
+
+    // 플랫폼별 Client ID 가져오기
+    String? clientId;
+    if (kIsWeb) {
+      clientId = dotenv.env['GOOGLE_CLIENT_ID_WEB'];
+    } else if (Platform.isAndroid) {
+      clientId = dotenv.env['GOOGLE_CLIENT_ID_ANDROID'];
+    } else if (Platform.isIOS) {
+      clientId = dotenv.env['GOOGLE_CLIENT_ID_IOS'];
+    }
+
+    // GoogleSignIn 초기화
+    _googleSignIn = GoogleSignIn(
+      clientId: clientId,
+      scopes: ['email', 'profile'],
+    );
+
+    return _googleSignIn!;
+  }
 
   /// 현재 로그인한 사용자 가져오기
   ///
@@ -93,7 +122,7 @@ class SupabaseAuthDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       // 1. Google Sign In 플로우 시작
-      final googleUser = await _googleSignIn.signIn();
+      final googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
         throw const app_exceptions.AuthException(
@@ -187,8 +216,8 @@ class SupabaseAuthDataSource {
   Future<void> signOut() async {
     try {
       // Google Sign In도 함께 로그아웃
-      if (await _googleSignIn.isSignedIn()) {
-        await _googleSignIn.signOut();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
       }
 
       await _client.auth.signOut();
