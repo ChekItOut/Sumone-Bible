@@ -1193,13 +1193,14 @@ ALTER TABLE users ALTER COLUMN new_field SET NOT NULL;
 
 ---
 
+
 ## 17. 에이전트 시스템 (Agent System)
 
 ### 17.1 에이전트 개요
 
 **에이전트란?**
 - 특정 영역의 작업을 자율적으로 수행하는 전문 AI 협업자
-- Claude Code의 Task tool을 사용하여 생성
+- Claude Code의 Task tool을 사용하여 실행
 - 각 에이전트는 명확한 책임과 전문성을 가짐
 
 **에이전트 활용 원칙**:
@@ -1208,14 +1209,72 @@ ALTER TABLE users ALTER COLUMN new_field SET NOT NULL;
 - ✅ **일관성**: 동일한 작업은 항상 같은 에이전트가 담당
 - ✅ **협업**: 복잡한 작업은 여러 에이전트가 순차적으로 수행
 
-**에이전트 vs 직접 작업**:
+---
+
+### 17.2 사용 가능한 에이전트
+
+프로젝트에는 다음 7개의 전문 에이전트가 **`.claude/agents/`** 폴더에 정의되어 있습니다:
+
+1. **🎨 UI/UX Implementation Agent** (`ui-ux-agent`)
+   - 화면별 UI 구현, Material Design 3 적용, 반응형 레이아웃
+   - 파일: `.claude/agents/ui-ux-agent.md`
+
+2. **🔌 Backend Integration Agent** (`backend-agent`)
+   - Supabase 연동, 인증 시스템, 데이터베이스 CRUD, Realtime Subscription
+   - 파일: `.claude/agents/backend-agent.md`
+
+3. **📖 Bible API Agent** (`bible-api-agent`)
+   - Bible API 통합, 성경 구절 조회, 로컬 캐싱, API 실패 대비
+   - 파일: `.claude/agents/bible-api-agent.md`
+
+4. **🤖 AI Integration Agent** (`ai-agent`)
+   - Gemini API 통합, 질문 생성, 프롬프트 최적화, 비용 최적화
+   - 파일: `.claude/agents/ai-agent.md`
+
+5. **🔔 Notification Agent** (`notification-agent`)
+   - FCM 통합, 푸시 알림, 로컬 알림, Edge Function
+   - 파일: `.claude/agents/notification-agent.md`
+
+6. **✨ Animation Agent** (`animation-agent`)
+   - 복잡한 애니메이션, Dual Reveal 카드, 마일스톤 축하, Confetti
+   - 파일: `.claude/agents/animation-agent.md`
+
+7. **🧪 Testing Agent** (`testing-agent`)
+   - 단위 테스트, 통합 테스트, Widget 테스트, Mock 객체 생성
+   - 파일: `.claude/agents/testing-agent.md`
+
+**📖 각 에이전트의 상세 가이드는 해당 md 파일을 참조하세요!**
+
+---
+
+### 17.3 에이전트 호출 방법
+
+#### Task Tool 사용
+
+```python
+Task(
+  subagent_type: "general-purpose",
+  description: "[에이전트 이름] 작업 요약",
+  prompt: """
+  {에이전트 md 파일의 프롬프트 템플릿 사용}
+
+  또는
+
+  {간단한 요청}
+  예: "홈 화면 UI를 구현해줘. docs/prd.md 7.4절 참고."
+  """
+)
 ```
-에이전트 호출:
+
+#### 직접 호출 vs 에이전트 호출
+
+```
+✅ 에이전트 호출이 적합한 경우:
 - 복잡한 구현 (여러 파일 생성/수정)
 - 전문 지식 필요 (애니메이션, API 통합)
 - 반복적 패턴 (여러 화면 UI 구현)
 
-직접 작업:
+✅ 직접 작업이 적합한 경우:
 - 간단한 수정 (1-2줄)
 - 즉각적 응답 필요
 - 탐색 및 분석
@@ -1223,496 +1282,59 @@ ALTER TABLE users ALTER COLUMN new_field SET NOT NULL;
 
 ---
 
-### 17.2 에이전트 목록 및 역할
+### 17.4 자동 호출 가이드라인 (Claude Code 필수)
 
-#### 🎨 Agent 1: UI/UX Implementation Agent
+**IMPORTANT**: Claude Code는 다음 상황에서 **능동적으로 자동으로** 적절한 에이전트를 호출해야 합니다.
 
-**ID**: `ui-ux-agent`
-
-**책임 범위**:
-- 화면별 UI 구현 (Screens, Widgets)
-- Material Design 3 적용
-- 반응형 레이아웃 구현
-- 테마 일관성 유지
-- 접근성 고려
-
-**호출 시점**:
-- 새로운 화면 구현 시
-- 복잡한 위젯 컴포넌트 개발 시
-- UI 리팩토링 시
-
-**전문 영역**:
-- Flutter Widget 구조
-- 테마 및 스타일링
-- 애니메이션 기본 구현
-- 사용자 입력 처리
-
-**프롬프트 템플릿**:
-```
-[UI/UX Agent] {화면/위젯 이름} 구현
-
-**목표**: {구현할 화면/위젯 설명}
-
-**참조 문서**:
-- docs/prd.md 섹션 {X.X}: {기능 명세}
-- docs/roadmap.md 섹션 {Y.Y}: {UI 가이드라인}
-
-**요구사항**:
-1. Clean Architecture 준수 (lib/presentation/screens/{feature}/)
-2. 테마 적용 (app/theme.dart 사용)
-3. 반응형 디자인
-4. 접근성 고려 (시맨틱 위젯)
-
-**구현 파일**:
-- lib/presentation/screens/{feature}/{screen_name}_screen.dart
-- lib/presentation/screens/{feature}/widgets/{widget_name}.dart
-
-**체크리스트**:
-- [ ] 네이밍 규칙 준수 (snake_case 파일명, PascalCase 클래스명)
-- [ ] 재사용 가능한 위젯 분리
-- [ ] 불필요한 rebuild 방지 (Consumer 부분 적용)
-- [ ] flutter analyze 통과
-- [ ] dart format 적용
-```
-
-**호출 예시**:
-```
-"UI/UX Agent를 생성하여 홈 화면을 구현해줘.
-
-docs/prd.md의 7.4절 '홈 화면 와이어프레임'과 docs/roadmap.md의 2.2절 '디자인 시스템'을 참고하여:
-- lib/presentation/screens/home/home_screen.dart
-- lib/presentation/screens/home/widgets/daily_verse_card.dart
-- lib/presentation/screens/home/widgets/streak_widget.dart
-- lib/presentation/screens/home/widgets/quick_actions.dart
-
-위 파일들을 구현해줘."
-```
-
----
-
-#### 🔌 Agent 2: Backend Integration Agent
-
-**ID**: `backend-agent`
-
-**책임 범위**:
-- Supabase 연동
-- 인증 시스템 구현
-- 데이터베이스 CRUD
-- Realtime Subscription
-- RLS 정책 준수
-
-**호출 시점**:
-- 새로운 데이터 소스 추가 시
-- Repository 구현 시
-- Supabase 설정 변경 시
-
-**전문 영역**:
-- Supabase Flutter SDK
-- PostgreSQL / RLS
-- 실시간 데이터 동기화
-- 에러 핸들링
-
-**프롬프트 템플릿**:
-```
-[Backend Agent] {기능} Supabase 연동
-
-**목표**: {구현할 백엔드 기능}
-
-**참조 문서**:
-- docs/prd.md 섹션 6: 데이터 아키텍처
-- docs/roadmap.md 섹션 4: Supabase 연동 계획
-
-**요구사항**:
-1. Clean Architecture 준수
-   - lib/data/datasources/{name}_datasource.dart
-   - lib/data/repositories/{name}_repository.dart
-   - lib/data/models/{name}_model.dart
-2. RLS 정책 준수
-3. Either 패턴 사용 (성공/실패 명시)
-4. 사용자 친화적 에러 메시지
-
-**데이터베이스 테이블**: {테이블명}
-
-**체크리스트**:
-- [ ] Null Safety 철저히 적용
-- [ ] 에러 타입 정의 (lib/core/error/failures.dart)
-- [ ] 테스트 작성 (mock repository)
-- [ ] RLS 정책 검증
-```
-
-**호출 예시**:
-```
-"Backend Agent를 생성하여 인증 시스템을 구현해줘.
-
-docs/prd.md의 4.1절 '인증 및 사용자 관리'를 참고하여:
-- Supabase Auth 통합 (이메일, Google, Apple)
-- lib/data/datasources/supabase_auth_datasource.dart
-- lib/data/repositories/auth_repository.dart
-- lib/data/models/user_model.dart
-
-위 파일들을 구현하고 RLS 정책을 준수해줘."
-```
-
----
-
-#### 📖 Agent 3: Bible API Agent
-
-**ID**: `bible-api-agent`
-
-**책임 범위**:
-- Bible API 통합
-- 성경 구절 조회
-- 로컬 캐싱 구현
-- API 실패 대비 (Fallback)
-
-**호출 시점**:
-- 성경 API 통합 시
-- 캐싱 로직 구현 시
-- API 변경 대응 시
-
-**전문 영역**:
-- bible.helloao.org API
-- 캐싱 전략
-- 다국어 번역본 처리
-
-**프롬프트 템플릿**:
-```
-[Bible API Agent] 성경 API 통합
-
-**목표**: Bible API를 통한 성경 구절 조회 및 캐싱
-
-**참조 문서**:
-- docs/prd.md 섹션 4.2: 일일 말씀 & 질문 시스템
-- docs/roadmap.md 섹션 5: 성경 API 통합
-
-**요구사항**:
-1. bible.helloao.org API 통합
-2. 캐싱 우선 (Supabase bible_cache 테이블)
-3. API 실패 시 Fallback 제공
-4. 다국어 지원 (KRV, NIV)
-
-**구현 파일**:
-- lib/data/datasources/bible_api_datasource.dart
-- lib/data/repositories/verse_repository.dart
-- lib/data/models/verse_model.dart
-
-**체크리스트**:
-- [ ] 캐시 Hit/Miss 로그 (개발 환경)
-- [ ] API 타임아웃 처리
-- [ ] 오프라인 대응
-- [ ] 성능 최적화 (불필요한 재호출 방지)
-```
-
----
-
-#### 🤖 Agent 4: AI Integration Agent
-
-**ID**: `ai-agent`
-
-**책임 범위**:
-- Gemini API 통합
-- 질문 생성 프롬프트 최적화
-- AI 응답 품질 검증
-- 비용 최적화 (캐싱)
-
-**호출 시점**:
-- AI 기능 구현 시
-- 프롬프트 개선 시
-- GPT API 추가 시 (프리미엄 기능)
-
-**전문 영역**:
-- Gemini 1.5 Flash API
-- Prompt Engineering
-- 응답 파싱 및 검증
-
-**프롬프트 템플릿**:
-```
-[AI Agent] {AI 기능} 구현
-
-**목표**: {AI 기능 설명}
-
-**참조 문서**:
-- docs/prd.md 섹션 5: AI 기능 통합 계획
-- docs/roadmap.md 섹션 6: AI 기능 통합
-
-**요구사항**:
-1. Gemini 1.5 Flash API 사용
-2. 프롬프트를 상수로 관리 (lib/core/constants/ai_prompts.dart)
-3. 응답 캐싱 (비용 절감)
-4. 품질 검증 로직
-
-**구현 파일**:
-- lib/data/datasources/gemini_api_datasource.dart
-- lib/core/constants/ai_prompts.dart
-
-**체크리스트**:
-- [ ] 프롬프트 버전 관리
-- [ ] 응답 검증 (부적절한 내용 필터링)
-- [ ] 비용 추적 로그
-- [ ] 타임아웃 처리
-```
-
----
-
-#### 🔔 Agent 5: Notification Agent
-
-**ID**: `notification-agent`
-
-**책임 범위**:
-- FCM 통합
-- 푸시 알림 설정
-- 로컬 알림
-- Supabase Edge Function (알림 전송)
-
-**호출 시점**:
-- 알림 시스템 구현 시
-- 알림 설정 화면 개발 시
-- Edge Function 작성 시
-
-**전문 영역**:
-- Firebase Cloud Messaging
-- flutter_local_notifications
-- Supabase Edge Functions (Deno)
-
-**프롬프트 템플릿**:
-```
-[Notification Agent] 알림 시스템 구현
-
-**목표**: {알림 기능 설명}
-
-**참조 문서**:
-- docs/prd.md 섹션 4.2 F-006: 푸시 알림
-- docs/roadmap.md Phase 5: 알림 시스템
-
-**요구사항**:
-1. FCM 통합 (iOS, Android)
-2. 사용자 설정 반영 (알림 시간, ON/OFF)
-3. 로컬 알림 (백그라운드)
-4. Supabase Edge Function (서버 전송)
-
-**구현 파일**:
-- lib/data/services/notification_service.dart
-- supabase/functions/send-daily-notification/index.ts
-
-**체크리스트**:
-- [ ] 권한 요청 (iOS, Android)
-- [ ] 백그라운드 알림 테스트
-- [ ] 알림 클릭 시 딥링크
-- [ ] Cron Job 설정 (매일 오전 9시)
-```
-
----
-
-#### ✨ Agent 6: Animation Agent
-
-**ID**: `animation-agent`
-
-**책임 범위**:
-- 복잡한 애니메이션 구현
-- Dual Reveal 카드 뒤집기
-- 마일스톤 축하 (Confetti)
-- 로딩 애니메이션
-
-**호출 시점**:
-- 커스텀 애니메이션 필요 시
-- 사용자 경험 향상 필요 시
-- Lottie 애니메이션 통합 시
-
-**전문 영역**:
-- Flutter Animation API
-- AnimationController
-- Tween, Curve
-- Lottie, Confetti
-
-**프롬프트 템플릿**:
-```
-[Animation Agent] {애니메이션} 구현
-
-**목표**: {애니메이션 설명}
-
-**참조 문서**:
-- docs/prd.md 섹션 7.4: UI/UX 가이드라인
-- docs/roadmap.md 섹션 2.3: 애니메이션 가이드
-
-**요구사항**:
-1. 부드러운 애니메이션 (60fps)
-2. 메모리 누수 방지 (dispose)
-3. 성능 최적화
-4. 접근성 고려 (애니메이션 비활성화 옵션)
-
-**구현 파일**:
-- lib/presentation/screens/{feature}/widgets/{animation_name}.dart
-
-**체크리스트**:
-- [ ] AnimationController dispose
-- [ ] 성능 프로파일링
-- [ ] 다양한 기기 테스트
-- [ ] 애니메이션 duration 적절성
-```
-
----
-
-#### 🧪 Agent 7: Testing Agent
-
-**ID**: `testing-agent`
-
-**책임 범위**:
-- 단위 테스트 작성
-- 통합 테스트 작성
-- Widget 테스트
-- Mock 객체 생성
-
-**호출 시점**:
-- 새로운 기능 구현 후
-- 리팩토링 후
-- 버그 수정 후 (재발 방지)
-
-**전문 영역**:
-- flutter_test
-- mockito
-- integration_test
-- AAA 패턴
-
-**프롬프트 템플릿**:
-```
-[Testing Agent] {기능} 테스트 작성
-
-**목표**: {테스트할 기능}
-
-**참조 문서**:
-- docs/roadmap.md 섹션 9: 테스트 전략
-- CLAUDE.md 섹션 9: 테스트 작성 규칙
-
-**요구사항**:
-1. AAA 패턴 (Arrange-Act-Assert)
-2. 테스트 커버리지 목표 달성
-   - Domain: 100%
-   - Data: 80%
-   - Presentation: 60%
-3. 명확한 테스트 이름
-4. Mock 객체 적절히 사용
-
-**구현 파일**:
-- test/{layer}/{feature}/{file_name}_test.dart
-
-**체크리스트**:
-- [ ] 모든 엣지 케이스 커버
-- [ ] 테스트 독립성 (순서 무관)
-- [ ] 테스트 실패 시 명확한 메시지
-- [ ] flutter test 통과
-```
-
----
-
-### 17.3 에이전트 호출 규칙
-
-#### 호출 문법
-
-```dart
-// Task tool 사용
-Task(
-  subagent_type: "general-purpose",
-  description: "[Agent ID] 작업 요약",
-  prompt: """
-  [에이전트 프롬프트 템플릿]
-  """
-)
-```
-
-#### 호출 우선순위
-
-**1순위: 복잡한 구현**
-```
-상황: 새로운 화면 전체 구현
-→ UI/UX Agent 호출
-
-상황: 백엔드 연동 및 데이터 처리
-→ Backend Agent 호출
-```
-
-**2순위: 전문 영역**
-```
-상황: 복잡한 애니메이션 필요
-→ Animation Agent 호출
-
-상황: AI 프롬프트 최적화
-→ AI Agent 호출
-```
-
-**3순위: 품질 보증**
-```
-상황: 기능 구현 완료 후
-→ Testing Agent 호출 (테스트 작성)
-```
-
-#### 호출 금지 상황
-
-❌ **간단한 수정 (1-2줄)**
-```dart
-// 이런 건 직접 수정
-final color = Colors.blue; → final color = Colors.red;
-```
-
-❌ **탐색 및 분석**
-```
-"이 프로젝트의 구조를 분석해줘"
-→ Explore agent 또는 직접 분석
-```
-
-❌ **즉각적 응답 필요**
-```
-"이 에러가 뭐야?"
-→ 직접 분석
-```
-
----
-
-### 17.4 에이전트 자동 호출 가이드라인
-
-**IMPORTANT**: Claude Code는 다음 상황에서 **자동으로** 적절한 에이전트를 호출해야 합니다.
-
-#### 자동 호출 규칙
-
-**Rule 1: 새로운 화면 구현 요청 시**
+#### Rule 1: 새로운 화면 구현 요청 시
 ```
 사용자 요청: "로그인 화면 만들어줘"
-→ 자동으로 UI/UX Agent 호출
+→ UI/UX Agent 자동 호출
 
 사용자 요청: "홈 화면 UI 구현해줘"
-→ 자동으로 UI/UX Agent 호출
+→ UI/UX Agent 자동 호출
 ```
 
-**Rule 2: API 통합 요청 시**
+#### Rule 2: API 통합 요청 시
 ```
 사용자 요청: "Supabase 인증 연동해줘"
-→ 자동으로 Backend Agent 호출
+→ Backend Agent 자동 호출
 
 사용자 요청: "성경 API 통합해줘"
-→ 자동으로 Bible API Agent 호출
+→ Bible API Agent 자동 호출
 
 사용자 요청: "Gemini로 질문 생성 기능 만들어줘"
-→ 자동으로 AI Agent 호출
+→ AI Agent 자동 호출
 ```
 
-**Rule 3: 복잡한 애니메이션 요청 시**
+#### Rule 3: 복잡한 애니메이션 요청 시
 ```
 사용자 요청: "Dual Reveal 애니메이션 구현해줘"
-→ 자동으로 Animation Agent 호출
+→ Animation Agent 자동 호출
 
 사용자 요청: "마일스톤 축하 애니메이션 만들어줘"
-→ 자동으로 Animation Agent 호출
+→ Animation Agent 자동 호출
 ```
 
-**Rule 4: 테스트 작성 요청 시**
+#### Rule 4: 알림 시스템 요청 시
+```
+사용자 요청: "푸시 알림 구현해줘"
+→ Notification Agent 자동 호출
+
+사용자 요청: "일일 알림 설정해줘"
+→ Notification Agent 자동 호출
+```
+
+#### Rule 5: 테스트 작성 요청 시
 ```
 사용자 요청: "이 기능 테스트 작성해줘"
-→ 자동으로 Testing Agent 호출
+→ Testing Agent 자동 호출
 
 사용자 요청: "테스트 커버리지 올려줘"
-→ 자동으로 Testing Agent 호출
+→ Testing Agent 자동 호출
 ```
 
-**Rule 5: Phase 단위 작업 요청 시**
+#### Rule 6: Phase 단위 작업 요청 시
 ```
 사용자 요청: "Phase 1 시작하자" (인증 및 온보딩)
 → 순차적으로:
@@ -1729,126 +1351,27 @@ final color = Colors.blue; → final color = Colors.red;
    5. Testing Agent (테스트)
 ```
 
-#### 호출 전 확인 사항
-
-**Claude Code는 에이전트 호출 전에 반드시**:
-1. ✅ 문서 확인 (docs/prd.md, docs/roadmap.md)
-2. ✅ 기존 코드 검색 (중복 방지)
-3. ✅ 의존성 확인 (선행 작업 완료 여부)
-4. ✅ 에이전트 프롬프트 작성 (명확한 목표, 요구사항, 체크리스트)
-
 ---
 
-### 17.5 개발 단계별 에이전트 활용
+### 17.5 에이전트 호출 전 체크리스트
 
-#### Phase 0: 프로젝트 셋업 (Week 1)
+**Claude Code는 에이전트 호출 전에 반드시**:
 
-```
-작업: 프로젝트 초기화
-→ 직접 수행 (간단한 설정)
-
-작업: Supabase 테이블 생성
-→ Backend Agent 호출
-```
-
-#### Phase 1: 인증 및 온보딩 (Week 2)
-
-```
-Task 1.1: 인증 시스템
-→ Backend Agent (Supabase Auth 통합)
-→ UI/UX Agent (로그인, 회원가입 화면)
-→ Testing Agent (인증 플로우 테스트)
-
-Task 1.2: 온보딩 플로우
-→ UI/UX Agent (스플래시, 온보딩 3단계, 프로필 설정)
-
-Task 1.3: 커플 매칭
-→ Backend Agent (초대 링크 생성, 커플 연결)
-→ UI/UX Agent (초대 화면)
-```
-
-#### Phase 2: 일일 말씀 시스템 (Week 3-4)
-
-```
-Task 2.1: 성경 API 통합
-→ Bible API Agent (API 통합, 캐싱)
-
-Task 2.2: AI 질문 생성
-→ AI Agent (Gemini API, 프롬프트 최적화)
-
-Task 2.3: Supabase Edge Function
-→ Backend Agent (Cron Job, 일일 생성 함수)
-
-Task 2.4: UI 구현
-→ UI/UX Agent (홈 화면, 말씀 카드, 질문 카드)
-```
-
-#### Phase 3: 답변 & Dual Reveal (Week 5-6)
-
-```
-Task 3.1: 답변 작성
-→ UI/UX Agent (텍스트 입력, 글자 수 카운터)
-→ Backend Agent (답변 저장, 임시 저장)
-
-Task 3.2: Dual Reveal 애니메이션
-→ Animation Agent (카드 뒤집기 애니메이션)
-→ UI/UX Agent (대기 화면, 공개 화면)
-
-Task 3.3: 실시간 동기화
-→ Backend Agent (Realtime Subscriptions)
-```
-
-#### Phase 4: 스트릭 & 마일스톤 (Week 7)
-
-```
-Task 4.1: 스트릭 시스템
-→ Backend Agent (스트릭 계산 로직)
-→ UI/UX Agent (스트릭 위젯)
-
-Task 4.2: 마일스톤 축하
-→ Animation Agent (Confetti 애니메이션)
-→ UI/UX Agent (축하 화면, 공유 기능)
-```
-
-#### Phase 5: 알림 시스템 (Week 8)
-
-```
-Task 5.1: 푸시 알림
-→ Notification Agent (FCM 통합, Edge Function)
-
-Task 5.2: 로컬 알림
-→ Notification Agent (flutter_local_notifications)
-→ UI/UX Agent (알림 설정 화면)
-```
-
-#### Phase 6: 부가 기능 (Week 9)
-
-```
-Task 6.1: 과거 대화 보기
-→ UI/UX Agent (타임라인 UI, 상세 보기)
-→ Backend Agent (데이터 조회, 필터링)
-
-Task 6.2: 설정
-→ UI/UX Agent (설정 화면)
-```
-
-#### Phase 7: 테스트 & 최적화 (Week 10)
-
-```
-Task 7.1: 테스트
-→ Testing Agent (전체 테스트 작성, 커버리지 목표 달성)
-
-Task 7.2: 성능 최적화
-→ 직접 수행 (프로파일링, 최적화)
-```
+- [ ] **1. 문서 확인**: docs/prd.md, docs/roadmap.md에서 해당 기능 확인
+- [ ] **2. 기존 코드 검색**: 비슷한 구현이 있는지 확인 (Grep, Glob)
+- [ ] **3. 의존성 확인**: 선행 작업이 완료되었는지 확인
+- [ ] **4. 적절한 에이전트 선택**: 작업 성격에 맞는 에이전트
+- [ ] **5. 명확한 프롬프트 작성**:
+  - 목표 명시
+  - 참조 문서 제공 (예: "docs/prd.md 섹션 4.1 참조")
+  - 요구사항 리스트
+  - 구현 파일 경로
 
 ---
 
 ### 17.6 에이전트 협업 패턴
 
 #### 순차 협업 (Sequential)
-
-**패턴**: A → B → C
 ```
 예시: 새로운 기능 추가
 1. Backend Agent (API 연동)
@@ -1859,176 +1382,59 @@ Task 7.2: 성능 최적화
 ```
 
 #### 병렬 협업 (Parallel)
-
-**패턴**: A + B (동시)
 ```
 예시: 독립적인 화면들
-- UI/UX Agent (홈 화면) || UI/UX Agent (설정 화면)
-```
-
-#### 피드백 협업 (Feedback)
-
-**패턴**: A → 리뷰 → A (수정)
-```
-예시: 애니메이션 개선
-1. Animation Agent (초안 구현)
-   ↓
-2. 사용자 피드백
-   ↓
-3. Animation Agent (수정)
+- UI/UX Agent (홈 화면) + UI/UX Agent (설정 화면)
+  (동시에 실행 가능)
 ```
 
 ---
 
-### 17.7 에이전트 프롬프트 예시 (실전)
+### 17.7 Quick Reference
 
-#### 예시 1: 홈 화면 구현
+**작업별 에이전트 선택 가이드**:
 
-```markdown
-[UI/UX Agent] 홈 화면 구현
-
-**목표**: Bible SumOne MVP의 홈 화면을 구현합니다.
-
-**참조 문서**:
-- docs/prd.md 섹션 7.4: 홈 화면 와이어프레임
-- docs/roadmap.md 섹션 2: UI 디자인 시스템
-- CLAUDE.md 섹션 2-5: 아키텍처 및 코딩 스타일
-
-**요구사항**:
-1. **구조**:
-   - lib/presentation/screens/home/home_screen.dart (메인 화면)
-   - lib/presentation/screens/home/widgets/daily_verse_card.dart (오늘의 말씀 카드)
-   - lib/presentation/screens/home/widgets/streak_widget.dart (스트릭 위젯)
-   - lib/presentation/screens/home/widgets/quick_actions.dart (빠른 액션)
-
-2. **디자인**:
-   - Material Design 3
-   - 테마 적용 (app/theme.dart의 primaryColor, 폰트)
-   - 반응형 레이아웃 (다양한 화면 크기)
-
-3. **기능**:
-   - 스트릭 표시 (🔥 7일째 함께 읽고 있어요!)
-   - 오늘의 말씀 카드 (성경 구절 미리보기)
-   - "읽으러 가기" 버튼 → /verse/daily 화면으로 이동
-   - 하단: "📚 과거 대화 보기", "⚙️ 설정" 링크
-
-4. **상태 관리**:
-   - Riverpod Provider 사용 (verseProvider, streakProvider)
-   - Consumer로 필요한 부분만 rebuild
-
-**체크리스트**:
-- [ ] 네이밍 규칙 (snake_case 파일명, PascalCase 클래스명)
-- [ ] Clean Architecture (Presentation 레이어만)
-- [ ] 재사용 위젯 분리 (DailyVerseCard, StreakWidget)
-- [ ] 불필요한 rebuild 방지
-- [ ] 접근성 (Semantics)
-- [ ] flutter analyze 통과
-- [ ] dart format 적용
-
-**구현 후 알려줄 것**:
-- 생성된 파일 목록
-- 주요 구현 내용
-- 다음 단계 제안 (예: Provider 구현, 라우팅 추가)
-```
-
-#### 예시 2: Supabase 인증 통합
-
-```markdown
-[Backend Agent] Supabase 인증 시스템 구현
-
-**목표**: Supabase Auth를 통한 회원가입, 로그인, 로그아웃 구현
-
-**참조 문서**:
-- docs/prd.md 섹션 4.1: 회원가입 / 로그인 (F-001)
-- docs/roadmap.md 섹션 4: Supabase 연동 계획
-- CLAUDE.md 섹션 7.1: Supabase 사용 규칙
-
-**요구사항**:
-1. **인증 방식**:
-   - 이메일/비밀번호
-   - Google OAuth
-   - Apple OAuth (iOS)
-
-2. **구현 파일**:
-   - lib/data/datasources/supabase_auth_datasource.dart
-   - lib/data/repositories/auth_repository.dart
-   - lib/data/models/user_model.dart
-   - lib/domain/entities/user.dart
-   - lib/domain/usecases/auth/sign_in_usecase.dart
-   - lib/domain/usecases/auth/sign_up_usecase.dart
-   - lib/domain/usecases/auth/sign_out_usecase.dart
-
-3. **에러 핸들링**:
-   - Either 패턴 사용
-   - 에러 타입 정의 (lib/core/error/failures.dart에 AuthFailure 추가)
-   - 사용자 친화적 메시지
-
-4. **보안**:
-   - RLS 정책 준수
-   - 비밀번호 로그 금지
-   - 토큰 안전 저장 (Supabase가 자동 처리)
-
-**데이터베이스**:
-- 테이블: public.users (이미 생성됨)
-- RLS 정책: 본인 데이터만 조회/수정
-
-**체크리스트**:
-- [ ] Clean Architecture 의존성 규칙 (Domain → Data X)
-- [ ] Null Safety
-- [ ] Either<Failure, User> 반환
-- [ ] 에러 메시지 매핑
-- [ ] 테스트 작성 (mockito)
-
-**구현 후 알려줄 것**:
-- 생성된 파일 및 주요 함수 시그니처
-- 사용 예시 (Provider에서 호출하는 방법)
-- 다음 단계 (AuthProvider 구현 필요)
-```
+| 작업 종류 | 에이전트 | 예시 |
+|----------|---------|------|
+| 새 화면 구현 | UI/UX | "로그인 화면 만들어줘" |
+| 위젯 개발 | UI/UX | "말씀 카드 위젯 만들어줘" |
+| Supabase 연동 | Backend | "인증 시스템 구현해줘" |
+| 실시간 동기화 | Backend | "Realtime Subscription 추가해줘" |
+| 성경 API | Bible API | "성경 구절 조회 기능 구현해줘" |
+| AI 질문 생성 | AI | "Gemini로 질문 생성해줘" |
+| 푸시 알림 | Notification | "FCM 통합해줘" |
+| 로컬 알림 | Notification | "일일 알림 스케줄 만들어줘" |
+| 애니메이션 | Animation | "카드 뒤집기 구현해줘" |
+| Confetti | Animation | "축하 애니메이션 추가해줘" |
+| 단위 테스트 | Testing | "UseCase 테스트 작성해줘" |
+| Widget 테스트 | Testing | "버튼 위젯 테스트 해줘" |
 
 ---
 
-### 17.8 에이전트 호출 체크리스트
+### 17.8 FAQ
 
-**에이전트 호출 전 (Claude Code가 확인)**:
-
-- [ ] **1. 문서 확인**: docs/prd.md, docs/roadmap.md에서 해당 기능 확인
-- [ ] **2. 기존 코드 검색**: 비슷한 구현이 있는지 확인 (Grep, Glob)
-- [ ] **3. 의존성 확인**: 선행 작업이 완료되었는지 확인
-- [ ] **4. 적절한 에이전트 선택**: 작업 성격에 맞는 에이전트
-- [ ] **5. 명확한 프롬프트 작성**:
-  - 목표 명시
-  - 참조 문서 제공
-  - 요구사항 리스트
-  - 체크리스트 포함
-
-**에이전트 작업 완료 후 (Claude Code가 확인)**:
-
-- [ ] **1. 결과 검토**: 에이전트가 제공한 파일 목록 확인
-- [ ] **2. 품질 확인**:
-  - flutter analyze 통과
-  - dart format 적용
-  - 네이밍 규칙 준수
-- [ ] **3. 다음 단계 계획**: 추가 작업 필요한지 확인
-- [ ] **4. 사용자 보고**: 간결한 요약 + 다음 단계 제안
-
----
-
-### 17.9 FAQ
-
-**Q1: 모든 작업을 에이전트에게 맡겨야 하나요?**
-A: 아니요. 간단한 수정(1-2줄)이나 탐색 작업은 직접 수행하는 것이 빠릅니다. 에이전트는 복잡한 구현, 전문 지식이 필요한 작업에 활용하세요.
-
-**Q2: 에이전트가 실수하면 어떻게 하나요?**
+**Q: 에이전트가 실수하면 어떻게 하나요?**
 A: 에이전트 결과를 검토하고, 문제가 있으면 수정 요청하거나 직접 수정합니다. 에이전트는 도구이며, 최종 책임은 개발자에게 있습니다.
 
-**Q3: 여러 에이전트를 동시에 실행할 수 있나요?**
-A: Task tool은 순차적으로 실행됩니다. 병렬 작업이 필요하면 각 에이전트를 순차적으로 호출하되, 독립적인 작업을 먼저 모두 시작하세요.
+**Q: 간단한 수정도 에이전트를 써야 하나요?**
+A: 아니요. 1-2줄 수정은 직접 하는 것이 빠릅니다. 에이전트는 복잡한 구현에만 사용하세요.
 
-**Q4: 에이전트 프롬프트를 매번 작성해야 하나요?**
-A: 이 문서의 템플릿을 사용하면 됩니다. Claude Code가 자동으로 적절한 템플릿을 채워서 호출합니다.
+**Q: 에이전트가 문서를 읽을 수 있나요?**
+A: 네! Task tool로 실행된 에이전트는 모든 파일에 접근 가능합니다. 프롬프트에 "docs/prd.md 섹션 4.1 참조"라고 명시하면 자동으로 읽습니다.
 
-**Q5: 에이전트가 문서를 읽을 수 있나요?**
-A: 네, Task tool로 생성된 에이전트는 모든 파일에 접근 가능합니다. 프롬프트에 "docs/prd.md 참조"라고 명시하면 자동으로 읽습니다.
+**Q: 에이전트를 커스터마이징하고 싶어요.**
+A: `.claude/agents/` 폴더의 해당 md 파일을 수정하세요. 프롬프트 템플릿, 체크리스트 등을 프로젝트에 맞게 조정할 수 있습니다.
+
+---
+
+**Remember**:
+```
+"복잡한 작업은 에이전트에게,
+ 핵심 결정은 개발자가,
+ 간단한 수정은 직접"
+```
+
+**🎯 에이전트는 Claude Code의 강력한 협업 파트너입니다. 능동적으로 활용하세요! 🤖**
 
 ---
 
