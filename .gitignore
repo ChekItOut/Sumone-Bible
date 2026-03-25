@@ -43,3 +43,47 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ==================== 환경 변수 및 API 키 ====================
+# IMPORTANT: API 키가 포함된 파일들 (절대 커밋 금지!)
+.env
+*.env.local
+*.env.*.local
+
+# .env.example은 템플릿이므로 커밋 허용 (실제 값 없음)
+!.env.example
+
+# ==================== Claude Code 관련 ====================
+# Claude 설정 파일 (로컬 설정, API 키 포함 가능)
+.claude/
+.claude/settings.local.json
+
+# 프로젝트 가이드라인 (선택적으로 제외)
+CLAUDE.md
+
+# ==================== 문서 폴더 ====================
+# docs 폴더 전체 제외 (선택사항)
+# 주석 해제하려면 아래 줄의 # 제거
+# docs/
+
+# 또는 특정 문서만 제외하려면:
+# docs/prd.md
+# docs/roadmap.md
+# docs/features.md
+# docs/personas.md
+
+# ==================== 기타 민감한 파일 ====================
+# Firebase 관련
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# 인증서 및 키 파일
+*.keystore
+*.jks
+*.p12
+*.key
+*.pem
+
+# 로컬 설정 파일
+local.properties
