@@ -1392,6 +1392,34 @@ class GptApiDatasource {
 - [ ] 축하 메시지 표시
 - [ ] 인스타/카톡 공유 기능
 
+#### Task 4.3: 성령의 불 캐릭터 시스템
+- [ ] 이미지 에셋 준비 (level1.png, level2.png, level3.png)
+  - PNG 포맷, 알파 채널 (투명 배경)
+  - 해상도: 500x500px 이상
+  - 레벨별 디자인 차이 (크기, 색상 강도)
+- [ ] 데이터 모델 설계 (HolyFireLevel)
+- [ ] 레벨 계산 로직 구현
+  - calculateFireLevel(currentStreak)
+  - Level 1: 0-2일, Level 2: 3-6일, Level 3: 7일+
+- [ ] StreakProvider 확장
+  - holy_fire_level 필드 추가
+  - 스트릭 변경 시 자동 레벨 업데이트
+- [ ] HolyFireWidget 개발
+  - Flutter AnimationController 기반 애니메이션:
+    - Float: 위아래 둥실둥실 (2초 주기)
+    - Pulse: 크기 맥동 (1.5초 주기)
+    - Glow: 테두리 빛남 (ImageFilter.blur + ColorFilter, 1.8초 주기)
+  - 선택적 인터랙션: 탭(흔들림), 드래그(이동 후 복귀)
+  - 크기: 80-120px
+- [ ] HomeScreen 통합
+  - 스트릭 위젯 근처 배치
+  - 레벨 변경 시 부드러운 전환 애니메이션 (AnimatedSwitcher)
+- [ ] 레벨 업 알림
+  - "성령의 불이 더 강해졌어요! 🔥"
+- [ ] 성능 테스트
+  - 다양한 기기에서 애니메이션 성능 확인
+  - 메모리 사용량 모니터링 (정적 이미지이므로 매우 가벼움)
+
 ---
 
 ### Phase 5: 알림 시스템 (Week 8)

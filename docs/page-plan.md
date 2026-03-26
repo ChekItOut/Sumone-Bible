@@ -362,6 +362,15 @@
 - **스트릭 위젯** (상단):
   - 🔥 아이콘 + "7일째 함께 읽고 있어요!"
   - 카드 스타일, borderRadius 24px
+- **성령의 불 캐릭터** (스트릭 위젯 근처):
+  - 크기: 80-120px
+  - 투명 배경 (PNG 이미지)
+  - 레벨에 따라 동적 변화 (Level 1/2/3 이미지 교체)
+  - Flutter 애니메이션:
+    - Float: 위아래 둥실둥실
+    - Pulse: 크기 맥동
+    - Glow: 테두리 빛남 (진한 주황색)
+  - 위치: Stack으로 스트릭 위젯 우측 상단 또는 중앙
 - **오늘의 말씀 카드** (중앙):
   - 큰 카드 (borderRadius 24px, elevation 4)
   - 성경 구절 요약: "고린도전서 13:4-7"
@@ -373,11 +382,16 @@
 
 **기능**
 1. 현재 스트릭 정보 조회 (Supabase `streaks` 테이블)
-2. 오늘의 말씀 조회 (Supabase `daily_verses` 테이블)
+   - `current_streak`, `holy_fire_level` 조회
+2. 성령의 불 레벨 계산 및 표시
+   - `calculateFireLevel(currentStreak)` 로직 적용
+   - 해당 레벨의 PNG 이미지 로드 (level1.png, level2.png, level3.png)
+   - AnimationController로 Float, Pulse, Glow 애니메이션 실행
+3. 오늘의 말씀 조회 (Supabase `daily_verses` 테이블)
    - 오늘 날짜 기준 (`date = CURRENT_DATE`)
-3. "읽으러 가기" 버튼 → `/verse/daily`
-4. "과거 대화 보기" → `/history`
-5. 설정 아이콘 → `/settings`
+4. "읽으러 가기" 버튼 → `/verse/daily`
+5. "과거 대화 보기" → `/history`
+6. 설정 아이콘 → `/settings`
 
 **상태 관리**
 - **Provider**:
@@ -395,6 +409,7 @@
 - `lib/presentation/screens/home/home_screen.dart`
 - `lib/presentation/screens/home/widgets/daily_verse_card.dart`
 - `lib/presentation/screens/home/widgets/streak_widget.dart`
+- `lib/presentation/screens/home/widgets/holy_fire_widget.dart` (NEW)
 
 **참조**
 - docs/prd.md: 섹션 7.4 (홈 화면 와이어프레임)

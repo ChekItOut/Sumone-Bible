@@ -428,6 +428,89 @@ interface Streak {
 - 풀스크린 축하 애니메이션 (컨페티)
 - 공유 기능 (인스타 스토리, 카톡)
 
+#### F-015: 성령의 불 캐릭터 시스템 (Holy Fire Character)
+**우선순위**: P0
+**설명**: 스트릭에 반응하는 동적 캐릭터로 습관 형성 동기부여 강화
+
+**핵심 개념**:
+- 성령의 불 모양의 귀여운 캐릭터
+- 스트릭에 따라 3단계로 변화 (Level 1 → Level 2 → Level 3)
+- 불꽃이 점점 강해지거나 약해지는 시각적 피드백
+
+**레벨 시스템**:
+```
+Level 1 (약한 불꽃): 0-2일 연속
+  - 작고 약한 불꽃
+  - 천천히 흔들리는 애니메이션
+
+Level 2 (중간 불꽃): 3-6일 연속
+  - 중간 크기, 활기찬 불꽃
+  - 더 역동적인 움직임
+
+Level 3 (강한 불꽃): 7일 이상 연속
+  - 크고 강렬한 불꽃
+  - 빠르고 강렬한 애니메이션
+```
+
+**기술 스펙**:
+- **포맷**: PNG (투명 배경, 알파 채널)
+- **저장 위치**: `assets/images/holy_fire/`
+  - `level1.png` (약 50KB)
+  - `level2.png` (약 50KB)
+  - `level3.png` (약 50KB)
+- **총 용량**: 약 150KB (비디오 대비 95% 감소)
+- **애니메이션**: Flutter AnimationController (코드 기반)
+  - Float: 위아래로 둥실둥실 움직임
+  - Pulse: 크기 맥동 효과
+  - Glow: 캐릭터 테두리 빛남 (ImageFilter + ColorFilter)
+  - Shake: 탭 시 흔들림 (선택적)
+  - Drag: 드래그로 위치 이동 (선택적)
+
+**레벨 계산 로직**:
+```typescript
+function calculateFireLevel(currentStreak: number): number {
+  if (currentStreak >= 7) return 3;
+  if (currentStreak >= 3) return 2;
+  return 1;
+}
+```
+
+**데이터 모델 확장**:
+```typescript
+interface Streak {
+  couple_id: string;
+  current_streak: number;
+  longest_streak: number;
+  last_completed_date: date;
+  holy_fire_level: number; // 1, 2, 3 (NEW)
+  updated_at: timestamp;
+}
+```
+
+**UI/UX**:
+- **위치**: 홈 화면 상단 (스트릭 위젯 근처 또는 통합)
+- **크기**: 80-120px
+- **배경**: 완전 투명 (PNG 알파 채널)
+- **애니메이션**:
+  - Float: 2초 주기 위아래 움직임
+  - Pulse: 1.5초 주기 크기 맥동
+  - Glow: 1.8초 주기 테두리 빛남 (진한 주황색)
+- **인터랙션** (선택적):
+  - 탭: 흔들림 효과
+  - 드래그: 위치 이동 후 2초 뒤 복귀
+- **레벨 업 알림**: "성령의 불이 더 강해졌어요! 🔥"
+
+**이미지 제작 가이드**:
+- 포맷: PNG (알파 채널 필수)
+- 배경: 완전 투명 (Alpha = 0)
+- 해상도: 500x500px 이상 권장
+- 디자인: 불꽃 캐릭터 (귀여운 스타일)
+- 레벨별 차이점:
+  - Level 1: 작고 약한 불꽃 (밝은 색상)
+  - Level 2: 중간 크기 불꽃 (중간 색상)
+  - Level 3: 크고 강렬한 불꽃 (진한 색상)
+- 애니메이션은 Flutter 코드로 구현 (이미지는 정적)
+
 ---
 
 ### 4.5 과거 대화 보기
@@ -608,6 +691,7 @@ CREATE TABLE streaks (
   current_streak INT DEFAULT 0,
   longest_streak INT DEFAULT 0,
   last_completed_date DATE,
+  holy_fire_level INT DEFAULT 1 CHECK (holy_fire_level IN (1, 2, 3)), -- NEW
   updated_at TIMESTAMP DEFAULT NOW()
 );
 ```
@@ -759,6 +843,8 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 ```
 ┌─────────────────────────────┐
 │  🔥 7일째 함께 읽고 있어요!  │ <- 스트릭
+│         🔥                   │ <- 성령의 불 캐릭터 (Level 3)
+│      [애니메이션]             │    (투명 배경, 80-120px)
 ├─────────────────────────────┤
 │                             │
 │   [오늘의 말씀 카드]          │ <- 카드 디자인
