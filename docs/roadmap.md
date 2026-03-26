@@ -1141,6 +1141,171 @@ class GptApiDatasource {
 
 ---
 
+### Phase 0.5: 디자인 시스템 구축 (3-5일) ⏸️
+
+**목적**: 사용자 제공 UI 이미지 기반으로 체계적인 디자인 시스템 구축 및 검증
+
+**배경**:
+- 현재 폰트는 TODO 상태로 주석 처리됨 (Pretendard, Noto Serif KR)
+- 공통 위젯 라이브러리 부재로 화면마다 중복 구현 발생
+- Phase 2부터 핵심 UI 기능 구현 시작 → 지금 디자인 시스템 확립 필요
+
+**완료 조건**:
+- [ ] 폰트 적용 완료
+- [ ] 공통 위젯 라이브러리 10개 이상 구현
+- [ ] 테스트 페이지로 사용자 컨펌 완료
+- [ ] 기존 UI (Phase 1.1~1.2) 리팩토링 완료
+- [ ] UI 가이드 문서 작성 완료
+
+#### Task 0.5.1: UI 이미지 분석 및 디자인 토큰 추출
+**담당**: 사용자
+**예상 소요**: 1일
+
+**작업 내용**:
+- [ ] 참고할 UI 이미지 제공 (스크린샷, Figma 링크, Dribbble 등)
+- [ ] Claude Code에게 이미지 공유
+- [ ] 디자인 토큰 추출 확인
+  - 색상 팔레트 (Primary, Secondary, Background, Text)
+  - 타이포그래피 (폰트 이름, 크기, 두께)
+  - 컴포넌트 스타일 (버튼 모서리, 카드 그림자, 입력 필드)
+  - 간격 시스템 (8px grid 권장)
+
+**결과물**:
+- 이미지 파일들
+- 디자인 토큰 명세서 (Claude Code 작성)
+
+#### Task 0.5.2: 테마 시스템 구현 + 테스트 페이지
+**담당**: Claude Code (UI/UX Agent)
+**예상 소요**: 1일
+
+**작업 내용**:
+- [ ] 폰트 파일 추가 (fonts/ 폴더)
+  - Pretendard (Regular, Medium, Bold)
+  - Noto Serif KR (Regular, Medium)
+- [ ] pubspec.yaml fonts 섹션 활성화
+- [ ] theme.dart 업데이트
+  - 사용자 이미지 기반 색상 팔레트
+  - 폰트 주석 해제
+  - 타이포그래피 스케일 정의
+  - 컴포넌트 테마 추가
+- [ ] 테스트 페이지 구현
+  - lib/presentation/screens/design_system/theme_test_screen.dart
+  - 색상 팔레트 표시
+  - 타이포그래피 샘플
+  - 다크 모드 토글
+- [ ] /design-system-test 라우팅 추가
+
+**사용자 컨펌 포인트** ⏸️:
+"색상과 폰트가 제공한 이미지와 일치하나요?"
+- ✅ OK → Task 0.5.3 진행
+- ❌ 수정 필요 → 피드백 반영 후 재확인
+
+#### Task 0.5.3: 공통 위젯 라이브러리 + 테스트 페이지
+**담당**: Claude Code (UI/UX Agent)
+**예상 소요**: 2일
+
+**구현할 위젯**:
+- [ ] lib/presentation/widgets/buttons/
+  - primary_button.dart
+  - secondary_button.dart
+  - text_button_custom.dart
+- [ ] lib/presentation/widgets/cards/
+  - base_card.dart
+  - elevated_card.dart
+- [ ] lib/presentation/widgets/inputs/
+  - text_field_custom.dart
+  - text_area_custom.dart
+- [ ] lib/presentation/widgets/loading/
+  - loading_indicator.dart
+  - skeleton_loader.dart
+- [ ] lib/presentation/widgets/dialogs/
+  - confirm_dialog.dart
+  - error_dialog.dart
+- [ ] lib/presentation/widgets/app_bar/
+  - custom_app_bar.dart
+
+**테스트 페이지**:
+- [ ] lib/presentation/screens/design_system/widgets_test_screen.dart
+- [ ] 모든 위젯의 다양한 상태 표시 (default, loading, error, disabled)
+
+**사용자 컨펌 포인트** ⏸️:
+"각 위젯의 스타일과 동작이 제공한 이미지와 일치하나요?"
+- ✅ OK → Task 0.5.4 또는 0.5.5 진행
+- ❌ 수정 필요 → 피드백 반영
+
+#### Task 0.5.4: Widgetbook 구축 (선택적, P1)
+**담당**: Claude Code
+**예상 소요**: 1일
+**우선순위**: 선택적 (MVP 필수 아님)
+
+**작업 내용**:
+- [ ] widgetbook 패키지 추가
+- [ ] widgetbook/main.dart 생성
+- [ ] 각 위젯별 유즈케이스 추가
+
+**사용자 컨펌 포인트** ⏸️:
+"Widgetbook이 개발에 유용한가요?"
+- ✅ OK → 유지
+- ⏭️ Skip → Task 0.5.5로 진행
+
+#### Task 0.5.5: 기존 UI 리팩토링
+**담당**: Claude Code (UI/UX Agent)
+**예상 소요**: 1-2일
+
+**마이그레이션 대상**:
+- [ ] lib/presentation/screens/splash/splash_screen.dart
+  - 하드코딩 색상 → AppTheme 사용
+  - 로딩 인디케이터 → LoadingIndicator 위젯 사용
+- [ ] lib/presentation/screens/onboarding/onboarding_screen.dart
+  - 버튼 → PrimaryButton, TextButtonCustom 사용
+  - 색상 → AppTheme 상수 사용
+- [ ] lib/presentation/screens/onboarding/profile_setup_screen.dart
+  - 입력 필드 → TextFieldCustom 사용
+  - 버튼 → PrimaryButton 사용
+  - AppBar → CustomAppBar 사용
+- [ ] lib/presentation/screens/onboarding/widgets/onboarding_page.dart
+  - 색상 → AppTheme 상수 사용
+  - 타이포그래피 → Theme.of(context).textTheme 사용
+
+**사용자 컨펌 포인트** ⏸️:
+"기존 화면들이 새 디자인 시스템으로 잘 전환되었나요? 동작에 문제가 없나요?"
+- ✅ OK → Task 0.5.6 진행
+- ❌ 문제 발생 → 특정 화면 수정
+
+#### Task 0.5.6: UI 가이드 문서 작성 + 테스트 페이지 제거
+**담당**: Claude Code
+**예상 소요**: 0.5일
+
+**문서 작업**:
+- [ ] docs/ui-guide.md 작성 (신규)
+  - 색상 팔레트 (Hex 코드, 용도, 예시)
+  - 타이포그래피 (폰트, 크기, 사용처)
+  - 간격 시스템 (8px grid)
+  - 각 공통 위젯 사용법 (코드 예시)
+  - 다크 모드 가이드
+- [ ] docs/prd.md 업데이트
+  - 섹션 7.2 (컬러 팔레트) 최신화
+  - 섹션 7.3 (타이포그래피) 최신화
+  - 섹션 7.4 (핵심 화면) 업데이트
+- [ ] docs/roadmap.md 업데이트
+  - Phase 0.5 완료 ✅ 표시
+
+**테스트 페이지 제거** (Production 빌드 대비):
+- [ ] lib/presentation/screens/design_system/ 폴더 삭제
+- [ ] lib/app/routes.dart에서 /design-system-test 라우팅 제거
+
+**최종 컨펌 포인트** ⏸️:
+"Phase 0.5를 완료하고 Phase 1.3으로 넘어가시겠어요?"
+- ✅ OK → Phase 0.5 완료! 🎉 → Phase 1.3 진행
+
+---
+
+**Phase 0.5 완료 후**:
+- Phase 1.3 (커플 매칭) 진행
+- Phase 2 (일일 말씀 시스템) 준비 - 이제 공통 위젯 활용 가능!
+
+---
+
 ### Phase 1: 인증 및 온보딩 (Week 2)
 
 #### Task 1.1: 인증 시스템 ✅
