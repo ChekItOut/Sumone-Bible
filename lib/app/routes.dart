@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../presentation/screens/splash/splash_screen.dart';
 import '../presentation/screens/onboarding/onboarding_screen.dart';
 import '../presentation/screens/onboarding/profile_setup_screen.dart';
+import '../presentation/screens/_test/holy_fire_test_screen.dart'; // 테스트용
 
 /// Bible SumOne 앱 라우팅 설정
 ///
@@ -75,6 +76,14 @@ class AppRouter {
       //   name: 'settings',
       //   builder: (context, state) => const SettingsScreen(),
       // ),
+
+      // ==================== 테스트 ====================
+      // NOTE: 테스트용 라우트 - 프로덕션에서는 제거 예정
+      GoRoute(
+        path: '/holy-fire-test',
+        name: 'holy-fire-test',
+        builder: (context, state) => const HolyFireTestScreen(),
+      ),
     ],
 
     // 에러 페이지
