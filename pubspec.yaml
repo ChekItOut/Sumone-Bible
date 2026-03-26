@@ -93,6 +93,7 @@ flutter:
     - assets/icons/
     - assets/animations/
     - assets/data/bible.json  # 한글 성경 JSON (4.9MB)
+    - assets/_test/  # 테스트용 에셋
     - .env
 
   # TODO: Phase 0.3 - 폰트 파일 다운로드 및 추가
