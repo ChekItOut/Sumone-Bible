@@ -1157,14 +1157,14 @@ class GptApiDatasource {
 - [ ] 기존 UI (Phase 1.1~1.2) 리팩토링 완료
 - [ ] UI 가이드 문서 작성 완료
 
-#### Task 0.5.1: UI 이미지 분석 및 디자인 토큰 추출
+#### Task 0.5.1: UI 이미지 분석 및 디자인 토큰 추출 ✅
 **담당**: 사용자
 **예상 소요**: 1일
 
 **작업 내용**:
-- [ ] 참고할 UI 이미지 제공 (스크린샷, Figma 링크, Dribbble 등)
-- [ ] Claude Code에게 이미지 공유
-- [ ] 디자인 토큰 추출 확인
+- [✅] 참고할 UI 이미지 제공 (스크린샷, Figma 링크, Dribbble 등)
+- [✅] Claude Code에게 이미지 공유
+- [✅] 디자인 토큰 추출 확인
   - 색상 팔레트 (Primary, Secondary, Background, Text)
   - 타이포그래피 (폰트 이름, 크기, 두께)
   - 컴포넌트 스타일 (버튼 모서리, 카드 그림자, 입력 필드)
@@ -1173,6 +1173,8 @@ class GptApiDatasource {
 **결과물**:
 - 이미지 파일들
 - 디자인 토큰 명세서 (Claude Code 작성)
+- design_test_screen.dart 구현 완료
+- docs/design-guideline.md 작성 완료
 
 #### Task 0.5.2: 테마 시스템 구현 + 테스트 페이지
 **담당**: Claude Code (UI/UX Agent)
