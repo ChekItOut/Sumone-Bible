@@ -1176,31 +1176,34 @@ class GptApiDatasource {
 - design_test_screen.dart 구현 완료
 - docs/design-guideline.md 작성 완료
 
-#### Task 0.5.2: 테마 시스템 구현 + 테스트 페이지
+#### Task 0.5.2: 테마 시스템 구현 + 테스트 페이지 ✅
 **담당**: Claude Code (UI/UX Agent)
 **예상 소요**: 1일
 
 **작업 내용**:
-- [ ] 폰트 파일 추가 (fonts/ 폴더)
+- [⏸️] 폰트 파일 추가 (fonts/ 폴더) - 보류 (폰트 없이 진행)
   - Pretendard (Regular, Medium, Bold)
   - Noto Serif KR (Regular, Medium)
-- [ ] pubspec.yaml fonts 섹션 활성화
-- [ ] theme.dart 업데이트
-  - 사용자 이미지 기반 색상 팔레트
-  - 폰트 주석 해제
-  - 타이포그래피 스케일 정의
-  - 컴포넌트 테마 추가
-- [ ] 테스트 페이지 구현
+- [⏸️] pubspec.yaml fonts 섹션 활성화 - 보류
+- [✅] theme.dart 업데이트
+  - design-guideline.md 기반 색상 팔레트 (#F93D17)
+  - 타이포그래피 스케일 정의 (Headline 1-3, Body 1-2, Caption 1-2)
+  - 컴포넌트 테마 추가 (버튼, 카드, 입력 필드, AppBar, Divider, Progress)
+  - 다크 모드 지원 (추후 확장 예정)
+- [✅] 테스트 페이지 구현
   - lib/presentation/screens/design_system/theme_test_screen.dart
-  - 색상 팔레트 표시
-  - 타이포그래피 샘플
-  - 다크 모드 토글
-- [ ] /design-system-test 라우팅 추가
+  - 색상 팔레트 표시 (Primary, Status, Background, Text)
+  - 타이포그래피 샘플 (모든 텍스트 스타일)
+  - 다크 모드 토글 (우측 상단 스위치)
+  - 버튼, 카드, 입력 필드 테스트
+- [✅] /theme-test 라우팅 추가
 
 **사용자 컨펌 포인트** ⏸️:
-"색상과 폰트가 제공한 이미지와 일치하나요?"
+"색상과 타이포그래피가 design-guideline.md와 일치하나요?"
 - ✅ OK → Task 0.5.3 진행
 - ❌ 수정 필요 → 피드백 반영 후 재확인
+
+**NOTE**: 폰트 파일은 추후 추가 예정 (현재 시스템 기본 폰트 사용)
 
 #### Task 0.5.3: 공통 위젯 라이브러리 + 테스트 페이지
 **담당**: Claude Code (UI/UX Agent)
