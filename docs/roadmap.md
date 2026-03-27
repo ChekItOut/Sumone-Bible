@@ -1210,28 +1210,28 @@ class GptApiDatasource {
 **예상 소요**: 2일
 
 **구현할 위젯**:
-- [ ] lib/presentation/widgets/buttons/
+- [✅] lib/presentation/widgets/buttons/
   - primary_button.dart
   - secondary_button.dart
   - text_button_custom.dart
-- [ ] lib/presentation/widgets/cards/
+- [✅] lib/presentation/widgets/cards/
   - base_card.dart
   - elevated_card.dart
-- [ ] lib/presentation/widgets/inputs/
+- [✅] lib/presentation/widgets/inputs/
   - text_field_custom.dart
   - text_area_custom.dart
-- [ ] lib/presentation/widgets/loading/
+- [✅] lib/presentation/widgets/loading/
   - loading_indicator.dart
   - skeleton_loader.dart
-- [ ] lib/presentation/widgets/dialogs/
+- [✅] lib/presentation/widgets/dialogs/
   - confirm_dialog.dart
   - error_dialog.dart
-- [ ] lib/presentation/widgets/app_bar/
+- [✅] lib/presentation/widgets/app_bar/
   - custom_app_bar.dart
 
 **테스트 페이지**:
-- [ ] lib/presentation/screens/design_system/widgets_test_screen.dart
-- [ ] 모든 위젯의 다양한 상태 표시 (default, loading, error, disabled)
+- [✅] lib/presentation/screens/design_system/widgets_test_screen.dart
+- [✅] 모든 위젯의 다양한 상태 표시 (default, loading, error, disabled)
 
 **사용자 컨펌 포인트** ⏸️:
 "각 위젯의 스타일과 동작이 제공한 이미지와 일치하나요?"

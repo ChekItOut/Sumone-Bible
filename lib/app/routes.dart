@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../presentation/screens/splash/splash_screen.dart';
 import '../presentation/screens/onboarding/onboarding_screen.dart';
 import '../presentation/screens/onboarding/profile_setup_screen.dart';
-import '../presentation/screens/_test/holy_fire_test_screen.dart'; // 테스트용
-import '../presentation/screens/design_system/design_test_screen.dart'; // 디자인 시스템 테스트용
+import '../presentation/screens/_test/holy_fire_test_screen.dart'; // Holy Fire 애니메이션 테스트용 (참고용)
 import '../presentation/screens/design_system/theme_test_screen.dart'; // 테마 시스템 테스트용
+import '../presentation/screens/design_system/widgets_test_screen.dart'; // 공통 위젯 테스트용
 
 /// Bible SumOne 앱 라우팅 설정
 ///
@@ -80,21 +80,21 @@ class AppRouter {
       // ),
 
       // ==================== 테스트 ====================
-      // NOTE: 테스트용 라우트 - 프로덕션에서는 제거 예정
+      // NOTE: 테스트용 라우트 - Phase 0.5.6에서 제거 예정
       GoRoute(
         path: '/holy-fire-test',
         name: 'holy-fire-test',
         builder: (context, state) => const HolyFireTestScreen(),
       ),
       GoRoute(
-        path: '/design-test',
-        name: 'design-test',
-        builder: (context, state) => const DesignTestScreen(),
-      ),
-      GoRoute(
         path: '/theme-test',
         name: 'theme-test',
         builder: (context, state) => const ThemeTestScreen(),
+      ),
+      GoRoute(
+        path: '/widgets-test',
+        name: 'widgets-test',
+        builder: (context, state) => const WidgetsTestScreen(),
       ),
     ],
 
