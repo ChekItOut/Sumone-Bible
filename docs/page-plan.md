@@ -145,7 +145,7 @@
 - **현재 상태**: ✅ 구현 완료
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight` (#78909C - slate blue)
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9 - 연한 청회색)
 - **로고**: 중앙 배치 (애니메이션)
 - **로딩 인디케이터**: CircularProgressIndicator
 - **폰트**: Pretendard Bold, 24px
@@ -184,11 +184,11 @@
 - **현재 상태**: ✅ 구현 완료
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight` (#78909C)
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
 - **카드**: PageView (3단계)
   - 카드 스타일: borderRadius 24px, elevation 4
   - 카드 배경: 흰색 (#FFFFFF)
-- **버튼**: "다음", "시작하기" (Primary 버튼, borderRadius 16px)
+- **버튼**: "다음", "시작하기" (Primary 버튼 #11BC78, borderRadius 16px)
 - **인디케이터**: 페이지 인디케이터 (점 3개)
 
 **기능**
@@ -224,12 +224,12 @@
 - **현재 상태**: ✅ 구현 완료
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight`
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
 - **카드**: 흰색 카드 (borderRadius 24px)
 - **입력 필드**:
   - 이름 입력 (TextField)
   - 관계 단계 선택 (DropdownButton: "연애 중", "약혼", "신혼")
-- **버튼**: "완료" (Primary 버튼)
+- **버튼**: "완료" (Primary 버튼 #11BC78)
 
 **기능**
 1. 이름 입력 (필수)
@@ -262,14 +262,14 @@
 - **Parameters**: 없음
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight`
-- **카드**: 중앙 카드
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **카드**: 중앙 카드 (흰색, borderRadius 24px)
   - 제목: "파트너를 초대하세요"
   - 설명: "아래 링크를 공유하면 자동으로 연결됩니다"
 - **링크 표시**: 복사 가능한 초대 링크 (Chip 위젯)
 - **버튼**:
   - "링크 복사" (Secondary 버튼)
-  - "공유하기" (Primary 버튼 - share_plus)
+  - "공유하기" (Primary 버튼 #11BC78 - share_plus)
 - **하단**: "나중에 하기" (텍스트 버튼)
 
 **기능**
@@ -307,13 +307,13 @@
 - **Parameters**: `token` (초대 토큰, 필수)
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight`
-- **카드**: 중앙 카드
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **카드**: 중앙 카드 (흰색, borderRadius 24px)
   - 제목: "○○님이 초대했어요"
   - 설명: "함께 말씀을 나눠보세요"
 - **프로필 표시**: 초대한 사람의 이름 및 프로필 사진
 - **버튼**:
-  - "수락하고 시작하기" (Primary 버튼)
+  - "수락하고 시작하기" (Primary 버튼 #11BC78)
   - "취소" (Secondary 버튼)
 
 **기능**
@@ -355,13 +355,13 @@
 - **Parameters**: 없음
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight`
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
 - **AppBar**:
   - 제목: "Bible SumOne"
   - 우측: 설정 아이콘 버튼
 - **스트릭 위젯** (상단):
   - 🔥 아이콘 + "7일째 함께 읽고 있어요!"
-  - 카드 스타일, borderRadius 24px
+  - 카드 스타일 (흰색), borderRadius 24px
 - **성령의 불 캐릭터** (스트릭 위젯 근처):
   - 크기: 80-120px
   - 투명 배경 (PNG 이미지)
@@ -369,13 +369,13 @@
   - Flutter 애니메이션:
     - Float: 위아래 둥실둥실
     - Pulse: 크기 맥동
-    - Glow: 테두리 빛남 (진한 주황색)
+    - Glow: 테두리 빛남 (녹색 계열 #11BC78)
   - 위치: Stack으로 스트릭 위젯 우측 상단 또는 중앙
 - **오늘의 말씀 카드** (중앙):
-  - 큰 카드 (borderRadius 24px, elevation 4)
+  - 큰 카드 (흰색, borderRadius 24px, elevation 4)
   - 성경 구절 요약: "고린도전서 13:4-7"
   - "사랑은 오래 참고..." (첫 구절 미리보기)
-  - "읽으러 가기" 버튼 (Primary)
+  - "읽으러 가기" 버튼 (Primary #11BC78)
 - **하단 메뉴**:
   - "과거 대화 보기" (텍스트 버튼)
   - "설정" (텍스트 버튼)
@@ -425,7 +425,7 @@
 - **Parameters**: 없음
 
 **UI 구성**
-- **배경색**: `AppTheme.backgroundLight`
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
 - **AppBar**:
   - 제목: "오늘의 말씀"
   - 좌측: 뒤로가기 버튼
@@ -435,11 +435,12 @@
   - 본문: Noto Serif KR, 18px, 줄 간격 1.8
   - 전체 성경 구절 표시
 - **질문 카드** (중앙):
+  - 흰색 카드, borderRadius 24px
   - 제목: "💬 오늘의 질문"
   - AI 생성 질문 표시
   - 폰트: Pretendard, 16px
 - **버튼** (하단):
-  - "답변 작성하기" (Primary 버튼, 고정 하단)
+  - "답변 작성하기" (Primary 버튼 #11BC78, 고정 하단)
 
 **기능**
 1. 오늘의 말씀 조회 (Supabase `daily_verses`)

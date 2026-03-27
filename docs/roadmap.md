@@ -207,8 +207,8 @@ lib/
 
 ### 2.1 테마 설정 (`app/theme.dart`)
 
-**디자인 컨셉**: 모던한 도서 앱 UI 참조
-- 부드러운 slate blue 배경 (#78909C)
+**디자인 컨셉**: 모던하고 차분한 UI
+- 연한 청회색 배경 (#F1F5F9)
 - 큰 카드 중심 디자인 (24px 둥근 모서리)
 - 넉넉한 여백과 부드러운 그림자
 
@@ -216,12 +216,12 @@ lib/
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // 컬러 팔레트 (Updated 2026-03-24)
-  static const Color primaryColor = Color(0xFF6B4DE8); // 보라색 (영적)
+  // 컬러 팔레트 (Updated 2026-03-27)
+  static const Color primaryColor = Color(0xFF11BC78); // 녹색/민트 (성장, 생명)
   static const Color secondaryColor = Color(0xFFFFC857); // 노란색 (빛, 별)
   static const Color accentColor = Color(0xFFFF6B9D); // 핑크 (하트)
 
-  static const Color backgroundLight = Color(0xFF78909C); // Slate blue
+  static const Color backgroundLight = Color(0xFFF1F5F9); // 연한 청회색
   static const Color backgroundDark = Color(0xFF121212);
 
   static const Color surfaceLight = Color(0xFFFFFFFF); // 카드 배경
@@ -1123,7 +1123,7 @@ class GptApiDatasource {
 - [✅] Flutter 프로젝트 생성 완료 (이미 완료)
 - [✅] pubspec.yaml에 모든 패키지 추가
 - [✅] 폴더 구조 생성
-- [✅] 테마 설정 (theme.dart)
+- [✅] 테마 설정 (theme.dart) - 색상 #11BC78, #F1F5F9 적용
 - [✅] 라우팅 설정 (routes.dart)
 
 #### Task 0.2: Supabase 설정 ✅
@@ -1186,7 +1186,7 @@ class GptApiDatasource {
   - Noto Serif KR (Regular, Medium)
 - [⏸️] pubspec.yaml fonts 섹션 활성화 - 보류
 - [✅] theme.dart 업데이트
-  - design-guideline.md 기반 색상 팔레트 (#F93D17)
+  - design-guideline.md 기반 색상 팔레트 (#11BC78, #F1F5F9)
   - 타이포그래피 스케일 정의 (Headline 1-3, Body 1-2, Caption 1-2)
   - 컴포넌트 테마 추가 (버튼, 카드, 입력 필드, AppBar, Divider, Progress)
   - 다크 모드 지원 (추후 확장 예정)

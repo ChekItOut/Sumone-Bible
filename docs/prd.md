@@ -764,22 +764,24 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 
 ### 7.2 컬러 팔레트
 
-**디자인 참조**: 모던한 도서 앱 UI (부드러운 slate blue 배경 + 흰색 카드)
+**디자인 참조**: 모던하고 차분한 UI (연한 청회색 배경 + 흰색 카드)
 
-**📝 NOTE**: 아래 색상은 **임시 색상**입니다. **Phase 0.5 (디자인 시스템 구축)** 단계에서 사용자가 제공한 UI 이미지를 분석하여 최종 색상 팔레트를 확정합니다.
+**✅ UPDATE (2026-03-27)**: Phase 0.5에서 최종 색상 확정 완료
 
 #### 라이트 모드
-- **Primary**: #6B4DE8 (보라색 - 영적, 고귀함)
+- **Primary**: #11BC78 (녹색/민트 - 성장, 생명, 신선함)
+- **Primary Light**: #40D399 (밝은 민트)
+- **Primary Dark**: #0D9A63 (어두운 민트)
 - **Secondary**: #FFC857 (따뜻한 노란색 - 빛, 별)
-- **Background**: #78909C (Slate Blue-Grey - 부드럽고 차분함)
+- **Background**: #F1F5F9 (연한 청회색 - 부드럽고 차분함)
 - **Surface (Card)**: #FFFFFF (흰색 - 깔끔하고 명확한 구분)
-- **Text on Background**: #FFFFFF (흰색 - 배경 위에서 잘 보임)
+- **Text on Background**: #1A1A1A (어두운 회색 - 배경 위 가독성)
 - **Text on Card**: #1A1A1A (어두운 회색 - 가독성)
 - **Text Secondary**: #666666
 - **Accent**: #FF6B9D (핑크 - 하트, 사랑)
 
 #### 다크 모드
-- **Primary**: #8B6EF7
+- **Primary**: #40D399 (밝은 민트 - 다크 모드에서 가시성)
 - **Secondary**: #FFC857
 - **Background**: #121212
 - **Surface**: #1E1E1E
@@ -813,7 +815,7 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 
 #### 버튼
 - **Primary 버튼**:
-  - 배경: #6B4DE8 (보라색)
+  - 배경: #11BC78 (녹색/민트)
   - 텍스트: #FFFFFF
   - 모서리: 16px
   - 높이: 48-56px
@@ -821,8 +823,8 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 
 - **Secondary 버튼**:
   - 배경: 투명 또는 #F5F5F5
-  - 텍스트: #6B4DE8
-  - 테두리: 1px solid #6B4DE8
+  - 텍스트: #11BC78
+  - 테두리: 1px solid #11BC78
   - 모서리: 16px
 
 #### 아이콘 & 이모지

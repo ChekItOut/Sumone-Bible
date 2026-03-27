@@ -39,8 +39,8 @@
 ### 1.2 참조 UI
 
 **기반 디자인**:
-- 제공받은 UI 스크린샷 분석 결과 (2026-03-26)
-- Primary Color: **#F93D17** (주황-빨강)
+- 제공받은 UI 스크린샷 분석 결과 (2026-03-27 최종 업데이트)
+- Primary Color: **#11BC78** (녹색/민트)
 - 카드 중심 디자인
 - 부드러운 그림자와 둥근 모서리
 - 깔끔한 여백과 간격
@@ -66,9 +66,9 @@
 
 ```dart
 // Primary Color
-static const Color primaryColor = Color(0xFFF93D17);      // 기본 (#F93D17)
-static const Color primaryLight = Color(0xFFFF6B47);      // 밝은 톤 (#FF6B47)
-static const Color primaryDark = Color(0xFFD93010);       // 어두운 톤 (#D93010)
+static const Color primaryColor = Color(0xFF11BC78);      // 기본 (#11BC78)
+static const Color primaryLight = Color(0xFF40D399);      // 밝은 톤 (#40D399)
+static const Color primaryDark = Color(0xFF0D9A63);       // 어두운 톤 (#0D9A63)
 ```
 
 **사용 예시**:
@@ -89,11 +89,11 @@ static const Color primaryDark = Color(0xFFD93010);       // 어두운 톤 (#D93
 
 ```dart
 // Background
-static const Color backgroundColor = Color(0xFFF8F5F5); // 앱 전체 배경 (#F8F5F5)
+static const Color backgroundColor = Color(0xFFF1F5F9); // 앱 전체 배경 (#F1F5F9)
 static const Color surfaceColor = Color(0xFFFFFFFF);    // 카드 배경 (#FFFFFF)
 ```
 
-**backgroundColor** (연한 회색/핑크):
+**backgroundColor** (연한 청회색):
 - 앱 전체 배경색
 - Scaffold background
 - 카드 외부 공간
@@ -440,7 +440,7 @@ Text(
 ElevatedButton(
   onPressed: () {},
   style: ElevatedButton.styleFrom(
-    backgroundColor: primaryColor,       // #F93D17
+    backgroundColor: primaryColor,       // #11BC78
     foregroundColor: Colors.white,       // 흰색 텍스트
     padding: EdgeInsets.symmetric(
       vertical: 16,
@@ -462,7 +462,7 @@ ElevatedButton(
 ```
 
 **특징**:
-- 배경색: Primary Color
+- 배경색: Primary Color (#11BC78)
 - 텍스트: 흰색, 16px, SemiBold
 - 둥근 모서리: 12px
 - 그림자: 없음 (elevation 0)
@@ -1203,12 +1203,12 @@ Image.asset(
 
 ```dart
 // Primary
-primaryColor       = #F93D17
-primaryLight       = #FF6B47
-primaryDark        = #D93010
+primaryColor       = #11BC78
+primaryLight       = #40D399
+primaryDark        = #0D9A63
 
 // Background
-backgroundColor    = #F8F5F5
+backgroundColor    = #F1F5F9
 surfaceColor       = #FFFFFF
 
 // Text
@@ -1256,6 +1256,11 @@ infoColor          = #4D9FFF
 - 초안 작성
 - design_test_screen.dart 분석 기반
 - 색상, 타이포그래피, 컴포넌트 스타일 정의
+
+**v1.1 (2026-03-27)**:
+- 색상 팔레트 업데이트
+- Primary: #F93D17 → #11BC78 (녹색/민트)
+- Background: #F8F5F5 → #F1F5F9 (연한 청회색)
 
 **향후 계획**:
 - Dark Mode 색상 팔레트 추가
