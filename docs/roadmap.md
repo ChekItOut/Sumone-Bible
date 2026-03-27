@@ -1258,17 +1258,17 @@ class GptApiDatasource {
 **예상 소요**: 1-2일
 
 **마이그레이션 대상**:
-- [ ] lib/presentation/screens/splash/splash_screen.dart
+- [✅] lib/presentation/screens/splash/splash_screen.dart
   - 하드코딩 색상 → AppTheme 사용
   - 로딩 인디케이터 → LoadingIndicator 위젯 사용
-- [ ] lib/presentation/screens/onboarding/onboarding_screen.dart
+- [✅] lib/presentation/screens/onboarding/onboarding_screen.dart
   - 버튼 → PrimaryButton, TextButtonCustom 사용
   - 색상 → AppTheme 상수 사용
-- [ ] lib/presentation/screens/onboarding/profile_setup_screen.dart
+- [✅] lib/presentation/screens/onboarding/profile_setup_screen.dart
   - 입력 필드 → TextFieldCustom 사용
   - 버튼 → PrimaryButton 사용
   - AppBar → CustomAppBar 사용
-- [ ] lib/presentation/screens/onboarding/widgets/onboarding_page.dart
+- [✅] lib/presentation/screens/onboarding/widgets/onboarding_page.dart
   - 색상 → AppTheme 상수 사용
   - 타이포그래피 → Theme.of(context).textTheme 사용
 
