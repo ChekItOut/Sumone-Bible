@@ -46,7 +46,9 @@ class OnboardingPage extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineLarge,
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  color: Colors.black,
+                ),
           ),
 
           const SizedBox(height: 16),
@@ -56,7 +58,7 @@ class OnboardingPage extends StatelessWidget {
             description,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: AppTheme.textPrimary.withValues(alpha: 0.8),
+              color: Colors.black87, // 약간 연한 검정 (가독성)
               height: 1.5,
             ),
           ),

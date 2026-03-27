@@ -172,13 +172,15 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 // 안내 메시지
                 Text(
                   '거의 다 왔어요!',
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                        color: Colors.black,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '파트너와 함께 사용할 프로필을 설정해주세요',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                    color: Colors.black87, // 약간 연한 검정 (가독성)
                   ),
                 ),
 
