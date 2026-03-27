@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/utils/logger.dart';
 import '../../../data/datasources/supabase_auth_datasource.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/inputs/text_field_custom.dart';
 
 /// 프로필 설정 화면
 ///
@@ -34,9 +38,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
     try {
       final dataSource = SupabaseAuthDataSource();
       await dataSource.getCurrentUser();
-      print('✅ 프로필 설정 화면: 사용자 로그인 확인됨');
+      logger.info('프로필 설정 화면: 사용자 로그인 확인됨');
     } catch (e) {
-      print('❌ 프로필 설정 화면: 사용자가 로그인되어 있지 않음');
+      logger.warning('프로필 설정 화면: 사용자가 로그인되어 있지 않음');
 
       if (mounted) {
         // 로그인되어 있지 않으면 온보딩으로 돌아가기
@@ -103,12 +107,12 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       final dataSource = SupabaseAuthDataSource();
 
       // 현재 사용자 확인 (디버깅용)
-      print('📝 프로필 저장 시작');
+      logger.info('프로필 저장 시작');
       try {
         final currentUser = await dataSource.getCurrentUser();
-        print('✅ 현재 사용자: ${currentUser.id}');
+        logger.info('현재 사용자: ${currentUser.id}');
       } catch (e) {
-        print('❌ 사용자 조회 실패: $e');
+        logger.error('사용자 조회 실패', error: e);
       }
 
       // 업데이트할 데이터 출력
@@ -116,7 +120,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
         'name': _nameController.text.trim(),
         'relationship_stage': _selectedRelationshipStage,
       };
-      print('📤 업데이트할 메타데이터: $metadata');
+      logger.debug('업데이트할 메타데이터: $metadata');
 
       // Supabase Auth user_metadata 업데이트
       await dataSource.updateUserMetadata(metadata);
@@ -156,9 +160,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: const Text('프로필 설정'),
-        backgroundColor: AppTheme.backgroundColor,
+      appBar: CustomAppBar(
+        title: '프로필 설정',
+        centerTitle: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -169,23 +173,16 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 안내 메시지
-                const Text(
+                Text(
                   '거의 다 왔어요!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '파트너와 함께 사용할 프로필을 설정해주세요',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppTheme.textPrimary.withValues(
-                      alpha: 0.8,
-                    ),
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                      ),
                 ),
 
                 const SizedBox(height: 40),
@@ -204,28 +201,13 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '이름',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          hintText: '홍길동',
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                        validator: _validateName,
-                        textInputAction: TextInputAction.next,
-                      ),
-                    ],
+                  child: TextFieldCustom(
+                    labelText: '이름',
+                    hintText: '홍길동',
+                    controller: _nameController,
+                    validator: _validateName,
+                    textInputAction: TextInputAction.next,
+                    prefixIcon: const Icon(Icons.person),
                   ),
                 ),
 
@@ -248,13 +230,11 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         '관계 단계',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 16),
 
@@ -324,35 +304,11 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 const SizedBox(height: 40),
 
                 // 완료 버튼
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text(
-                            '완료',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  ),
+                PrimaryButton(
+                  text: '완료',
+                  onPressed: _saveProfile,
+                  isLoading: _isLoading,
+                  fullWidth: true,
                 ),
               ],
             ),
