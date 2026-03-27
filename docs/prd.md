@@ -790,53 +790,60 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 
 ### 7.3 타이포그래피
 
-**📝 NOTE**: 폰트 파일은 **Phase 0.5 (디자인 시스템 구축)** 단계에서 추가됩니다. 현재는 시스템 기본 폰트를 사용합니다.
+**✅ UPDATE (2026-03-28)**: Phase 0.5에서 폰트 시스템 완료
 
 #### 폰트 패밀리
-- **본문 (성경 구절)**: Noto Serif KR (세리프 - 경건함) ⏸️ Phase 0.5에서 추가 예정
-- **UI/버튼**: Pretendard (산세리프 - 모던함) ⏸️ Phase 0.5에서 추가 예정
+- **UI/버튼**: Pretendard (시스템 기본 폰트 사용 중)
+- **성경 구절**: Noto Serif KR (향후 추가 예정)
+
+**참고**: 자세한 타이포그래피 스타일은 [design-guideline.md 섹션 3](./design-guideline.md#3-타이포그래피-typography) 참조
 
 #### 폰트 크기
-- **Headline**: 24px (Bold)
-- **Body**: 16px (Regular)
-- **Caption**: 14px (Regular)
-- **성경 구절**: 18px (Medium)
+- **Headline 1**: 24px (Bold) - 화면 제목
+- **Headline 2**: 20px (Bold) - 섹션 제목
+- **Body 1**: 16px (Regular) - 주요 본문
+- **Body 2**: 14px (Regular) - 보조 본문
+- **Caption 1**: 12px (Regular) - 캡션, 라벨
+- **성경 구절**: 18px (Medium, Noto Serif KR) - 가독성 + 경건함
 
 ### 7.3.1 컴포넌트 스타일
 
-**📝 NOTE**: 아래 스타일은 **임시 가이드**입니다. **Phase 0.5 (디자인 시스템 구축)** 단계에서 사용자가 제공한 UI 이미지를 분석하여 세부 스타일을 조정합니다.
+**📝 NOTE**: 상세한 컴포넌트 스타일은 [design-guideline.md 섹션 4](./design-guideline.md#4-컴포넌트-스타일-component-styles)를 참조하세요.
 
-#### 카드 (Card)
-- **배경색**: #FFFFFF (흰색)
-- **모서리**: 24px 둥근 모서리 (매우 부드러운 느낌)
-- **그림자**: Elevation 4, 블랙 8% 투명도
-- **패딩**: 16-24px (내부 여백 넉넉하게)
-- **여백**: 카드 간 16px 간격
+#### 핵심 스타일 요약
 
-#### 버튼
-- **Primary 버튼**:
-  - 배경: #11BC78 (녹색/민트)
-  - 텍스트: #FFFFFF
-  - 모서리: 16px
-  - 높이: 48-56px
-  - Elevation: 2
+**버튼**:
+- Primary: #11BC78 배경, 흰색 텍스트, 12px 둥근 모서리
+- Secondary: #F5F5F5 배경, #666666 텍스트
+- Text: 배경 없음, primaryColor 텍스트
 
-- **Secondary 버튼**:
-  - 배경: 투명 또는 #F5F5F5
-  - 텍스트: #11BC78
-  - 테두리: 1px solid #11BC78
-  - 모서리: 16px
+**카드**:
+- 기본 카드: 16px 둥근 모서리, Elevation 2
+- 강조 카드: 20px 둥근 모서리, Elevation 4
+- 내부 패딩: 20px
 
-#### 아이콘 & 이모지
-- **하트 (좋아요)**: #FF6B9D (핑크)
-- **별 (평점/스트릭)**: #FFC857 (노란색)
-- **불꽃 (스트릭)**: #FF6B4D (주황-빨강)
-- **크기**: 20-24px (일반), 32-48px (강조)
+**입력 필드**:
+- 배경: Colors.grey.shade100
+- 둥근 모서리: 12px
+- 포커스 테두리: primaryColor, 2px
 
-#### 레이아웃
-- **여백**: 넉넉한 padding (16-24px)
-- **카드 간격**: 16px
-- **섹션 간격**: 24-32px
+**다이얼로그**:
+- 둥근 모서리: 20px
+- 내부 패딩: 24px
+- 버튼: Primary + Secondary 조합
+
+**아이콘 & 이모지**:
+- 하트 (좋아요): #FF6B9D (핑크)
+- 별 (평점/스트릭): #FFC857 (노란색)
+- 불꽃 (스트릭): #FF6B4D (주황-빨강)
+- 크기: 20-24px (일반), 32-48px (강조)
+
+**레이아웃**:
+- 여백: 넉넉한 padding (16-24px)
+- 카드 간격: 16px
+- 섹션 간격: 24-32px
+
+**공통 위젯 사용법은 [design-guideline.md 섹션 4.9~4.14](./design-guideline.md#49-공통-위젯-버튼-common-widgets-buttons) 참조**
 - **스크롤**: 부드러운 수직/수평 스크롤
 
 ### 7.4 핵심 화면 와이어프레임

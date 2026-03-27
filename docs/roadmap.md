@@ -1141,9 +1141,10 @@ class GptApiDatasource {
 
 ---
 
-### Phase 0.5: 디자인 시스템 구축 (3-5일) ⏸️
+### Phase 0.5: 디자인 시스템 구축 (Week 2.5) ✅
 
-**목적**: 사용자 제공 UI 이미지 기반으로 체계적인 디자인 시스템 구축 및 검증
+**완료 일자**: 2026-03-28
+**목적**: 사용자 제공 UI 이미지 기반으로 체계적인 디자인 시스템 구축 및 검증 완료
 
 **배경**:
 - 현재 폰트는 TODO 상태로 주석 처리됨 (Pretendard, Noto Serif KR)
@@ -1151,11 +1152,11 @@ class GptApiDatasource {
 - Phase 2부터 핵심 UI 기능 구현 시작 → 지금 디자인 시스템 확립 필요
 
 **완료 조건**:
-- [ ] 폰트 적용 완료
-- [ ] 공통 위젯 라이브러리 10개 이상 구현
-- [ ] 테스트 페이지로 사용자 컨펌 완료
-- [ ] 기존 UI (Phase 1.1~1.2) 리팩토링 완료
-- [ ] UI 가이드 문서 작성 완료
+- [✅] 폰트 적용 완료
+- [✅] 공통 위젯 라이브러리 12개 구현 (목표 10개 초과 달성 🎉)
+- [✅] 테스트 페이지로 사용자 컨펌 완료
+- [✅] 기존 UI (Phase 1.1~1.2) 리팩토링 완료
+- [✅] UI 가이드 문서 작성 완료
 
 #### Task 0.5.1: UI 이미지 분석 및 디자인 토큰 추출 ✅
 **담당**: 사용자
@@ -1277,29 +1278,45 @@ class GptApiDatasource {
 - ✅ OK → Task 0.5.6 진행
 - ❌ 문제 발생 → 특정 화면 수정
 
-#### Task 0.5.6: UI 가이드 문서 작성 + 테스트 페이지 제거
+#### Task 0.5.6: UI 가이드 문서 작성 + 테스트 페이지 제거 ✅
 **담당**: Claude Code
 **예상 소요**: 0.5일
+**실제 소요**: 2시간 (예상보다 빠름 🎉)
 
 **문서 작업**:
-- [ ] docs/ui-guide.md 작성 (신규)
-  - 색상 팔레트 (Hex 코드, 용도, 예시)
-  - 타이포그래피 (폰트, 크기, 사용처)
-  - 간격 시스템 (8px grid)
-  - 각 공통 위젯 사용법 (코드 예시)
-  - 다크 모드 가이드
-- [ ] docs/prd.md 업데이트
-  - 섹션 7.2 (컬러 팔레트) 최신화
-  - 섹션 7.3 (타이포그래피) 최신화
-  - 섹션 7.4 (핵심 화면) 업데이트
-- [ ] docs/roadmap.md 업데이트
-  - Phase 0.5 완료 ✅ 표시
+- [✅] docs/design-guideline.md 업데이트 (ui-guide.md 대신 기존 문서 확장)
+  - 섹션 4.9~4.14: 공통 위젯 12개 사용법 및 코드 예시 추가
+    * PrimaryButton, SecondaryButton, TextButtonCustom
+    * BaseCard, ElevatedCard
+    * TextFieldCustom, TextAreaCustom
+    * LoadingIndicator, SkeletonLoader (+ FullScreenLoading, SkeletonCard, SkeletonList)
+    * ConfirmDialog, ErrorDialog
+    * CustomAppBar
+  - 섹션 9: 다크 모드 가이드 업데이트
+    * 색상 팔레트 (Light vs Dark 비교)
+    * 테마 전환 방법 (3가지 방법 제시)
+    * 디자인 원칙 (대비율, 순수 검정 피하기, 색상 강도 조정, 그림자 제거)
+    * 테스트 방법 및 FAQ
+  - 섹션 11.4: 공통 위젯 치트시트 추가
+- [✅] docs/prd.md 업데이트
+  - 섹션 7.3: 타이포그래피 최신화 (폰트 시스템 완료 표시, UPDATE 2026-03-28)
+  - 섹션 7.3.1: 컴포넌트 스타일 간소화 및 참조 링크 추가
+- [✅] docs/roadmap.md 업데이트
+  - Phase 0.5 완료 ✅ 표시 (완료 일자: 2026-03-28)
+  - Task 0.5.6 체크리스트 완료
+  - 실제 소요 시간 기록
 
 **테스트 페이지 제거** (Production 빌드 대비):
-- [ ] lib/presentation/screens/design_system/ 폴더 삭제
-- [ ] lib/app/routes.dart에서 /design-system-test 라우팅 제거
+- [✅] lib/presentation/screens/design_system/ 폴더 삭제
+  - theme_test_screen.dart 제거 (613줄)
+  - widgets_test_screen.dart 제거 (436줄)
+- [✅] lib/app/routes.dart에서 테스트 라우팅 제거
+  - /theme-test import 및 라우트 제거
+  - /widgets-test import 및 라우트 제거
 
-**최종 컨펌 포인트** ⏸️:
+**NOTE**: docs/ui-guide.md는 별도로 생성하지 않음. design-guideline.md가 이미 충분히 상세하여 단일 진실 공급원(Single Source of Truth) 원칙 준수.
+
+**최종 컨펌 포인트**:
 "Phase 0.5를 완료하고 Phase 1.3으로 넘어가시겠어요?"
 - ✅ OK → Phase 0.5 완료! 🎉 → Phase 1.3 진행
 
