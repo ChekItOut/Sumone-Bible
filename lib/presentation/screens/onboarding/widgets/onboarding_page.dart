@@ -46,11 +46,7 @@ class OnboardingPage extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
-            ),
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
 
           const SizedBox(height: 16),
@@ -59,11 +55,10 @@ class OnboardingPage extends StatelessWidget {
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: AppTheme.textPrimary.withValues(alpha: 0.8),
-              height: 1.5,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                  height: 1.5,
+                ),
           ),
 
           const Spacer(),
