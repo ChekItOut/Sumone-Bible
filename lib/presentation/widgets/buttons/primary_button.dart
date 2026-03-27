@@ -50,9 +50,11 @@ class PrimaryButton extends StatelessWidget {
         onPressed: isDisabled ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: isDisabled
-              ? AppTheme.disabledBackground
+              ? Colors.grey.shade300 // 중성적인 회색 (테마 일관성)
               : AppTheme.primaryColor,
-          foregroundColor: isDisabled ? AppTheme.disabledText : Colors.white,
+          foregroundColor: isDisabled
+              ? Colors.grey.shade600 // 진한 회색 텍스트
+              : Colors.white,
           padding:
               padding ??
               const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -60,8 +62,8 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12), // 12px 둥근 모서리
           ),
           elevation: 0, // Material Design 3
-          disabledBackgroundColor: AppTheme.disabledBackground,
-          disabledForegroundColor: AppTheme.disabledText,
+          disabledBackgroundColor: Colors.grey.shade300,
+          disabledForegroundColor: Colors.grey.shade600,
         ),
         child: isLoading
             ? const SizedBox(
