@@ -15,7 +15,7 @@ class AppRouter {
   /// GoRouter 인스턴스
   static final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: '/',
+    initialLocation: '/', // 스플래시 화면에서 시작
     routes: [
       // ==================== 스플래시 ====================
       GoRoute(
