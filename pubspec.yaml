@@ -96,16 +96,17 @@ flutter:
     - assets/_test/  # 테스트용 에셋
     - .env
 
-  # TODO: Phase 0.3 - 폰트 파일 다운로드 및 추가
-  # fonts:
-  #   - family: Pretendard
-  #     fonts:
-  #       - asset: fonts/Pretendard-Regular.ttf
-  #       - asset: fonts/Pretendard-Medium.ttf
-  #         weight: 500
-  #       - asset: fonts/Pretendard-Bold.ttf
-  #         weight: 700
+  # Pretendard 폰트 추가 완료 (2026-03-27)
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: fonts/Pretendard-Regular.otf
+        - asset: fonts/Pretendard-Medium.otf
+          weight: 500
+        - asset: fonts/Pretendard-Bold.otf
+          weight: 700
 
+  # TODO: Noto Serif KR 폰트 추가 예정 (성경 구절 전용)
   #   - family: Noto Serif KR
   #     fonts:
   #       - asset: fonts/NotoSerifKR-Regular.ttf

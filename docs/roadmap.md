@@ -1181,10 +1181,10 @@ class GptApiDatasource {
 **예상 소요**: 1일
 
 **작업 내용**:
-- [⏸️] 폰트 파일 추가 (fonts/ 폴더) - 보류 (폰트 없이 진행)
-  - Pretendard (Regular, Medium, Bold)
-  - Noto Serif KR (Regular, Medium)
-- [⏸️] pubspec.yaml fonts 섹션 활성화 - 보류
+- [✅] 폰트 파일 추가 (fonts/ 폴더) - 완료 (2026-03-27)
+  - Pretendard (Regular, Medium, Bold) - .otf 형식
+  - Noto Serif KR (Regular, Medium) - 추후 추가 예정
+- [✅] pubspec.yaml fonts 섹션 활성화 - 완료 (Pretendard만)
 - [✅] theme.dart 업데이트
   - design-guideline.md 기반 색상 팔레트 (#11BC78, #F1F5F9)
   - 타이포그래피 스케일 정의 (Headline 1-3, Body 1-2, Caption 1-2)
@@ -1203,7 +1203,7 @@ class GptApiDatasource {
 - ✅ OK → Task 0.5.3 진행
 - ❌ 수정 필요 → 피드백 반영 후 재확인
 
-**NOTE**: 폰트 파일은 추후 추가 예정 (현재 시스템 기본 폰트 사용)
+**NOTE**: Pretendard 폰트 추가 완료 (2026-03-27). Noto Serif KR은 추후 성경 구절 표시용으로 추가 예정.
 
 #### Task 0.5.3: 공통 위젯 라이브러리 + 테스트 페이지
 **담당**: Claude Code (UI/UX Agent)
