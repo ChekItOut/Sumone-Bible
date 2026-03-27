@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Logger - 로깅 유틸리티
 ///
 /// print() 대신 사용하는 구조화된 로그 시스템
@@ -20,16 +22,16 @@ class Logger {
   ///
   /// 앱의 주요 이벤트나 사용자 액션을 기록할 때 사용
   /// 예: 로그인 성공, 데이터 로드 완료, 화면 이동 등
-  static void info(String message) {
-    print('ℹ️ [INFO] $message');
+  void info(String message) {
+    debugPrint('ℹ️ [INFO] $message');
   }
 
   /// 디버깅 로그
   ///
   /// 개발 중 상세한 정보를 확인할 때 사용
   /// 예: API 요청/응답, 상태 변경, 변수 값 등
-  static void debug(String message) {
-    print('🔍 [DEBUG] $message');
+  void debug(String message) {
+    debugPrint('🔍 [DEBUG] $message');
   }
 
   /// 에러 로그
@@ -39,16 +41,16 @@ class Logger {
   ///
   /// [message] 에러 설명
   /// [error] 선택적 에러 객체 (Exception, Error 등)
-  static void error(String message, {Object? error}) {
-    print('❌ [ERROR] $message${error != null ? ": $error" : ""}');
+  void error(String message, {Object? error}) {
+    debugPrint('❌ [ERROR] $message${error != null ? ": $error" : ""}');
   }
 
   /// 경고 로그
   ///
   /// 잠재적 문제나 주의가 필요한 상황에서 사용
   /// 예: 세션 만료 임박, 네트워크 느림, Deprecated API 사용 등
-  static void warning(String message) {
-    print('⚠️ [WARNING] $message');
+  void warning(String message) {
+    debugPrint('⚠️ [WARNING] $message');
   }
 }
 
