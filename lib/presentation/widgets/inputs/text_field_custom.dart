@@ -27,6 +27,8 @@ import '../../../app/theme.dart';
 /// - suffixIcon: 우측 아이콘 (옵션)
 /// - maxLines: 최대 줄 수 (기본값: 1)
 /// - onChanged: 입력 변경 시 콜백 (옵션)
+/// - validator: 유효성 검사 함수 (옵션, TextFormField에서 사용)
+/// - textInputAction: 키보드 액션 버튼 (기본값: TextInputAction.done)
 class TextFieldCustom extends StatelessWidget {
   final String? labelText;
   final String? hintText;
@@ -39,6 +41,8 @@ class TextFieldCustom extends StatelessWidget {
   final Widget? suffixIcon;
   final int? maxLines;
   final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
+  final TextInputAction textInputAction;
 
   const TextFieldCustom({
     super.key,
@@ -53,6 +57,8 @@ class TextFieldCustom extends StatelessWidget {
     this.suffixIcon,
     this.maxLines = 1,
     this.onChanged,
+    this.validator,
+    this.textInputAction = TextInputAction.done,
   });
 
   @override
@@ -75,13 +81,15 @@ class TextFieldCustom extends StatelessWidget {
         ],
 
         // 입력 필드
-        TextField(
+        TextFormField(
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
           enabled: enabled,
           maxLines: maxLines,
           onChanged: onChanged,
+          validator: validator,
+          textInputAction: textInputAction,
           style: const TextStyle(fontSize: 16, color: AppTheme.textPrimary),
           decoration: InputDecoration(
             filled: true,

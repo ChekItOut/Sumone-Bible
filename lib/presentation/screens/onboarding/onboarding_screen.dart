@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
 import '../../../core/constants/supabase_client.dart';
+import '../../../core/utils/logger.dart';
 import '../../../data/datasources/supabase_auth_datasource.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/buttons/text_button_custom.dart';
 import 'widgets/onboarding_page.dart';
 
 /// 온보딩 화면
@@ -56,7 +59,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         final session = data.session;
         if (session != null && mounted) {
           // 로그인 완료 → 프로필 설정으로 이동
-          print('✅ [Web] OAuth 로그인 완료: ${session.user.id}');
+          logger.info('[Web] OAuth 로그인 완료: ${session.user.id}');
           context.push('/profile-setup');
         }
       });
@@ -105,25 +108,25 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     });
 
     try {
-      print('🔐 Google 로그인 시작');
+      logger.info('Google 로그인 시작');
       final dataSource = SupabaseAuthDataSource();
 
       if (kIsWeb) {
         // 웹: OAuth 플로우 시작 (전체 페이지 리다이렉트)
-        print('🌐 [Web] OAuth 플로우 시작...');
+        logger.info('[Web] OAuth 플로우 시작...');
         await dataSource.signInWithGoogle();
 
         // NOTE: 웹에서는 페이지가 Google로 리다이렉트되므로
         // 이 코드는 실행되지 않을 가능성이 높습니다.
         // 로그인 후 앱으로 돌아오면 authStateChanges가 트리거됩니다.
-        print('⏳ [Web] OAuth 리다이렉트 대기 중...');
+        logger.debug('[Web] OAuth 리다이렉트 대기 중...');
         // 로딩 상태 유지 (페이지가 리다이렉트될 것임)
       } else {
         // 모바일: 네이티브 Sign-In (즉시 완료)
-        print('📱 [Mobile] 네이티브 Google Sign-In...');
+        logger.info('[Mobile] 네이티브 Google Sign-In...');
         final user = await dataSource.signInWithGoogle();
 
-        print('✅ Google 로그인 성공: ${user.id}');
+        logger.info('Google 로그인 성공: ${user.id}');
 
         if (mounted) {
           setState(() {
@@ -135,7 +138,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         }
       }
     } catch (e) {
-      print('❌ Google 로그인 실패: $e');
+      logger.error('Google 로그인 실패', error: e);
 
       // 웹에서는 OAuth 플로우 시작 실패만 에러로 표시
       // (리다이렉트되면 이 코드는 실행되지 않음)
@@ -170,16 +173,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _skip,
-                  child: const Text(
-                    '건너뛰기',
-                    style: TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
+                child: TextButtonCustom(text: '건너뛰기', onPressed: _skip),
               ),
             ),
 
@@ -218,9 +212,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         decoration: BoxDecoration(
                           color: _currentPage == index
                               ? AppTheme.primaryColor
-                              : AppTheme.textPrimary.withValues(
-                                  alpha: 0.3,
-                                ),
+                              : AppTheme.textPrimary.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -230,37 +222,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   const SizedBox(height: 24),
 
                   // 다음/시작하기 버튼
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _nextPage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              _currentPage == _pages.length - 1
-                                  ? 'Google로 시작하기'
-                                  : '다음',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
+                  PrimaryButton(
+                    text: _currentPage == _pages.length - 1
+                        ? 'Google로 시작하기'
+                        : '다음',
+                    onPressed: _nextPage,
+                    isLoading: _isLoading,
+                    fullWidth: true,
                   ),
                 ],
               ),
