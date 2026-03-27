@@ -140,8 +140,8 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
           const SizedBox(height: 8),
           Text(
             'design-guideline.md 기반 테마 시스템을 시각화합니다.\n\n'
-            '• Primary Color: #F93D17\n'
-            '• Background: #F8F5F5 (Light) / #121212 (Dark)\n'
+            '• Primary Color: #11BC78 (녹색/민트)\n'
+            '• Background: #F1F5F9 (Light) / #121212 (Dark)\n'
             '• 타이포그래피: Pretendard (기본), Noto Serif KR (성경 구절)\n'
             '• Material Design 3 기반\n\n'
             '우측 상단 스위치로 다크 모드를 테스트할 수 있습니다.',
@@ -197,7 +197,7 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
                 Expanded(
                   child: _buildColorSwatch(
                     'Primary',
-                    '#F93D17',
+                    '#11BC78',
                     AppTheme.primaryColor,
                   ),
                 ),
@@ -205,7 +205,7 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
                 Expanded(
                   child: _buildColorSwatch(
                     'Light',
-                    '#FF6B47',
+                    '#40D399',
                     AppTheme.primaryLight,
                   ),
                 ),
@@ -213,7 +213,7 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
                 Expanded(
                   child: _buildColorSwatch(
                     'Dark',
-                    '#D93010',
+                    '#0D9A63',
                     AppTheme.primaryDark,
                   ),
                 ),
@@ -291,7 +291,7 @@ class _ThemeTestScreenState extends State<ThemeTestScreen> {
                 Expanded(
                   child: _buildColorSwatch(
                     'Background',
-                    _isDarkMode ? '#121212' : '#F8F5F5',
+                    _isDarkMode ? '#121212' : '#F1F5F9',
                     _isDarkMode
                         ? AppTheme.backgroundDark
                         : AppTheme.backgroundColor,

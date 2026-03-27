@@ -8,12 +8,12 @@ class AppTheme {
   // ==================== 컬러 팔레트 (design-guideline.md) ====================
 
   // Primary Colors (주 색상)
-  static const Color primaryColor = Color(0xFFF93D17); // 주황-빨강 (#F93D17)
-  static const Color primaryLight = Color(0xFFFF6B47); // 밝은 톤 (#FF6B47)
-  static const Color primaryDark = Color(0xFFD93010); // 어두운 톤 (#D93010)
+  static const Color primaryColor = Color(0xFF11BC78); // 녹색/민트 (#11BC78)
+  static const Color primaryLight = Color(0xFF40D399); // 밝은 톤 (#40D399)
+  static const Color primaryDark = Color(0xFF0D9A63); // 어두운 톤 (#0D9A63)
 
   // Background Colors (배경 색상)
-  static const Color backgroundColor = Color(0xFFF8F5F5); // 앱 전체 배경 (#F8F5F5)
+  static const Color backgroundColor = Color(0xFFF1F5F9); // 앱 전체 배경 (#F1F5F9)
   static const Color surfaceColor = Color(0xFFFFFFFF); // 카드 배경 (#FFFFFF)
 
   // Text Colors (텍스트 색상)

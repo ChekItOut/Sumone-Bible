@@ -155,10 +155,10 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
         title: const Text('프로필 설정'),
-        backgroundColor: AppTheme.backgroundLight,
+        backgroundColor: AppTheme.backgroundColor,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -174,7 +174,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textOnBackgroundLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -182,7 +182,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                   '파트너와 함께 사용할 프로필을 설정해주세요',
                   style: TextStyle(
                     fontSize: 16,
-                    color: AppTheme.textOnBackgroundLight.withValues(
+                    color: AppTheme.textPrimary.withValues(
                       alpha: 0.8,
                     ),
                   ),
@@ -194,7 +194,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: AppTheme.surfaceLight,
+                    color: AppTheme.surfaceColor,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
@@ -212,7 +212,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimaryLight,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -235,7 +235,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: AppTheme.surfaceLight,
+                    color: AppTheme.surfaceColor,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
@@ -253,7 +253,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimaryLight,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -308,7 +308,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                                           : FontWeight.normal,
                                       color: isSelected
                                           ? AppTheme.primaryColor
-                                          : AppTheme.textPrimaryLight,
+                                          : AppTheme.textPrimary,
                                     ),
                                   ),
                                 ],

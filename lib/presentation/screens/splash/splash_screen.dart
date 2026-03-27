@@ -82,7 +82,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppTheme.backgroundColor,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -118,7 +118,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textOnBackgroundLight,
+                  color: AppTheme.textPrimary,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -130,7 +130,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 '함께하는 말씀 나눔',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AppTheme.textOnBackgroundLight.withValues(alpha: 0.8),
+                  color: AppTheme.textPrimary.withValues(alpha: 0.8),
                 ),
               ),
 

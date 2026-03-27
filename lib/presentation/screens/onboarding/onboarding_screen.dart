@@ -161,7 +161,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppTheme.backgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -175,7 +175,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   child: const Text(
                     '건너뛰기',
                     style: TextStyle(
-                      color: AppTheme.textOnBackgroundLight,
+                      color: AppTheme.textPrimary,
                       fontSize: 16,
                     ),
                   ),
@@ -218,7 +218,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         decoration: BoxDecoration(
                           color: _currentPage == index
                               ? AppTheme.primaryColor
-                              : AppTheme.textOnBackgroundLight.withValues(
+                              : AppTheme.textPrimary.withValues(
                                   alpha: 0.3,
                                 ),
                           borderRadius: BorderRadius.circular(4),
