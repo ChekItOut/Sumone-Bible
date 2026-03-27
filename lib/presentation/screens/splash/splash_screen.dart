@@ -117,9 +117,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               Text(
                 'Bible SumOne',
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      fontSize: 32,
-                      letterSpacing: -0.5,
-                    ),
+                  fontSize: 32,
+                  letterSpacing: -0.5,
+                ),
               ),
 
               const SizedBox(height: 8),
@@ -128,17 +128,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               Text(
                 '함께하는 말씀 나눔',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.textPrimary.withValues(alpha: 0.8),
-                    ),
+                  color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                ),
               ),
 
               const SizedBox(height: 48),
 
               // 로딩 인디케이터
-              const LoadingIndicator(
-                size: 32,
-                color: AppTheme.surfaceColor,
-              ),
+              const LoadingIndicator(size: 32, color: AppTheme.surfaceColor),
             ],
           ),
         ),

@@ -56,9 +56,9 @@ class OnboardingPage extends StatelessWidget {
             description,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppTheme.textPrimary.withValues(alpha: 0.8),
-                  height: 1.5,
-                ),
+              color: AppTheme.textPrimary.withValues(alpha: 0.8),
+              height: 1.5,
+            ),
           ),
 
           const Spacer(),

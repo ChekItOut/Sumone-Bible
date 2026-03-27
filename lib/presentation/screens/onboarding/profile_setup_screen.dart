@@ -160,10 +160,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: CustomAppBar(
-        title: '프로필 설정',
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: '프로필 설정', centerTitle: true),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -181,8 +178,8 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 Text(
                   '파트너와 함께 사용할 프로필을 설정해주세요',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textPrimary.withValues(alpha: 0.8),
-                      ),
+                    color: AppTheme.textPrimary.withValues(alpha: 0.8),
+                  ),
                 ),
 
                 const SizedBox(height: 40),
@@ -233,8 +230,8 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                       Text(
                         '관계 단계',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
 

@@ -173,10 +173,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Align(
                 alignment: Alignment.centerRight,
-                child: TextButtonCustom(
-                  text: '건너뛰기',
-                  onPressed: _skip,
-                ),
+                child: TextButtonCustom(text: '건너뛰기', onPressed: _skip),
               ),
             ),
 
@@ -215,9 +212,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         decoration: BoxDecoration(
                           color: _currentPage == index
                               ? AppTheme.primaryColor
-                              : AppTheme.textPrimary.withValues(
-                                  alpha: 0.3,
-                                ),
+                              : AppTheme.textPrimary.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
