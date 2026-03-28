@@ -1400,12 +1400,17 @@ class GptApiDatasource {
 - [ ] 메모리 캐싱 및 최적화
 - [ ] 에러 핸들링
 
-#### Task 2.2: AI 질문 생성 (수정됨)
+#### Task 2.2: AI 질문 생성 (하이브리드 전략)
 - [ ] GeminiApiDatasource 구현
+- [ ] **핵심 구절 추출 로직 구현 (VerseExtractor)** (NEW)
+- [ ] **템플릿 질문 시스템 구현 (QuestionTemplates)** (NEW)
+- [ ] **분량별 3단계 처리 로직** (NEW):
+  - 5절 이하: 전체 텍스트 → Gemini
+  - 6-50절: 핵심 구절 3-5개 추출 → Gemini
+  - 51절 이상: 템플릿 질문 (Gemini 안 씀)
 - [ ] 질문 생성 프롬프트 최적화
 - [ ] 질문 품질 필터링
 - [ ] 베타 테스트용 목회자 검토 시스템
-- [ ] **커플별 플랜 기반 구절 계산 로직 (NEW)**
 
 #### Task 2.3: Supabase Edge Function (수정됨)
 - [ ] generate-daily-verse 함수 작성 (커플별 플랜 기반)

@@ -475,31 +475,37 @@ InvitePartner  ConnectCouple  DailyVersePlan 수정
 - **AppBar**:
   - 제목: "오늘의 말씀"
   - 좌측: 뒤로가기 버튼
+- **안내 메시지** (NEW):
+  - "오늘의 말씀을 읽고 아래 질문에 대한 소감을 나눠보세요 💬"
+  - 배경: 연한 초록색 (#E8F5E9)
+  - 폰트: Pretendard 14px, 중앙 정렬
 - **성경 구절 카드** (상단):
   - 흰색 카드, borderRadius 24px
   - 제목: "고린도전서 13:4-7"
   - 본문: Noto Serif KR, 18px, 줄 간격 1.8
   - 전체 성경 구절 표시
-- **질문 카드** (중앙):
+  - 폰트 크기 조절 버튼 (A-, A+) (선택적)
+- **질문 카드** (중앙) ← 유지!
   - 흰색 카드, borderRadius 24px
   - 제목: "💬 오늘의 질문"
   - AI 생성 질문 표시
   - 폰트: Pretendard, 16px
 - **버튼** (하단):
-  - "답변 작성하기" (Primary 버튼 #11BC78, 고정 하단)
+  - "소감 작성하기" (변경: 답변 → 소감)
+  - Primary 버튼 #11BC78, 고정 하단
 
 **기능**
-1. 오늘의 말씀 조회 (Supabase `daily_verses`)
+1. 오늘의 말씀 조회 (Supabase `daily_verses`, 자정 생성)
 2. 성경 구절 전체 표시
-3. AI 생성 질문 표시
-4. "답변 작성하기" 버튼 → `/response/:verseId`
+3. AI 질문 표시 (이미 생성되어 있음)
+4. "소감 작성하기" 버튼 → `/response/:verseId`
 
 **상태 관리**
-- **Provider**: `verseProvider` (오늘의 말씀)
+- **Provider**: `verseProvider` (오늘의 말씀 + 질문)
 - **Local State**: 없음
 
 **이동 조건**
-- "답변 작성하기" → `/response/:verseId`
+- "소감 작성하기" → `/response/:verseId`
 
 **파일 위치**
 - `lib/presentation/screens/verse/daily_verse_screen.dart`
@@ -522,38 +528,27 @@ InvitePartner  ConnectCouple  DailyVersePlan 수정
 **UI 구성**
 - **배경색**: `AppTheme.backgroundLight`
 - **AppBar**:
-  - 제목: "오늘의 말씀"
+  - 제목: "소감 작성" (변경: 오늘의 말씀 → 소감 작성)
   - 좌측: 뒤로가기 버튼
-- **성경 구절** (상단, 스크롤 가능):
-  - 축약 표시 (예: "고린도전서 13:4-7")
-  - 클릭 시 전체 보기 (다이얼로그 또는 확장)
+- **성경 구절** (상단, 축약):
+  - 예: "고린도전서 13:4-7"
+  - 클릭 시 전체 보기
 - **질문 카드** (중앙):
-  - "💬 오늘의 질문"
-  - 질문 내용
-- **답변 입력** (하단):
-  - TextField (멀티라인, 3-5줄 높이)
-  - 글자 수 카운터: "150 / 500자" (우측 하단)
-  - 힌트 텍스트: "이 말씀을 읽고 떠오르는 생각을 써보세요"
-- **버튼** (하단 고정):
-  - "제출하기" (Primary 버튼)
+  - 제목: "💬 오늘의 질문" (유지)
+  - 질문 내용 (이미 생성되어 있음)
+  - 색상: 기본 (#6B4DE8), 유지
+- **소감 입력** (하단, 강조):
+  - TextField (멀티라인, 3-5줄)
+  - 글자 수: "150 / 500자"
+  - 힌트: "질문을 참고하여 자유롭게 소감을 써보세요" (변경)
+- **버튼**: "제출하기"
 
 **기능**
-1. URL 파라미터에서 `verseId` 추출
-2. 성경 구절 및 질문 조회 (Supabase `daily_verses`)
+1. URL 파라미터 `verseId` 추출
+2. 성경 구절 및 **질문 조회** (Supabase `daily_verses`, 이미 생성됨)
 3. 텍스트 입력 (최대 500자)
-4. 임시 저장 기능:
-   - 페이지 나갈 때 자동 저장 (Supabase `responses`, `is_submitted = false`)
-   - 다시 진입 시 불러오기
-5. "제출하기" 버튼:
-   - 유효성 검증 (1자 이상)
-   - Supabase `responses` 테이블 INSERT/UPDATE
-     - `verse_id`, `user_id`, `couple_id`, `content`
-     - `is_submitted = true`
-   - Supabase `daily_progress` 테이블 업데이트
-     - `user1_submitted` 또는 `user2_submitted = true`
-   - 파트너 답변 확인:
-     - 파트너 미완료 → `/response/waiting/:verseId`
-     - 둘 다 완료 → `/response/reveal/:verseId`
+4. 임시 저장
+5. 제출 → 파트너 대기 또는 Dual Reveal
 
 **상태 관리**
 - **Provider**: `responseProvider` (답변 작성, 조회)
