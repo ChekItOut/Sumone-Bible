@@ -42,8 +42,8 @@
 ### 1.3 현재 구현 상태
 
 - ✅ **구현 완료**: 3개 (Splash, Onboarding, ProfileSetup)
-- ⏭️ **계획됨**: 12개 (Phase 1-6)
-- 📊 **총 페이지**: 15개
+- ⏭️ **계획됨**: 18개 (Phase 1-6)
+- 📊 **총 페이지**: 21개
 
 ---
 
@@ -54,39 +54,46 @@
 | Phase | 페이지 수 | 화면 목록 |
 |-------|----------|----------|
 | **Phase 0-1 (완료)** | 3 | Splash, Onboarding, ProfileSetup |
-| **Phase 1.3 (커플 매칭)** | 2 | InvitePartner, ConnectCouple |
+| **Phase 1.3 (커플 매칭)** | 4 | InvitePartner, ConnectCouple, CoupleManagement, DailyVersePlan |
 | **Phase 2 (일일 말씀)** | 2 | Home, DailyVerse |
+| **Phase 2.5 (성경 읽기 & 탭바)** | 3 | Main (탭바), BibleReading, BibleSelector |
 | **Phase 3 (답변 & Dual Reveal)** | 3 | ResponseWrite, PartnerWaiting, DualReveal |
 | **Phase 4 (스트릭)** | 1 | MilestoneDialog (Overlay) |
-| **Phase 6 (부가 기능)** | 3 | History, Settings, ProfileEdit |
+| **Phase 6 (부가 기능)** | 4 | Calendar, History, Settings, ProfileEdit |
 | **기타** | 1 | ErrorScreen |
-| **합계** | **15** | |
+| **합계** | **21** | |
 
 ### 2.2 우선순위별 분류
 
 | 우선순위 | 설명 | 페이지 수 | 화면 목록 |
 |---------|------|----------|----------|
-| **P0 (필수 - MVP)** | 핵심 기능 | 10 | Splash, Onboarding, ProfileSetup, InvitePartner, ConnectCouple, Home, DailyVerse, ResponseWrite, PartnerWaiting, DualReveal |
-| **P1 (중요 - 베타)** | 사용자 경험 개선 | 2 | MilestoneDialog, History |
+| **P0 (필수 - MVP)** | 핵심 기능 | 14 | Splash, Onboarding, ProfileSetup, InvitePartner, ConnectCouple, CoupleManagement, DailyVersePlan, Main (탭바), Home, DailyVerse, ResponseWrite, PartnerWaiting, DualReveal, BibleReading |
+| **P1 (중요 - 베타)** | 사용자 경험 개선 | 4 | MilestoneDialog, History, Calendar, BibleSelector |
 | **P2 (추가 - 출시 후)** | 부가 기능 | 3 | Settings, ProfileEdit, ErrorScreen |
 
 ### 2.3 전체 페이지 목록 (알파벳순)
 
-1. **ConnectCoupleScreen** (`/couple/connect`) - 커플 초대 수락
-2. **DailyVerseScreen** (`/verse/daily`) - 오늘의 말씀 상세
-3. **DualRevealScreen** (`/response/reveal/:verseId`) - 답변 동시 공개
-4. **ErrorScreen** (라우트 에러 처리) - 404 에러 화면
-5. **HistoryScreen** (`/history`) - 과거 대화 타임라인
-6. **HomeScreen** (`/home`) - 홈 화면
-7. **InvitePartnerScreen** (`/couple/invite`) - 파트너 초대 링크 생성
-8. **MilestoneDialog** (Overlay) - 마일스톤 축하 팝업
-9. **OnboardingScreen** (`/onboarding`) ✅ - 온보딩 3단계
-10. **PartnerWaitingScreen** (`/response/waiting/:verseId`) - 파트너 대기 중
-11. **ProfileEditScreen** (`/settings/profile`) - 프로필 수정
-12. **ProfileSetupScreen** (`/profile-setup`) ✅ - 프로필 설정
-13. **ResponseWriteScreen** (`/response/:verseId`) - 답변 작성
-14. **SettingsScreen** (`/settings`) - 설정
-15. **SplashScreen** (`/`) ✅ - 스플래시 (로딩)
+1. **BibleReadingScreen** (`/main/bible`) - 자유 성경 읽기 (NEW)
+2. **BibleSelectorDrawer** (Overlay) - 성경/장 선택기 (NEW)
+3. **CalendarScreen** (`/calendar`) - 달별 읽기 기록 (NEW)
+4. **ConnectCoupleScreen** (`/couple/connect`) - 커플 초대 수락
+5. **CoupleManagementScreen** (`/couple/manage`) - 커플 연결/해제/플랜 관리 (NEW)
+6. **DailyVersePlanScreen** (`/couple/plan`) - Daily Verse 플랜 작성/수정 (NEW)
+7. **DailyVerseScreen** (`/verse/daily`) - 오늘의 말씀 상세
+8. **DualRevealScreen** (`/response/reveal/:verseId`) - 답변 동시 공개
+9. **ErrorScreen** (라우트 에러 처리) - 404 에러 화면
+10. **HistoryScreen** (`/main/history`) - 과거 대화 타임라인
+11. **HomeScreen** (`/main/home`) - 홈 화면 (탭바 기반)
+12. **InvitePartnerScreen** (`/couple/invite`) - 파트너 초대 링크 생성
+13. **MainScreen** (`/main`) - 탭바 래퍼 (NEW)
+14. **MilestoneDialog** (Overlay) - 마일스톤 축하 팝업
+15. **OnboardingScreen** (`/onboarding`) ✅ - 온보딩 3단계
+16. **PartnerWaitingScreen** (`/response/waiting/:verseId`) - 파트너 대기 중
+17. **ProfileEditScreen** (`/settings/profile`) - 프로필 수정
+18. **ProfileSetupScreen** (`/profile-setup`) ✅ - 프로필 설정
+19. **ResponseWriteScreen** (`/response/:verseId`) - 답변 작성
+20. **SettingsScreen** (`/main/settings`) - 설정 (탭바 기반)
+21. **SplashScreen** (`/`) ✅ - 스플래시 (로딩)
 
 ---
 
@@ -101,34 +108,53 @@
                 ↓                    ↓
          [로그인 완료]          ProfileSetup (/profile-setup)
                 ↓                    ↓
-         [커플 연결 완료?]    InvitePartner (/couple/invite)
-                ↓                    ↓
-            Home (/home)  ← ConnectCouple (/couple/connect)
+            Main (/main) ← 탭바 기반 네비게이션
                 ↓
-         DailyVerse (/verse/daily)
-                ↓
-         ResponseWrite (/response/:verseId)
-                ↓
+         ┌──────┴──────┬──────────┬──────────┐
+         ↓             ↓          ↓          ↓
+    Tab 1: Home   Tab 2: Bible  Tab 3: History  Tab 4: Settings
+    (/main/home)  (/main/bible) (/main/history) (/main/settings)
+         ↓
+    [커플 상태 섹션 클릭]
+         ↓
+    CoupleManagement (/couple/manage)
+         ↓
+    ┌────┴────┬──────────────┐
+    ↓         ↓              ↓
+InvitePartner  ConnectCouple  DailyVersePlan 수정
+(/couple/invite) (/couple/connect) (/couple/plan)
+    ↓         ↓              ↓
+    └────┬────┴──────────────┘
+         ↓
+    DailyVersePlan (/couple/plan) ← 플랜 작성
+         ↓
+    Home (/main/home)
+         ↓
+    [오늘의 말씀 카드 클릭]
+         ↓
+    DailyVerse (/verse/daily)
+         ↓
+    ResponseWrite (/response/:verseId)
+         ↓
     [파트너 답변 완료?] → PartnerWaiting (/response/waiting/:verseId)
-                ↓                    ↓
-         DualReveal (/response/reveal/:verseId)
-                ↓
-         [마일스톤 달성?] → MilestoneDialog (Overlay)
-                ↓
-            Home (/home)
-                ↓
-    [설정] → Settings (/settings) → ProfileEdit (/settings/profile)
-                ↓
-    [과거 대화] → History (/history)
+         ↓                    ↓
+    DualReveal (/response/reveal/:verseId)
+         ↓
+    [마일스톤 달성?] → MilestoneDialog (Overlay)
+         ↓
+    Home (/main/home)
+         ↓
+    [주간 캘린더 클릭] → Calendar (/calendar) → 날짜별 DualReveal
 ```
 
 ### 3.2 조건부 분기 요약
 
 | 조건 | True 화면 | False 화면 |
 |------|----------|-----------|
-| 첫 사용자? | Onboarding | Home |
+| 첫 사용자? | Onboarding | Main (홈 탭) |
 | 로그인 완료? | ProfileSetup | Onboarding |
-| 커플 연결 완료? | Home | InvitePartner |
+| 커플 연결 완료? | Home (연결 상태 표시) | Home (연결하기 버튼 표시) |
+| 커플 상태 섹션 클릭? | CoupleManagement | - |
 | 파트너 답변 완료? | DualReveal | PartnerWaiting |
 | 마일스톤 달성? (7, 30, 100일) | MilestoneDialog → Home | Home |
 
@@ -155,8 +181,7 @@
 2. Supabase 초기화
 3. 로그인 상태 확인
 4. 2초 후 자동 이동:
-   - 로그인 완료 + 커플 연결 완료 → `/home`
-   - 로그인 완료 + 커플 미연결 → `/couple/invite`
+   - 로그인 완료 → `/main/home` (커플 연결 여부와 상관없이)
    - 미로그인 → `/onboarding`
 
 **상태 관리**
@@ -335,7 +360,7 @@
 - **Local State**: `_token`, `_inviterProfile`, `_isLoading`
 
 **이동 조건**
-- "수락하고 시작하기" → `/home`
+- "수락하고 시작하기" → `/couple/plan` (플랜 작성)
 - "취소" → `/onboarding`
 
 **파일 위치**
@@ -350,7 +375,7 @@
 ### 4.6 HomeScreen
 
 **라우팅 정보**
-- **Path**: `/home`
+- **Path**: `/main/home` (탭바 내부)
 - **Name**: `home`
 - **Parameters**: 없음
 
@@ -358,11 +383,13 @@
 - **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
 - **AppBar**:
   - 제목: "Bible SumOne"
-  - 우측: 설정 아이콘 버튼
-- **스트릭 위젯** (상단):
-  - 🔥 아이콘 + "7일째 함께 읽고 있어요!"
-  - 카드 스타일 (흰색), borderRadius 24px
-- **성령의 불 캐릭터** (스트릭 위젯 근처):
+  - 액션: 없음 (설정은 탭바로 이동)
+- **커플 상태 섹션** (최상단, NEW):
+  - 카드 스타일 (흰색, borderRadius 24px)
+  - 연결됨: "함께하는 파트너: [이름]" + 프로필 사진
+  - 미연결: "파트너 연결하기" + 초대 아이콘
+  - 클릭 시 → `/couple/manage`
+- **성령의 불 캐릭터** (중앙 상단):
   - 크기: 80-120px
   - 투명 배경 (PNG 이미지)
   - 레벨에 따라 동적 변화 (Level 1/2/3 이미지 교체)
@@ -370,49 +397,68 @@
     - Float: 위아래 둥실둥실
     - Pulse: 크기 맥동
     - Glow: 테두리 빛남 (녹색 계열 #11BC78)
-  - 위치: Stack으로 스트릭 위젯 우측 상단 또는 중앙
-- **오늘의 말씀 카드** (중앙):
+  - 위치: 중앙 상단
+- **주간 캘린더 UI** (중앙, NEW):
+  - 오늘 날짜 + 최근 1주일 읽기 체크
+  - 7개 원형 아이콘 (월~일)
+  - ✓: 읽기 + ResponseWrite 완료
+  - ✗: 미완료
+  - ●: 오늘
+  - 클릭 시 → `/calendar` (달별 기록)
+- **오늘의 말씀 카드** (중앙 하단):
   - 큰 카드 (흰색, borderRadius 24px, elevation 4)
   - 성경 구절 요약: "고린도전서 13:4-7"
   - "사랑은 오래 참고..." (첫 구절 미리보기)
   - "읽으러 가기" 버튼 (Primary #11BC78)
-- **하단 메뉴**:
-  - "과거 대화 보기" (텍스트 버튼)
-  - "설정" (텍스트 버튼)
+- **하단 탭바** (NEW):
+  - Tab 1: 🏠 홈 (현재)
+  - Tab 2: 📖 성경
+  - Tab 3: 📚 대화
+  - Tab 4: ⚙️ 설정
 
 **기능**
-1. 현재 스트릭 정보 조회 (Supabase `streaks` 테이블)
+1. 커플 연결 상태 조회 (Supabase `couples` 테이블)
+   - 연결됨: 파트너 이름 및 프로필 사진 표시
+   - 미연결: "파트너 연결하기" 버튼 표시
+2. 현재 스트릭 정보 조회 (Supabase `streaks` 테이블)
    - `current_streak`, `holy_fire_level` 조회
-2. 성령의 불 레벨 계산 및 표시
+3. 성령의 불 레벨 계산 및 표시
    - `calculateFireLevel(currentStreak)` 로직 적용
    - 해당 레벨의 PNG 이미지 로드 (level1.png, level2.png, level3.png)
    - AnimationController로 Float, Pulse, Glow 애니메이션 실행
-3. 오늘의 말씀 조회 (Supabase `daily_verses` 테이블)
+4. 주간 읽기 기록 조회 (최근 7일)
+   - Supabase `daily_progress` 테이블 조회
+   - `both_completed_at`이 있으면 체크 (✓)
+5. 오늘의 말씀 조회
+   - 커플 플랜 기반 DailyVerse 생성 (Supabase `couples.daily_verse_plan`)
    - 오늘 날짜 기준 (`date = CURRENT_DATE`)
-4. "읽으러 가기" 버튼 → `/verse/daily`
-5. "과거 대화 보기" → `/history`
-6. 설정 아이콘 → `/settings`
+6. "읽으러 가기" 버튼 → `/verse/daily`
+7. 커플 상태 섹션 클릭 → `/couple/manage`
+8. 주간 캘린더 클릭 → `/calendar`
 
 **상태 관리**
 - **Provider**:
+  - `coupleProvider` (커플 연결 상태)
   - `streakProvider` (스트릭 정보)
   - `verseProvider` (오늘의 말씀)
-  - `authProvider` (사용자 정보)
+  - `progressProvider` (주간 읽기 기록, NEW)
 - **Local State**: 없음 (Provider만 사용)
 
 **이동 조건**
 - "읽으러 가기" → `/verse/daily`
-- "과거 대화 보기" → `/history`
-- 설정 아이콘 → `/settings`
+- 커플 상태 섹션 클릭 → `/couple/manage`
+- 주간 캘린더 클릭 → `/calendar`
+- 탭바 클릭 → `/main/bible`, `/main/history`, `/main/settings`
 
 **파일 위치**
 - `lib/presentation/screens/home/home_screen.dart`
+- `lib/presentation/screens/home/widgets/couple_status_card.dart` (NEW)
+- `lib/presentation/screens/home/widgets/weekly_calendar.dart` (NEW)
 - `lib/presentation/screens/home/widgets/daily_verse_card.dart`
-- `lib/presentation/screens/home/widgets/streak_widget.dart`
-- `lib/presentation/screens/home/widgets/holy_fire_widget.dart` (NEW)
+- `lib/presentation/screens/home/widgets/holy_fire_widget.dart`
 
 **참조**
-- docs/prd.md: 섹션 7.4 (홈 화면 와이어프레임)
+- docs/prd.md: 섹션 7.4 (홈 화면 와이어프레임, 업데이트 필요)
 - docs/roadmap.md: Task 2.4
 
 ---
@@ -845,19 +891,353 @@
 **기능**
 1. GoRouter에서 자동 호출 (라우트 에러 발생 시)
 2. 에러 메시지 표시
-3. "홈으로 돌아가기" → `/home` (로그인 완료) 또는 `/onboarding` (미로그인)
+3. "홈으로 돌아가기" → `/main/home` (로그인 완료) 또는 `/onboarding` (미로그인)
 
 **상태 관리**
 - **Local State**: `_errorMessage`
 
 **이동 조건**
-- "홈으로 돌아가기" → `/home` 또는 `/onboarding`
+- "홈으로 돌아가기" → `/main/home` 또는 `/onboarding`
 
 **파일 위치**
 - `lib/app/routes.dart` (errorBuilder 내부)
 
 **참조**
 - docs/roadmap.md: 섹션 1.1 (라우팅 설정)
+
+---
+
+### 4.16 CoupleManagementScreen (NEW)
+
+**라우팅 정보**
+- **Path**: `/couple/manage`
+- **Name**: `couple-manage`
+- **Parameters**: 없음
+
+**UI 구성**
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **AppBar**:
+  - 제목: "커플 관리"
+  - 좌측: 뒤로가기 → `/main/home`
+- **현재 상태 카드** (상단):
+  - 연결됨:
+    - 파트너 프로필 사진 + 이름
+    - 연결 날짜: "2026-03-25부터 함께"
+    - Daily Verse 플랜 요약: "창세기 · 3장씩"
+  - 미연결:
+    - "아직 파트너가 없습니다"
+    - 초대 아이콘
+- **메뉴 리스트**:
+  1. "파트너 초대하기" → `/couple/invite`
+  2. "초대 수락하기" (초대 링크 있을 때)
+  3. "Daily Verse 플랜 변경" → `/couple/plan`
+  4. "파트너 해제하기" (위험 경고, 빨간색)
+
+**기능**
+1. 커플 연결 상태 조회 (Supabase `couples`)
+2. "파트너 초대하기" → InvitePartnerScreen
+3. "초대 수락하기" → 초대 토큰 입력 다이얼로그 → ConnectCoupleScreen
+4. "Daily Verse 플랜 변경" → DailyVersePlanScreen
+5. "파트너 해제하기":
+   - 확인 다이얼로그 표시
+   - "정말 해제하시겠습니까? 모든 공유 데이터가 유지됩니다."
+   - 수락 시 Supabase `couples` 테이블에서 연결 해제
+   - 해제 후 HomeScreen으로 돌아감 (미연결 상태)
+
+**상태 관리**
+- **Provider**: `coupleProvider` (커플 상태, 해제 로직)
+- **Local State**: `_isLoading`, `_showDisconnectDialog`
+
+**이동 조건**
+- "파트너 초대하기" → `/couple/invite`
+- "Daily Verse 플랜 변경" → `/couple/plan`
+- "파트너 해제" 완료 → `/main/home`
+- 뒤로가기 → `/main/home`
+
+**파일 위치**
+- `lib/presentation/screens/couple/couple_management_screen.dart`
+- `lib/presentation/screens/couple/widgets/couple_status_card.dart`
+- `lib/presentation/screens/couple/widgets/disconnect_dialog.dart`
+
+**참조**
+- docs/prd.md: F-003 (커플 매칭, 업데이트 필요)
+- docs/roadmap.md: Task 1.3
+
+---
+
+### 4.17 DailyVersePlanScreen (NEW)
+
+**라우팅 정보**
+- **Path**: `/couple/plan`
+- **Name**: `daily-verse-plan`
+- **Parameters**: 없음
+
+**UI 구성**
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **AppBar**:
+  - 제목: "Daily Verse 플랜 설정"
+  - 좌측: 뒤로가기 → `/couple/manage` (또는 이전 화면)
+- **설정 카드** (중앙):
+  - **하루 분량 선택**:
+    - 라디오 버튼 그룹:
+      - "절 단위": [1절] [5절] [10절] [직접 입력: ___ 절]
+      - "장 단위": [1장] [3장] [5장] [직접 입력: ___ 장]
+  - **시작 성경 선택**:
+    - DropdownButton: 창세기 ~ 요한계시록
+    - 선택 시 해당 성경의 1장 1절부터 시작
+  - **플랜 미리보기**:
+    - "📖 미리보기:"
+    - 첫날: 창세기 1~3장
+    - 둘째날: 창세기 4~6장
+    - 셋째날: 창세기 7~9장
+- **버튼** (하단 고정):
+  - "저장하고 시작하기" (Primary 버튼)
+
+**기능**
+1. 현재 플랜 조회 (있을 경우, Supabase `couples.daily_verse_plan`)
+2. 하루 분량 선택 (절 수 또는 장 수)
+3. 시작 성경 선택 (창세기 ~ 요한계시록)
+4. 플랜 미리보기 동적 생성
+5. "저장하고 시작하기":
+   - Supabase `couples` 테이블 업데이트
+   - `daily_verse_plan` JSONB 필드 저장:
+     ```json
+     {
+       "start_book": "창세기",
+       "daily_amount": 3,
+       "daily_amount_type": "chapter",
+       "current_book": "창세기",
+       "current_chapter": 1,
+       "current_verse": 1,
+       "created_at": "2026-03-28T00:00:00Z"
+     }
+     ```
+   - `/main/home`으로 이동
+
+**상태 관리**
+- **Provider**: `coupleProvider` (플랜 저장)
+- **Local State**: `_dailyAmount`, `_amountType`, `_startBook`, `_preview`
+
+**이동 조건**
+- "저장하고 시작하기" → `/main/home`
+- 뒤로가기 → `/couple/manage`
+
+**파일 위치**
+- `lib/presentation/screens/couple/daily_verse_plan_screen.dart`
+- `lib/presentation/screens/couple/widgets/amount_selector.dart`
+- `lib/presentation/screens/couple/widgets/book_selector.dart`
+- `lib/presentation/screens/couple/widgets/plan_preview.dart`
+
+**참조**
+- docs/prd.md: F-004 (일일 말씀, 업데이트 필요)
+- docs/roadmap.md: Task 1.3, Task 2
+
+---
+
+### 4.18 BibleReadingScreen (NEW)
+
+**라우팅 정보**
+- **Path**: `/main/bible` (탭바 Tab 2)
+- **Name**: `bible-reading`
+- **Parameters**: 없음 (또는 선택적 `book`, `chapter`)
+
+**UI 구성**
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **AppBar**:
+  - 제목: 현재 위치 (예: "창세기 1장") ← 클릭 가능
+  - 우측: 북마크 아이콘 (추후 구현)
+- **본문 영역** (스크롤 가능):
+  - Noto Serif KR, 18px, 줄 간격 1.8
+  - 절 번호 표시: "1 태초에 하나님이 천지를 창조하시니라"
+  - 장 전체 표시
+- **하단 네비게이션** (고정):
+  - 좌측: "← 이전 장" 버튼
+  - 중앙: 장 번호 표시 (예: "1 / 50")
+  - 우측: "다음 장 →" 버튼
+- **스와이프 제스처**:
+  - 좌로 스와이프: 다음 장
+  - 우로 스와이프: 이전 장
+
+**기능**
+1. 기본 화면: 창세기 1장 1절부터 (또는 마지막 읽은 위치)
+2. 성경 본문 조회 (로컬 JSON 또는 Supabase `bible_cache`)
+3. 장 단위 페이징
+4. AppBar 제목 클릭 → BibleSelectorDrawer 열기
+5. 이전/다음 장 버튼 또는 스와이프
+6. 읽기 위치 자동 저장 (로컬 또는 Supabase `users` 테이블)
+
+**상태 관리**
+- **Provider**: `bibleProvider` (성경 데이터 조회, 위치 관리)
+- **Local State**: `_currentBook`, `_currentChapter`, `_verses`
+
+**이동 조건**
+- AppBar 클릭 → BibleSelectorDrawer 열기
+- 탭바로 다른 화면 이동
+
+**파일 위치**
+- `lib/presentation/screens/bible/bible_reading_screen.dart`
+- `lib/presentation/screens/bible/widgets/verse_list.dart`
+- `lib/presentation/screens/bible/widgets/chapter_navigation.dart`
+
+**참조**
+- docs/prd.md: F-016 (자유 성경 읽기, 추가 필요)
+- docs/roadmap.md: Phase 2.5
+
+---
+
+### 4.19 BibleSelectorDrawer (NEW)
+
+**라우팅 정보**
+- **Path**: 없음 (Overlay, Drawer)
+- **Name**: `bible-selector-drawer`
+- **Parameters**: 현재 위치 (`currentBook`, `currentChapter`)
+
+**UI 구성**
+- **타입**: Drawer (우측 또는 좌측)
+- **헤더**:
+  - 제목: "📖 성경 선택"
+  - 닫기 버튼 (X)
+- **성경 리스트** (스크롤 가능):
+  - 구약: 창세기 ~ 말라기 (39권)
+  - 신약: 마태복음 ~ 요한계시록 (27권)
+  - 각 성경:
+    - 이름 + 총 장 수 (예: "창세기 (50장)")
+    - 확장 가능 (ExpansionTile)
+    - 확장 시 장 번호 그리드 표시:
+      ```
+      [1] [2] [3] [4] [5]
+      [6] [7] [8] ...
+      ```
+- **검색 기능** (선택적):
+  - 상단 TextField
+  - 성경 이름으로 필터링
+
+**기능**
+1. 창세기 ~ 요한계시록 순서대로 리스트 표시
+2. 성경 클릭 → 장 번호 그리드 확장
+3. 장 번호 클릭:
+   - Drawer 닫기
+   - BibleReadingScreen 업데이트 (선택한 성경 + 장)
+4. 현재 위치 하이라이트 (예: 창세기 1장이면 창세기 확장, 1장 강조)
+
+**상태 관리**
+- **Local State**: `_expandedBook`, `_searchQuery`
+
+**이동 조건**
+- 장 선택 → Drawer 닫기 + BibleReadingScreen 업데이트
+
+**파일 위치**
+- `lib/presentation/screens/bible/widgets/bible_selector_drawer.dart`
+- `lib/presentation/screens/bible/widgets/book_list_item.dart`
+- `lib/presentation/screens/bible/widgets/chapter_grid.dart`
+
+**참조**
+- docs/prd.md: F-016 (자유 성경 읽기, 추가 필요)
+- docs/roadmap.md: Phase 2.5
+
+---
+
+### 4.20 CalendarScreen (NEW)
+
+**라우팅 정보**
+- **Path**: `/calendar`
+- **Name**: `calendar`
+- **Parameters**: 없음 (또는 선택적 `year`, `month`)
+
+**UI 구성**
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **AppBar**:
+  - 제목: "읽기 기록"
+  - 좌측: 뒤로가기 → `/main/home`
+  - 우측: 년/월 선택 (DropdownButton)
+- **캘린더 UI** (table_calendar 패키지):
+  - 월별 캘린더 표시
+  - 각 날짜:
+    - ✓ (녹색): DailyVerse 읽기 + ResponseWrite 완료
+    - ✗ (회색): 미완료 또는 한 명만 완료
+    - 공백: 데이터 없음 (과거 날짜)
+    - ● (강조): 오늘
+  - 날짜 클릭 → 해당 날짜의 DualRevealScreen으로 이동
+- **통계 요약** (상단 또는 하단):
+  - 이번 달 완료 일수: "15 / 30일"
+  - 현재 스트릭: "7일째"
+  - 최고 스트릭: "21일"
+
+**기능**
+1. 월별 읽기 기록 조회 (Supabase `daily_progress`)
+   - `both_completed_at`이 있으면 완료 (✓)
+2. 년/월 선택 시 해당 월 데이터 로드
+3. 날짜 클릭:
+   - 완료 날짜: `/response/reveal/:verseId` (해당 날짜의 DualReveal)
+   - 미완료 날짜: 알림 표시 ("이 날은 말씀을 나누지 않았어요")
+4. 통계 계산:
+   - 이번 달 완료 일수
+   - 현재 스트릭
+   - 최고 스트릭
+
+**상태 관리**
+- **Provider**: `progressProvider` (읽기 기록 조회)
+- **Local State**: `_selectedMonth`, `_calendarData`, `_stats`
+
+**이동 조건**
+- 완료 날짜 클릭 → `/response/reveal/:verseId`
+- 뒤로가기 → `/main/home`
+
+**파일 위치**
+- `lib/presentation/screens/calendar/calendar_screen.dart`
+- `lib/presentation/screens/calendar/widgets/calendar_view.dart`
+- `lib/presentation/screens/calendar/widgets/stats_card.dart`
+
+**참조**
+- docs/prd.md: F-017 (주간/달별 캘린더, 추가 필요)
+- docs/roadmap.md: Phase 6
+
+---
+
+### 4.21 MainScreen (NEW)
+
+**라우팅 정보**
+- **Path**: `/main`
+- **Name**: `main`
+- **Parameters**: 없음 (탭 인덱스는 내부 관리)
+
+**UI 구성**
+- **배경색**: `AppTheme.backgroundColor` (#F1F5F9)
+- **Body**: 현재 선택된 탭의 화면 표시
+  - Tab 0: HomeScreen (`/main/home`)
+  - Tab 1: BibleReadingScreen (`/main/bible`)
+  - Tab 2: HistoryScreen (`/main/history`)
+  - Tab 3: SettingsScreen (`/main/settings`)
+- **하단 탭바** (BottomNavigationBar):
+  - 4개 탭:
+    1. 🏠 홈
+    2. 📖 성경
+    3. 📚 대화
+    4. ⚙️ 설정
+  - Active 색상: `AppTheme.primaryColor` (#11BC78)
+  - Inactive 색상: Colors.grey
+
+**기능**
+1. 탭바 기반 네비게이션
+2. 탭 전환 시 화면 전환 (IndexedStack 또는 PageView)
+3. 각 탭의 상태 유지 (AutomaticKeepAliveClientMixin)
+4. Deep Link 지원:
+   - `/main/home` → 홈 탭 활성화
+   - `/main/bible` → 성경 탭 활성화
+   - 등등
+
+**상태 관리**
+- **Local State**: `_currentIndex` (현재 탭 인덱스)
+- **Provider**: 각 탭의 개별 Provider
+
+**이동 조건**
+- 탭 클릭 시 화면 전환
+
+**파일 위치**
+- `lib/presentation/screens/main/main_screen.dart`
+
+**참조**
+- docs/roadmap.md: Phase 2.5
 
 ---
 
@@ -954,30 +1334,22 @@ redirect: (context, state) {
     return '/onboarding';
   }
 
-  // 로그인 완료 + 인증 페이지 → 홈으로
+  // 로그인 완료 + 인증 페이지 → 메인 홈으로
   if (isAuthenticated && isOnAuthPage) {
-    return '/home';
+    return '/main/home';
   }
 
   return null; // 정상 진행
 },
 ```
 
-**커플 연결 체크**:
+**커플 연결 체크 (선택적)**:
 
 ```dart
+// NOTE: 커플 연결은 이제 선택적이므로 강제 리다이렉트 제거
+// HomeScreen에서 커플 상태 섹션으로 연결 유도
 redirect: (context, state) {
-  final coupleState = ref.read(coupleProvider);
-  final isConnected = coupleState.couple != null;
-  final requiresCouple = ['/home', '/verse/daily', '/response/'].any(
-    (path) => state.matchedLocation.startsWith(path),
-  );
-
-  // 커플 미연결 + 커플 필요 페이지 → 초대 화면으로
-  if (!isConnected && requiresCouple) {
-    return '/couple/invite';
-  }
-
+  // 커플 연결 체크 제거 (Home에서 자유롭게 접근)
   return null;
 },
 ```
@@ -1096,25 +1468,34 @@ final verseProvider = StateNotifierProvider<VerseProvider, VerseState>((ref) {
 
 ### 7.1 Phase별 구현 순서
 
-#### Phase 1: 커플 매칭 (Week 2)
-- [ ] **InvitePartnerScreen** (`/couple/invite`)
-- [ ] **ConnectCoupleScreen** (`/couple/connect?token=`)
+#### Phase 1.3: 커플 매칭 (Week 2-3)
+- [ ] **InvitePartnerScreen** (`/couple/invite`) - 플로우 수정
+- [ ] **ConnectCoupleScreen** (`/couple/connect?token=`) - 플로우 수정
+- [ ] **CoupleManagementScreen** (`/couple/manage`) - NEW
+- [ ] **DailyVersePlanScreen** (`/couple/plan`) - NEW
 
-#### Phase 2: 일일 말씀 (Week 3-4)
-- [ ] **HomeScreen** (`/home`)
+#### Phase 2: 일일 말씀 (Week 4-5)
+- [ ] **HomeScreen** (`/main/home`) - 레이아웃 재구성
 - [ ] **DailyVerseScreen** (`/verse/daily`)
+- [ ] 커플 플랜 기반 DailyVerse 생성 로직 (NEW)
 
-#### Phase 3: 답변 & Dual Reveal (Week 5-6)
+#### Phase 2.5: 성경 읽기 & 탭바 (Week 6-7) - NEW
+- [ ] **MainScreen** (`/main`) - 탭바 래퍼
+- [ ] **BibleReadingScreen** (`/main/bible`)
+- [ ] **BibleSelectorDrawer** (Overlay)
+
+#### Phase 3: 답변 & Dual Reveal (Week 8-9)
 - [ ] **ResponseWriteScreen** (`/response/:verseId`)
 - [ ] **PartnerWaitingScreen** (`/response/waiting/:verseId`)
 - [ ] **DualRevealScreen** (`/response/reveal/:verseId`)
 
-#### Phase 4: 스트릭 (Week 7)
+#### Phase 4: 스트릭 (Week 10)
 - [ ] **MilestoneDialog** (Overlay)
 
-#### Phase 6: 부가 기능 (Week 9)
-- [ ] **HistoryScreen** (`/history`)
-- [ ] **SettingsScreen** (`/settings`)
+#### Phase 6: 부가 기능 (Week 12-13)
+- [ ] **CalendarScreen** (`/calendar`) - NEW
+- [ ] **HistoryScreen** (`/main/history`) - 탭바 이동
+- [ ] **SettingsScreen** (`/main/settings`) - 탭바 이동
 - [ ] **ProfileEditScreen** (`/settings/profile`)
 
 ### 7.2 각 화면 구현 시 UI/UX Agent 활용
@@ -1238,17 +1619,23 @@ Provider:
 | SplashScreen | `/` | `splash` |
 | OnboardingScreen | `/onboarding` | `onboarding` |
 | ProfileSetupScreen | `/profile-setup` | `profile-setup` |
+| MainScreen | `/main` | `main` |
+| HomeScreen | `/main/home` | `home` |
+| BibleReadingScreen | `/main/bible` | `bible-reading` |
+| HistoryScreen | `/main/history` | `history` |
+| SettingsScreen | `/main/settings` | `settings` |
 | InvitePartnerScreen | `/couple/invite` | `invite-partner` |
 | ConnectCoupleScreen | `/couple/connect?token=` | `connect-couple` |
-| HomeScreen | `/home` | `home` |
+| CoupleManagementScreen | `/couple/manage` | `couple-manage` |
+| DailyVersePlanScreen | `/couple/plan` | `daily-verse-plan` |
 | DailyVerseScreen | `/verse/daily` | `daily-verse` |
 | ResponseWriteScreen | `/response/:verseId` | `response-write` |
 | PartnerWaitingScreen | `/response/waiting/:verseId` | `partner-waiting` |
 | DualRevealScreen | `/response/reveal/:verseId` | `dual-reveal` |
-| MilestoneDialog | N/A (Overlay) | `milestone-dialog` |
-| HistoryScreen | `/history` | `history` |
-| SettingsScreen | `/settings` | `settings` |
+| CalendarScreen | `/calendar` | `calendar` |
 | ProfileEditScreen | `/settings/profile` | `profile-edit` |
+| MilestoneDialog | N/A (Overlay) | `milestone-dialog` |
+| BibleSelectorDrawer | N/A (Overlay) | `bible-selector-drawer` |
 | ErrorScreen | N/A (errorBuilder) | `error` |
 
 ---

@@ -174,16 +174,26 @@ interface UserProfile {
 
 #### F-003: 커플 매칭
 **우선순위**: P0
-**설명**: 파트너 초대 및 커플 계정 연결
+**설명**: 파트너 초대 및 커플 계정 연결 (선택적)
 
-**플로우**:
-1. User A가 가입 후 "파트너 초대" 버튼 클릭
-2. 초대 링크 생성 (유니크 토큰)
-3. 카카오톡, 문자 등으로 공유
-4. User B가 링크로 접속하여 가입
-5. 자동으로 커플 연결 (couple_id 생성)
+**플로우 (변경됨)**:
+1. 첫 사용자 → Onboarding → ProfileSetup → **Home 진입** (커플 연결 선택적)
+2. Home 화면에서 "커플 상태 섹션" 표시:
+   - 연결됨: "함께하는 파트너: [이름]" + 프로필 사진
+   - 미연결: "파트너 연결하기" + 초대 아이콘
+3. 섹션 클릭 → CoupleManagementScreen:
+   - "파트너 초대하기" → InvitePartnerScreen
+   - "초대 수락하기" (토큰 입력 또는 딥링크)
+   - "파트너 해제하기" (확인 다이얼로그)
+   - "Daily Verse 플랜 변경" → DailyVersePlanScreen
+4. User A가 초대 링크 생성 (유니크 토큰)
+5. 카카오톡, 문자 등으로 공유
+6. User B가 링크로 접속하여 가입
+7. 자동으로 커플 연결 (couple_id 생성)
+8. **DailyVersePlanScreen으로 이동 → 플랜 작성**
+9. Home으로 돌아감
 
-**데이터 모델**:
+**데이터 모델 (확장됨)**:
 ```typescript
 interface Couple {
   couple_id: string;
@@ -191,28 +201,55 @@ interface Couple {
   user2_id: string;
   created_at: timestamp;
   relationship_stage: 'dating' | 'engaged' | 'married';
+  // NEW: Daily Verse 플랜
+  daily_verse_plan?: {
+    start_book: string;          // "창세기"
+    daily_amount: number;        // 3
+    daily_amount_type: 'verse' | 'chapter';  // "chapter"
+    current_book: string;        // "창세기"
+    current_chapter: number;     // 7
+    current_verse: number;       // 1
+    created_at: timestamp;
+    updated_at: timestamp;
+  };
 }
 ```
+
+**주요 변경점**:
+- ✅ 커플 연결이 **필수→선택**으로 변경
+- ✅ Home이 중심 허브 역할
+- ✅ 파트너 해제 기능 추가
+- ✅ Daily Verse 플랜 설정 추가
 
 ---
 
 ### 4.2 일일 말씀 & 질문 시스템
 
-#### F-004: 일일 말씀 생성 (AI)
+#### F-004: 일일 말씀 생성 (커플별 플랜 기반)
 **우선순위**: P0
-**설명**: 매일 자정에 모든 커플을 위한 말씀 & 질문 생성
+**설명**: 매일 자정에 각 커플의 Daily Verse 플랜에 따라 말씀 & 질문 생성
 
 **기술 스펙**:
 - **성경 데이터**: 로컬 JSON 파일 (assets/data/bible.json)
 - **AI API**: Gemini 1.5 Flash
-- **실행 방식**: Supabase Edge Function (Cron Job)
+- **실행 방식**: Supabase Edge Function (Cron Job) 또는 실시간 생성
 
-**알고리즘**:
-1. 주제 선택 (사랑, 용서, 감사, 소통 등 - 로테이션)
-2. 로컬 JSON 파일에서 해당 주제 관련 구절 조회 (verse_topics.json)
-3. Gemini API에 구절 + 커플 상태 → 질문 생성 요청
-4. 생성된 질문 검증 (신학적 적절성 필터)
-5. DB에 저장
+**알고리즘 (변경됨)**:
+1. 각 커플의 `daily_verse_plan` 조회 (Supabase `couples` 테이블)
+2. 플랜에 따라 오늘 읽을 성경 구절 계산:
+   - 예: 창세기 + 3장씩 → 첫날: 1~3장, 둘째날: 4~6장
+   - 예: 요한복음 + 5절씩 → 첫날: 1:1-5, 둘째날: 1:6-10
+3. 로컬 JSON 파일에서 해당 구절 조회
+4. Gemini API에 구절 + 커플 상태 → 질문 생성 요청
+5. 생성된 질문 검증 (신학적 적절성 필터)
+6. 커플별 `daily_verses` 테이블에 저장 (또는 동적 생성)
+7. `couples.daily_verse_plan`의 `current_book`, `current_chapter`, `current_verse` 업데이트
+
+**옵션**:
+- **옵션 1**: 매일 자정 Cron Job으로 모든 커플의 DailyVerse 사전 생성
+- **옵션 2**: 사용자가 HomeScreen 접근 시 실시간 생성 (캐싱)
+
+**권장**: 옵션 2 (실시간 생성 + 캐싱, 비용 최적화)
 
 **Gemini Prompt**:
 ```
@@ -511,6 +548,76 @@ interface Streak {
   - Level 3: 크고 강렬한 불꽃 (진한 색상)
 - 애니메이션은 Flutter 코드로 구현 (이미지는 정적)
 
+#### F-016: 자유 성경 읽기 (NEW)
+**우선순위**: P0
+**설명**: DailyVerse와 독립적으로 모든 성경을 자유롭게 탐색하고 읽기
+
+**기능 요구사항**:
+- 창세기 1장 1절부터 시작 (기본)
+- 장 단위 페이징 (이전/다음 장)
+- 좌우 스와이프 지원
+- 헤더에 현재 위치 표시 (예: "창세기 1장")
+- 헤더 클릭 → BibleSelectorDrawer 열기
+  - 창세기 ~ 요한계시록 리스트
+  - 성경 선택 → 장 선택 → 해당 위치로 이동
+- 읽기 위치 자동 저장 (다음 진입 시 마지막 위치)
+- DailyVerse 플랜과 완전 독립 (별도 탭)
+
+**UI/UX**:
+- 탭바 Tab 2: 📖 성경
+- 본문: Noto Serif KR, 18px, 줄 간격 1.8
+- 절 번호 표시: "1 태초에 하나님이..."
+- 하단 네비게이션: ← 이전 장 | 장 번호 | 다음 장 →
+
+**데이터 소스**:
+- 로컬 JSON (assets/data/bible.json)
+- 또는 Supabase `bible_cache` 테이블
+
+**저장 위치 (선택적)**:
+```typescript
+interface UserSettings {
+  user_id: string;
+  bible_reading_position?: {
+    book: string;
+    chapter: number;
+    verse: number;
+    updated_at: timestamp;
+  };
+}
+```
+
+---
+
+#### F-017: 주간/달별 읽기 기록 캘린더 (NEW)
+**우선순위**: P1
+**설명**: 성경 읽기 완료 여부를 캘린더로 시각화
+
+**기능 요구사항**:
+- **주간 캘린더 (HomeScreen)**:
+  - 오늘 날짜 + 최근 1주일 (7일)
+  - 각 날짜: ✓ (완료) / ✗ (미완료) / ● (오늘)
+  - 완료 조건: DailyVerse 읽기 + ResponseWrite 완료 (Dual Reveal까지)
+  - 클릭 시 → CalendarScreen (달별 기록)
+- **달별 캘린더 (CalendarScreen)**:
+  - 월별 캘린더 UI (table_calendar 패키지)
+  - 각 날짜 표시:
+    - ✓ (녹색): 완료
+    - ✗ (회색): 미완료
+    - ● (강조): 오늘
+  - 날짜 클릭 → 해당 날짜의 DualRevealScreen
+- **통계 요약**:
+  - 이번 달 완료 일수: "15 / 30일"
+  - 현재 스트릭: "7일째"
+  - 최고 스트릭: "21일"
+
+**UI/UX**:
+- 주간 캘린더: HomeScreen 중앙
+- 달별 캘린더: 별도 화면 (`/calendar`)
+
+**데이터 소스**:
+- Supabase `daily_progress` 테이블
+- `both_completed_at`이 있으면 완료 (✓)
+
 ---
 
 ### 4.5 과거 대화 보기
@@ -633,6 +740,19 @@ CREATE TABLE couples (
   user2_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
   relationship_stage VARCHAR(20),
   created_at TIMESTAMP DEFAULT NOW(),
+  -- NEW: Daily Verse 플랜
+  daily_verse_plan JSONB,
+  -- 예시 구조:
+  -- {
+  --   "start_book": "창세기",
+  --   "daily_amount": 3,
+  --   "daily_amount_type": "chapter",
+  --   "current_book": "창세기",
+  --   "current_chapter": 7,
+  --   "current_verse": 1,
+  --   "created_at": "2026-03-28T00:00:00Z",
+  --   "updated_at": "2026-03-28T10:30:00Z"
+  -- }
   UNIQUE(user1_id, user2_id)
 );
 ```
@@ -848,24 +968,28 @@ PUT    /notifications/settings  # 알림 설정 변경 (시간, ON/OFF)
 
 ### 7.4 핵심 화면 와이어프레임
 
-#### 홈 화면
+#### 홈 화면 (업데이트)
 ```
 ┌─────────────────────────────┐
-│  🔥 7일째 함께 읽고 있어요!  │ <- 스트릭
+│  [커플 상태 섹션]            │ <- NEW
+│  "함께하는 파트너: 민지"     │
+│  또는 "파트너 연결하기"      │
+├─────────────────────────────┤
 │         🔥                   │ <- 성령의 불 캐릭터 (Level 3)
 │      [애니메이션]             │    (투명 배경, 80-120px)
+│      (중앙 상단)              │
 ├─────────────────────────────┤
-│                             │
-│   [오늘의 말씀 카드]          │ <- 카드 디자인
+│  [주간 캘린더 UI]            │ <- NEW
+│   월 화 수 목 금 토 일        │
+│   ✓  ✓  ✗  ✓  ✓  ✓  ●      │
+│  (클릭 → 달별 기록)           │
+├─────────────────────────────┤
+│   [오늘의 말씀 카드]          │ <- 중앙 하단
 │   고린도전서 13:4-7          │
 │   "사랑은 오래 참고..."       │
-│                             │
 │   [읽으러 가기 버튼]          │
-│                             │
-├─────────────────────────────┤
-│  📚 과거 대화 보기            │
-│  ⚙️ 설정                    │
 └─────────────────────────────┘
+ [🏠 홈] [📖 성경] [📚 대화] [⚙️ 설정]  <- 탭바 (NEW)
 ```
 
 #### 답변 작성 화면

@@ -107,7 +107,9 @@ lib/
 │   │   ├── couple_provider.dart
 │   │   ├── verse_provider.dart
 │   │   ├── response_provider.dart
-│   │   └── streak_provider.dart
+│   │   ├── streak_provider.dart
+│   │   ├── progress_provider.dart      # NEW (주간/달별 읽기 기록)
+│   │   └── bible_provider.dart         # NEW (성경 읽기)
 │   │
 │   ├── screens/                   # Feature-First 화면
 │   │   ├── splash/
@@ -124,16 +126,38 @@ lib/
 │   │   │   └── widgets/
 │   │   │       └── onboarding_page.dart
 │   │   │
+│   │   ├── main/                       # NEW (탭바 래퍼)
+│   │   │   └── main_screen.dart
+│   │   │
 │   │   ├── couple/
 │   │   │   ├── invite_partner_screen.dart
-│   │   │   └── connect_couple_screen.dart
+│   │   │   ├── connect_couple_screen.dart
+│   │   │   ├── couple_management_screen.dart  # NEW
+│   │   │   ├── daily_verse_plan_screen.dart   # NEW
+│   │   │   └── widgets/
+│   │   │       ├── couple_status_card.dart    # NEW
+│   │   │       ├── disconnect_dialog.dart     # NEW
+│   │   │       ├── amount_selector.dart       # NEW
+│   │   │       ├── book_selector.dart         # NEW
+│   │   │       └── plan_preview.dart          # NEW
 │   │   │
 │   │   ├── home/
 │   │   │   ├── home_screen.dart
 │   │   │   └── widgets/
+│   │   │       ├── couple_status_card.dart    # NEW
+│   │   │       ├── weekly_calendar.dart       # NEW
 │   │   │       ├── daily_verse_card.dart
 │   │   │       ├── streak_widget.dart
-│   │   │       └── quick_actions.dart
+│   │   │       └── holy_fire_widget.dart
+│   │   │
+│   │   ├── bible/                      # NEW (자유 성경 읽기)
+│   │   │   ├── bible_reading_screen.dart
+│   │   │   └── widgets/
+│   │   │       ├── verse_list.dart
+│   │   │       ├── chapter_navigation.dart
+│   │   │       ├── bible_selector_drawer.dart
+│   │   │       ├── book_list_item.dart
+│   │   │       └── chapter_grid.dart
 │   │   │
 │   │   ├── verse/
 │   │   │   ├── daily_verse_screen.dart
@@ -150,6 +174,12 @@ lib/
 │   │   │       ├── my_response_card.dart
 │   │   │       ├── partner_response_card.dart
 │   │   │       └── flip_animation.dart
+│   │   │
+│   │   ├── calendar/               # NEW (달별 읽기 기록)
+│   │   │   ├── calendar_screen.dart
+│   │   │   └── widgets/
+│   │   │       ├── calendar_view.dart
+│   │   │       └── stats_card.dart
 │   │   │
 │   │   ├── history/
 │   │   │   ├── history_screen.dart
@@ -1341,7 +1371,19 @@ class GptApiDatasource {
 - [✅] 프로필 설정 (이름, 관계 단계)
 - [✅] 상태 저장 (Supabase Auth user_metadata)
 
-#### Task 1.3: 커플 매칭
+#### Task 1.3: 커플 매칭 (수정됨)
+- [ ] InvitePartnerScreen 플로우 수정 (Home에서 접근)
+- [ ] ConnectCoupleScreen 플로우 수정 (플랜 화면으로 리다이렉트)
+- [ ] **CoupleManagementScreen 구현 (NEW)**
+  - 커플 연결 상태 표시
+  - 파트너 초대/연결 버튼
+  - 파트너 해제 기능
+  - Daily Verse 플랜 변경 버튼
+- [ ] **DailyVersePlanScreen 구현 (NEW)**
+  - 하루 분량 선택 (절/장 단위)
+  - 시작 성경 선택
+  - 플랜 미리보기 동적 생성
+  - Supabase `couples.daily_verse_plan` 저장
 - [ ] 파트너 초대 링크 생성
 - [ ] 초대 링크 공유 (share_plus)
 - [ ] 초대 수락 플로우
@@ -1349,7 +1391,7 @@ class GptApiDatasource {
 
 ---
 
-### Phase 2: 일일 말씀 시스템 (Week 3-4)
+### Phase 2: 일일 말씀 시스템 (Week 3-5, 기간 연장)
 
 #### Task 2.1: 로컬 성경 데이터 통합
 - [ ] BibleDataService 구현 (로컬 JSON 기반)
@@ -1358,26 +1400,67 @@ class GptApiDatasource {
 - [ ] 메모리 캐싱 및 최적화
 - [ ] 에러 핸들링
 
-#### Task 2.2: AI 질문 생성
+#### Task 2.2: AI 질문 생성 (수정됨)
 - [ ] GeminiApiDatasource 구현
 - [ ] 질문 생성 프롬프트 최적화
 - [ ] 질문 품질 필터링
 - [ ] 베타 테스트용 목회자 검토 시스템
+- [ ] **커플별 플랜 기반 구절 계산 로직 (NEW)**
 
-#### Task 2.3: Supabase Edge Function
-- [ ] generate-daily-verse 함수 작성
-- [ ] Cron Job 설정 (매일 자정)
+#### Task 2.3: Supabase Edge Function (수정됨)
+- [ ] generate-daily-verse 함수 작성 (커플별 플랜 기반)
+- [ ] Cron Job 설정 (매일 자정) 또는 실시간 생성
+- [ ] 플랜 업데이트 로직 (current_book, current_chapter, current_verse)
 - [ ] 테스트 및 배포
 
-#### Task 2.4: UI 구현
-- [ ] 홈 화면 (daily_verse_card)
+#### Task 2.4: UI 구현 (수정됨)
+- [ ] **HomeScreen 재구성 (NEW)**
+  - 커플 상태 섹션 추가
+  - 주간 캘린더 UI 추가
+  - 성령의 불 캐릭터 배치
+  - 오늘의 말씀 카드
 - [ ] 오늘의 말씀 상세 화면
 - [ ] 성경 구절 표시 (Noto Serif KR)
 - [ ] 질문 카드 UI
 
 ---
 
-### Phase 3: 답변 & Dual Reveal (Week 5-6)
+### Phase 2.5: 성경 읽기 시스템 (Week 6-7, NEW)
+
+#### Task 2.5.1: 탭바 네비게이션 시스템
+- [ ] MainScreen 구현 (BottomNavigationBar 래퍼)
+- [ ] 4개 탭 설정 (Home, Bible, History, Settings)
+- [ ] 탭 상태 관리 (SelectedIndexProvider)
+- [ ] 아이콘 및 라벨 설정
+- [ ] 탭 전환 애니메이션
+
+#### Task 2.5.2: 자유 성경 읽기 기능
+- [ ] **BibleReadingScreen 구현**
+  - 장별 성경 구절 표시 (Noto Serif KR)
+  - 좌우 스와이프 네비게이션
+  - 현재 위치 헤더 (예: "창세기 1장")
+  - 로딩 상태 처리
+- [ ] **BibleSelectorDrawer 구현**
+  - 66권 성경 목록 표시
+  - 장 선택 그리드 (동적 생성)
+  - 검색/필터 기능
+  - 현재 위치 하이라이트
+- [ ] BibleProvider 상태 관리
+  - 현재 읽는 위치 추적 (book, chapter)
+  - 페이지 이동 로직
+  - 로컬 저장 (SharedPreferences)
+- [ ] BibleDataService 확장
+  - 장별 데이터 조회 최적화
+  - 메모리 캐싱 개선
+
+#### Task 2.5.3: 캘린더 통합 준비
+- [ ] CalendarProvider 기본 구조
+- [ ] 주간/월간 데이터 모델 정의
+- [ ] API 연결 준비 (daily_verses 테이블)
+
+---
+
+### Phase 3: 답변 & Dual Reveal (Week 8-9, 일정 변경)
 
 #### Task 3.1: 답변 작성
 - [ ] 텍스트 입력 UI
@@ -1400,7 +1483,7 @@ class GptApiDatasource {
 
 ---
 
-### Phase 4: 스트릭 & 마일스톤 (Week 7)
+### Phase 4: 스트릭 & 마일스톤 (Week 10, 일정 변경)
 
 #### Task 4.1: 스트릭 시스템
 - [ ] 스트릭 계산 로직
@@ -1444,7 +1527,7 @@ class GptApiDatasource {
 
 ---
 
-### Phase 5: 알림 시스템 (Week 8)
+### Phase 5: 알림 시스템 (Week 11, 일정 변경)
 
 **NOTE**: Firebase 제거 - Supabase + 로컬 알림으로 통일
 
@@ -1464,15 +1547,31 @@ class GptApiDatasource {
 
 ---
 
-### Phase 6: 부가 기능 (Week 9)
+### Phase 6: 부가 기능 (Week 12, 일정 변경)
 
-#### Task 6.1: 과거 대화 보기
-- [ ] 타임라인 UI
+#### Task 6.1: 캘린더 화면 구현 (NEW)
+- [ ] **CalendarScreen 개발**
+  - 주간 뷰: 7개 원형 아이콘 (월~일) + ✓/✗/● 표시
+  - 월간 뷰: 캘린더 그리드 (flutter_calendar_carousel)
+  - 뷰 전환 토글 (주간 ↔ 월간)
+- [ ] **일별 상세 보기**
+  - 날짜 클릭 시 해당일 말씀 + 답변 표시
+  - 과거 대화 조회 (daily_verses, responses 테이블)
+- [ ] CalendarProvider 구현
+  - 주간/월간 데이터 로드
+  - 완료 상태 계산 (둘 다 완료: ✓, 한 명만: ✗, 안 함: ●)
+- [ ] UI/UX
+  - 로딩 스켈레톤
+  - 빈 상태 처리 (데이터 없을 때)
+  - 무료: 7일, 프리미엄: 전체 (추후)
+
+#### Task 6.2: 과거 대화 보기 (Conversations 탭)
+- [ ] 타임라인 UI (날짜별 리스트)
 - [ ] 날짜별 필터링
 - [ ] 무료: 7일, 프리미엄: 전체
 - [ ] 상세 보기 화면
 
-#### Task 6.2: 설정
+#### Task 6.3: 설정 화면
 - [ ] 프로필 수정 (이름, 사진)
 - [ ] 알림 설정
 - [ ] 성경 번역본 선택
@@ -1481,7 +1580,7 @@ class GptApiDatasource {
 
 ---
 
-### Phase 7: 테스트 & 최적화 (Week 10)
+### Phase 7: 테스트 & 최적화 (Week 13, 일정 변경)
 
 #### Task 7.1: 테스트
 - [ ] 단위 테스트 (주요 비즈니스 로직)
@@ -1501,7 +1600,7 @@ class GptApiDatasource {
 
 ---
 
-### Phase 8: 출시 준비 (Week 11-12)
+### Phase 8: 출시 준비 (Week 14, 일정 변경)
 
 #### Task 8.1: 앱스토어 준비
 - [ ] 앱 아이콘 디자인
@@ -1825,16 +1924,17 @@ echo "SUPABASE_ANON_KEY=your_key" >> .env
 - 성경 API & AI API 계획
 - 상세한 기능 구현 순서
 
-### 🚀 다음 12주 일정
+### 🚀 다음 14주 일정 (수정됨)
 - Week 1: 프로젝트 셋업
 - Week 2: 인증 & 온보딩
-- Week 3-4: 일일 말씀 시스템
-- Week 5-6: 답변 & Dual Reveal
-- Week 7: 스트릭 & 마일스톤
-- Week 8: 알림 시스템
-- Week 9: 부가 기능
-- Week 10: 테스트 & 최적화
-- Week 11-12: 출시 준비
+- Week 3-5: 일일 말씀 시스템
+- **Week 6-7: 성경 읽기 시스템 (NEW)**
+- Week 8-9: 답변 & Dual Reveal
+- Week 10: 스트릭 & 마일스톤
+- Week 11: 알림 시스템
+- Week 12: 부가 기능
+- Week 13: 테스트 & 최적화
+- Week 14: 출시 준비
 
 ### 🎯 MVP 목표
 - 500 커플 가입
@@ -1850,6 +1950,7 @@ echo "SUPABASE_ANON_KEY=your_key" >> .env
 
 ---
 
-**문서 버전**: v1.0
-**최종 업데이트**: 2026-03-24
+**문서 버전**: v1.1
+**최종 업데이트**: 2026-03-28
 **작성자**: Product & Dev Team
+**변경사항**: Phase 2.5 추가 (성경 읽기 시스템), 탭바 네비게이션, 캘린더 기능 확장
