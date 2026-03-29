@@ -27,8 +27,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // 커플 정보 로드
-    _loadCoupleData();
+    // 첫 프레임 렌더링 후 커플 정보 로드
+    // NOTE: AuthProvider의 checkAuthStatus()가 완료될 때까지 대기
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadCoupleData();
+    });
   }
 
   /// 커플 정보 로드
@@ -37,9 +40,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = authState.user;
 
     if (user != null) {
+      logger.info('HomeScreen: 커플 정보 로드 시작 (user_id: ${user.id})');
       await ref.read(coupleProvider.notifier).loadCouple(user.id);
     } else {
-      logger.warning('HomeScreen: 사용자가 로그인되어 있지 않음');
+      // NOTE: 정상적으로는 라우팅 Guard에서 로그인을 체크해야 함
+      logger.warning('HomeScreen: 사용자가 로그인되어 있지 않음 (AuthProvider 초기화 대기 중일 수 있음)');
     }
   }
 
