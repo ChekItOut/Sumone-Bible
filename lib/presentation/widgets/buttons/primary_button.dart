@@ -27,6 +27,7 @@ class PrimaryButton extends StatelessWidget {
   final bool fullWidth;
   final double? height;
   final EdgeInsetsGeometry? padding;
+  final IconData? icon;
 
   const PrimaryButton({
     super.key,
@@ -36,6 +37,7 @@ class PrimaryButton extends StatelessWidget {
     this.fullWidth = false,
     this.height = 48,
     this.padding,
+    this.icon,
   });
 
   @override
@@ -73,6 +75,21 @@ class PrimaryButton extends StatelessWidget {
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
+              )
+            : icon != null
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600, // SemiBold
+                    ),
+                  ),
+                ],
               )
             : Text(
                 text,

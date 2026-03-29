@@ -101,7 +101,7 @@ class CoupleState {
 
   @override
   String toString() {
-    return 'CoupleState(isLoading: $isLoading, isConnected: $isConnected, hasPlan: $hasPlan, hasError: $hasError)';
+    return 'CoupleState(isLoading: $isLoading, couple: ${couple != null}, inviteLink: ${inviteLink != null}, error: ${error != null})';
   }
 }
 
