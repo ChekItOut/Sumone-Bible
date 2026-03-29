@@ -349,6 +349,38 @@ class SupabaseAuthDataSource {
     }
   }
 
+  /// 사용자 프로필 업데이트 (public.users 테이블)
+  ///
+  /// [profileData]: 업데이트할 프로필 데이터
+  ///
+  /// Throws:
+  /// - [app_exceptions.AuthException]: 업데이트 실패
+  /// - [app_exceptions.NetworkException]: 네트워크 연결 실패
+  Future<void> updateUserProfile(Map<String, dynamic> profileData) async {
+    try {
+      print('🔄 [Supabase] public.users 업데이트 시작');
+      print('📊 [Supabase] profileData: $profileData');
+
+      // UPSERT: user_id가 존재하면 UPDATE, 없으면 INSERT
+      await _client.from('users').upsert(
+            profileData,
+            onConflict: 'user_id',
+          );
+
+      print('✅ [Supabase] public.users 업데이트 성공');
+    } on SocketException catch (e) {
+      print('❌ [Supabase] SocketException (네트워크 오류): $e');
+      throw const app_exceptions.NetworkException();
+    } catch (e, stackTrace) {
+      print('❌ [Supabase] public.users 업데이트 실패: $e');
+      print('📚 [Supabase] StackTrace:\n$stackTrace');
+      throw app_exceptions.AuthException(
+        'Update user profile failed',
+        originalError: e,
+      );
+    }
+  }
+
   /// Supabase 에러 메시지를 앱의 에러 코드로 매핑
   String _mapSupabaseErrorCode(String message) {
     final lowerMessage = message.toLowerCase();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/constants/supabase_client.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/auth_state.dart';
 import '../../widgets/loading/loading_indicator.dart';
@@ -59,15 +60,64 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final authState = ref.read(authProvider);
 
     if (authState.isAuthenticated) {
-      // 로그인된 경우: 홈 화면으로 이동
-      if (mounted) {
-        context.go('/home');
+      // 로그인된 경우: 프로필 완료 여부 체크
+      final userId = authState.user?.id;
+      if (userId != null) {
+        final isProfileCompleted = await _checkProfileCompleted(userId);
+
+        if (mounted) {
+          if (isProfileCompleted) {
+            // 프로필 완료: 홈 화면으로
+            context.go('/home');
+          } else {
+            // 프로필 미완료: 프로필 설정 화면으로
+            context.go('/profile-setup');
+          }
+        }
+      } else {
+        // userId가 null인 경우 (비정상): 온보딩으로
+        if (mounted) {
+          context.go('/onboarding');
+        }
       }
     } else {
       // 미로그인: 온보딩 화면으로
       if (mounted) {
         context.go('/onboarding');
       }
+    }
+  }
+
+  /// 프로필 완료 여부 확인
+  ///
+  /// public.users 테이블에서 name, birth_date, relationship_stage가
+  /// 모두 설정되어 있으면 프로필 완료로 판단
+  Future<bool> _checkProfileCompleted(String userId) async {
+    try {
+      final response = await supabase
+          .from('users')
+          .select('name, birth_date, relationship_stage')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (response == null) {
+        // 레코드 없음: 프로필 미완료
+        return false;
+      }
+
+      // 필수 필드 체크
+      final name = response['name'] as String?;
+      final birthDate = response['birth_date'] as String?;
+      final relationshipStage = response['relationship_stage'] as String?;
+
+      // 모두 설정되어 있으면 프로필 완료
+      return name != null &&
+          name.isNotEmpty &&
+          birthDate != null &&
+          relationshipStage != null;
+    } catch (e) {
+      // 에러 발생 시 안전하게 프로필 설정 화면으로
+      return false;
     }
   }
 

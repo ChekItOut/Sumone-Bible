@@ -37,14 +37,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   /// 커플 정보 로드
   Future<void> _loadCoupleData() async {
     final authState = ref.read(authProvider);
+
+    // AuthProvider 로딩 중이면 대기
+    if (authState.isLoading) {
+      logger.debug('HomeScreen: AuthProvider 초기화 대기 중...');
+      return;
+    }
+
     final user = authState.user;
 
     if (user != null) {
       logger.info('HomeScreen: 커플 정보 로드 시작 (user_id: ${user.id})');
       await ref.read(coupleProvider.notifier).loadCouple(user.id);
     } else {
-      // NOTE: 정상적으로는 라우팅 Guard에서 로그인을 체크해야 함
-      logger.warning('HomeScreen: 사용자가 로그인되어 있지 않음 (AuthProvider 초기화 대기 중일 수 있음)');
+      // 이 경고가 나타나면 안 됨 (SplashScreen에서 이미 체크함)
+      logger.error(
+        'HomeScreen: 사용자가 로그인되어 있지 않음! 라우팅 오류 가능성',
+      );
+      // 안전하게 온보딩으로 리다이렉트
+      if (mounted) {
+        context.go('/onboarding');
+      }
     }
   }
 

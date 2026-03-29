@@ -205,35 +205,30 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       //   profileImageUrl = await _uploadProfileImage(_profileImage!);
       // }
 
-      // 업데이트할 메타데이터
-      final metadata = {
+      // 1. 현재 사용자 정보 가져오기
+      final currentUser = await dataSource.getCurrentUser();
+      logger.debug('현재 사용자 ID: ${currentUser.id}');
+
+      // 2. public.users 테이블 업데이트
+      final userUpdateData = {
+        'user_id': currentUser.id,
         'name': _nameController.text.trim(),
         'relationship_stage': _selectedRelationshipStage,
-        'birth_date': _birthDate!.toIso8601String(),
-        'relationship_start_date': _relationshipStartDate!.toIso8601String(),
+        'birth_date': _birthDate!.toIso8601String().split('T')[0], // DATE 형식
+        'relationship_start_date':
+            _relationshipStartDate!.toIso8601String().split('T')[0],
         if (_selectedRelationshipStage == 'married' && _marriageDate != null)
-          'marriage_date': _marriageDate!.toIso8601String(),
+          'marriage_date': _marriageDate!.toIso8601String().split('T')[0],
+        'updated_at': DateTime.now().toIso8601String(),
         // 'profile_image_url': profileImageUrl, // TODO: Phase 2
       };
 
-      logger.debug('프로필 메타데이터 저장: $metadata');
+      logger.debug('public.users 테이블 업데이트: $userUpdateData');
 
-      // Supabase Auth user_metadata 업데이트
-      await dataSource.updateUserMetadata(metadata);
+      // UPSERT: 존재하면 업데이트, 없으면 삽입
+      await dataSource.updateUserProfile(userUpdateData);
 
-      // TODO: Phase 2 - Supabase users 테이블에도 저장
-      // final currentUser = await dataSource.getCurrentUser();
-      // await supabase.from('users').upsert({
-      //   'user_id': currentUser.id,
-      //   'name': _nameController.text.trim(),
-      //   'relationship_stage': _selectedRelationshipStage,
-      //   'birth_date': _birthDate!.toIso8601String(),
-      //   'relationship_start_date': _relationshipStartDate!.toIso8601String(),
-      //   'marriage_date': _marriageDate?.toIso8601String(),
-      //   'profile_image_url': profileImageUrl,
-      // });
-
-      logger.info('프로필 저장 성공');
+      logger.info('✅ 프로필 저장 성공 (public.users)');
 
       if (mounted) {
         // 프로필 설정 완료 → 홈 화면으로 직접 이동
