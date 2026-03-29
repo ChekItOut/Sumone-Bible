@@ -87,3 +87,12 @@ firebase_options.dart
 
 # 로컬 설정 파일
 local.properties
+
+# ==================== Supabase CLI 관련 ====================
+# Supabase CLI 로컬 개발 환경 (Docker volumes 등)
+.supabase/
+
+# Supabase 로컬 환경 변수 (개인 access token 등)
+supabase/.env
+
+# NOTE: supabase/migrations/ 폴더는 커밋 필요 (제외하지 않음)

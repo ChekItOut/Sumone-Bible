@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "supabase": "supabase",
+    "sb:link": "supabase link --project-ref gtpzucliwqrrfcecsgzb",
+    "sb:pull": "supabase db pull",
+    "sb:push": "supabase db push",
+    "sb:reset": "supabase db reset",
+    "sb:diff": "supabase db diff",
+    "sb:migration": "supabase migration new"
+  },
+  "devDependencies": {
+    "supabase": "^2.84.4"
+  }
+}
