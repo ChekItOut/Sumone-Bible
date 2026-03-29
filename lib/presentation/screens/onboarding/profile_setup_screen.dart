@@ -207,9 +207,10 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
 
       // 1. 현재 사용자 정보 가져오기
       final currentUser = await dataSource.getCurrentUser();
-      logger.debug('현재 사용자 ID: ${currentUser.id}');
+      logger.info('프로필 저장 시작 - user_id: ${currentUser.id}');
 
-      // 2. public.users 테이블 업데이트
+      // 2. public.users 테이블 업데이트 데이터 준비
+      final now = DateTime.now();
       final userUpdateData = {
         'user_id': currentUser.id,
         'name': _nameController.text.trim(),
@@ -219,16 +220,17 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
             _relationshipStartDate!.toIso8601String().split('T')[0],
         if (_selectedRelationshipStage == 'married' && _marriageDate != null)
           'marriage_date': _marriageDate!.toIso8601String().split('T')[0],
-        'updated_at': DateTime.now().toIso8601String(),
+        'created_at': now.toIso8601String(), // INSERT 시 필요
+        'updated_at': now.toIso8601String(),
         // 'profile_image_url': profileImageUrl, // TODO: Phase 2
       };
 
-      logger.debug('public.users 테이블 업데이트: $userUpdateData');
+      logger.debug('저장할 데이터: $userUpdateData');
 
-      // UPSERT: 존재하면 업데이트, 없으면 삽입
+      // 3. UPSERT: 존재하면 업데이트, 없으면 삽입
       await dataSource.updateUserProfile(userUpdateData);
 
-      logger.info('✅ 프로필 저장 성공 (public.users)');
+      logger.info('✅ 프로필 저장 성공 - public.users 테이블 업데이트 완료');
 
       if (mounted) {
         // 프로필 설정 완료 → 홈 화면으로 직접 이동

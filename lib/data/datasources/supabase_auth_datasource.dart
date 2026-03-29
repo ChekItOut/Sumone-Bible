@@ -359,15 +359,27 @@ class SupabaseAuthDataSource {
   Future<void> updateUserProfile(Map<String, dynamic> profileData) async {
     try {
       print('🔄 [Supabase] public.users 업데이트 시작');
-      print('📊 [Supabase] profileData: $profileData');
+      print('📊 [Supabase] user_id: ${profileData['user_id']}');
+      print('📊 [Supabase] name: ${profileData['name']}');
+      print('📊 [Supabase] birth_date: ${profileData['birth_date']}');
 
       // UPSERT: user_id가 존재하면 UPDATE, 없으면 INSERT
-      await _client.from('users').upsert(
+      final response = await _client.from('users').upsert(
             profileData,
             onConflict: 'user_id',
-          );
+          ).select();
 
       print('✅ [Supabase] public.users 업데이트 성공');
+      print('📝 [Supabase] 응답: $response');
+    } on PostgrestException catch (e) {
+      print('❌ [Supabase] PostgrestException: ${e.message}');
+      print('❌ [Supabase] Code: ${e.code}');
+      print('❌ [Supabase] Details: ${e.details}');
+      throw app_exceptions.AuthException(
+        'Database error: ${e.message}',
+        code: e.code,
+        originalError: e,
+      );
     } on SocketException catch (e) {
       print('❌ [Supabase] SocketException (네트워크 오류): $e');
       throw const app_exceptions.NetworkException();
@@ -375,7 +387,7 @@ class SupabaseAuthDataSource {
       print('❌ [Supabase] public.users 업데이트 실패: $e');
       print('📚 [Supabase] StackTrace:\n$stackTrace');
       throw app_exceptions.AuthException(
-        'Update user profile failed',
+        'Update user profile failed: ${e.toString()}',
         originalError: e,
       );
     }
