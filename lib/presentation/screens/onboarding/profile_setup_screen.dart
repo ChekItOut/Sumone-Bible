@@ -29,33 +29,8 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
   @override
   void initState() {
     super.initState();
-    // 로그인 상태 확인
-    _checkAuthStatus();
-  }
-
-  /// 로그인 상태 확인
-  Future<void> _checkAuthStatus() async {
-    try {
-      final dataSource = SupabaseAuthDataSource();
-      await dataSource.getCurrentUser();
-      logger.info('프로필 설정 화면: 사용자 로그인 확인됨');
-    } catch (e) {
-      logger.warning('프로필 설정 화면: 사용자가 로그인되어 있지 않음');
-
-      if (mounted) {
-        // 로그인되어 있지 않으면 온보딩으로 돌아가기
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('먼저 로그인해주세요'),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.orange,
-          ),
-        );
-
-        // 온보딩 화면으로 리다이렉트
-        context.go('/onboarding');
-      }
-    }
+    // NOTE: 온보딩에서 이미 로그인 확인했으므로 _checkAuthStatus() 불필요
+    // 이 화면에 도달했다는 것은 이미 인증된 상태임을 의미
   }
 
   // 관계 단계 옵션
@@ -133,9 +108,8 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
       // });
 
       if (mounted) {
-        // 홈 화면으로 이동 (현재 단계에서는 스플래시로)
-        // TODO: Phase 2에서 실제 홈 화면으로 변경
-        context.go('/');
+        // 프로필 설정 완료 → 홈 화면으로 직접 이동
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {

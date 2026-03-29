@@ -60,7 +60,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (session != null && mounted) {
           // 로그인 완료 → 프로필 설정으로 이동
           logger.info('[Web] OAuth 로그인 완료: ${session.user.id}');
-          context.push('/profile-setup');
+          context.go('/profile-setup'); // ✅ go 사용 (스택 교체)
         }
       });
     }
@@ -134,7 +134,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           });
 
           // 로그인 성공 → 프로필 설정으로 이동
-          context.push('/profile-setup');
+          context.go('/profile-setup'); // ✅ go 사용 (스택 교체)
         }
       }
     } catch (e) {
