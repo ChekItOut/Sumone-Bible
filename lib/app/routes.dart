@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import '../presentation/screens/splash/splash_screen.dart';
 import '../presentation/screens/onboarding/onboarding_screen.dart';
 import '../presentation/screens/onboarding/profile_setup_screen.dart';
+import '../presentation/screens/home/home_screen.dart';
+import '../presentation/screens/couple/couple_management_screen.dart';
+import '../presentation/screens/couple/invite_partner_screen.dart';
+import '../presentation/screens/couple/connect_couple_screen.dart';
+import '../presentation/screens/couple/daily_verse_plan_screen.dart';
 import '../presentation/screens/_test/holy_fire_test_screen.dart'; // Holy Fire 애니메이션 테스트용 (참고용)
 
 /// Bible SumOne 앱 라우팅 설정
@@ -42,13 +47,37 @@ class AppRouter {
       //   builder: (context, state) => const LoginScreen(),
       // ),
 
+      // ==================== 커플 ====================
+      GoRoute(
+        path: '/couple/manage',
+        name: 'couple_manage',
+        builder: (context, state) => const CoupleManagementScreen(),
+      ),
+      GoRoute(
+        path: '/couple/invite',
+        name: 'couple_invite',
+        builder: (context, state) => const InvitePartnerScreen(),
+      ),
+      GoRoute(
+        path: '/couple/connect/:token',
+        name: 'couple_connect',
+        builder: (context, state) {
+          final token = state.pathParameters['token']!;
+          return ConnectCoupleScreen(token: token);
+        },
+      ),
+      GoRoute(
+        path: '/couple/plan',
+        name: 'couple_plan',
+        builder: (context, state) => const DailyVersePlanScreen(),
+      ),
+
       // ==================== 홈 ====================
-      // TODO: Phase 2에서 구현 예정
-      // GoRoute(
-      //   path: '/home',
-      //   name: 'home',
-      //   builder: (context, state) => const HomeScreen(),
-      // ),
+      GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const HomeScreen(),
+      ),
 
       // ==================== 말씀 ====================
       // TODO: Phase 2에서 구현 예정

@@ -9,7 +9,7 @@ import '../../widgets/loading/loading_indicator.dart';
 /// 스플래시 화면
 ///
 /// 앱 시작 시 로딩 화면 표시 및 인증 상태 확인
-/// - 로그인 완료: 홈 화면으로 이동 (TODO: Phase 2)
+/// - 로그인 완료: 홈 화면으로 이동
 /// - 미로그인: 온보딩 화면으로 이동
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -59,18 +59,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final authState = ref.read(authProvider);
 
     if (authState.isAuthenticated) {
-      // 로그인된 경우
-      // TODO: Phase 2에서 홈 화면으로 변경
-      // context.go('/home');
-
-      // 임시: 다시 스플래시 표시 (개발 중)
+      // 로그인된 경우: 홈 화면으로 이동
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('로그인 완료! (홈 화면은 Phase 2에서 구현 예정)'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        context.go('/home');
       }
     } else {
       // 미로그인: 온보딩 화면으로
