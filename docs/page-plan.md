@@ -104,14 +104,29 @@
 ```
                     Splash (/)
                        ↓
-         [첫 사용자?] → Onboarding (/onboarding)
-                ↓                    ↓
-         [로그인 완료]          ProfileSetup (/profile-setup)
-                ↓                    ↓
+              [인증 상태 체크]
+                       ↓
+        ┌──────────────┴──────────────┐
+        ↓                              ↓
+   Case 1: 미로그인              Case 2: 로그인됨
+  (신규 사용자)                  (기존 사용자)
+        ↓                              ↓
+  Onboarding                   [프로필 완료 확인]
+  (/onboarding)                        ↓
+        ↓                    ┌─────────┴─────────┐
+  [Google 로그인]            ↓                   ↓
+        ↓                 완료됨              미완료
+  ProfileSetup            Main (/main)     ProfileSetup
+  (/profile-setup)        (바로 이동!)      (/profile-setup)
+   (필수!)                                       ↓
+        ↓                                    Main (/main)
+   Main (/main)
+        └──────────────┬──────────────┘
+                       ↓
             Main (/main) ← 탭바 기반 네비게이션
-                ↓
-         ┌──────┴──────┬──────────┬──────────┐
-         ↓             ↓          ↓          ↓
+                       ↓
+         ┌─────────────┼─────────────┬──────────┐
+         ↓             ↓             ↓          ↓
     Tab 1: Home   Tab 2: Bible  Tab 3: History  Tab 4: Settings
     (/main/home)  (/main/bible) (/main/history) (/main/settings)
          ↓
@@ -149,14 +164,14 @@ InvitePartner  ConnectCouple  DailyVersePlan 수정
 
 ### 3.2 조건부 분기 요약
 
-| 조건 | True 화면 | False 화면 |
-|------|----------|-----------|
-| 첫 사용자? | Onboarding | Main (홈 탭) |
-| 로그인 완료? | ProfileSetup | Onboarding |
-| 커플 연결 완료? | Home (연결 상태 표시) | Home (연결하기 버튼 표시) |
-| 커플 상태 섹션 클릭? | CoupleManagement | - |
-| 파트너 답변 완료? | DualReveal | PartnerWaiting |
-| 마일스톤 달성? (7, 30, 100일) | MilestoneDialog → Home | Home |
+| 조건 | True 화면 | False 화면 | 비고 |
+|------|----------|-----------|------|
+| 미로그인? | Onboarding | [프로필 완료 확인] | Splash 화면에서 체크 |
+| 프로필 완료? (로그인됨) | Main (홈 탭) | ProfileSetup | name, birth_date, relationship_stage 확인 |
+| 커플 연결 완료? | Home (연결 상태 표시) | Home (연결하기 버튼 표시) | 선택적, 홈 화면에서만 표시 |
+| 커플 상태 섹션 클릭? | CoupleManagement | - | 연결/초대/플랜 관리 |
+| 파트너 답변 완료? | DualReveal | PartnerWaiting | 답변 작성 후 |
+| 마일스톤 달성? (7, 30, 100일) | MilestoneDialog → Home | Home | Phase 4 |
 
 ---
 
@@ -178,10 +193,13 @@ InvitePartner  ConnectCouple  DailyVersePlan 수정
 
 **기능**
 1. 앱 시작 시 자동 실행
-2. Supabase 초기화
-3. 로그인 상태 확인
-4. 2초 후 자동 이동:
-   - 로그인 완료 → `/main/home` (커플 연결 여부와 상관없이)
+2. Supabase 초기화 (자동)
+3. 로그인 상태 확인 (AuthProvider.checkAuthStatus())
+4. 2초 후 조건부 라우팅:
+   - **미로그인** → `/onboarding`
+   - **로그인됨 + 프로필 완료** → `/home`
+   - **로그인됨 + 프로필 미완료** → `/profile-setup`
+5. 프로필 완료 조건: `name`, `birth_date`, `relationship_stage` 모두 NOT NULL
    - 미로그인 → `/onboarding`
 
 **상태 관리**

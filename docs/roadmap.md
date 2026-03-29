@@ -1159,6 +1159,13 @@ class GptApiDatasource {
 #### Task 0.2: Supabase 설정 ✅
 - [✅] Supabase 프로젝트 생성
 - [✅] 데이터베이스 테이블 생성 (SQL 실행)
+  - 01_create_tables.sql (users, couples, daily_verses, responses, 등)
+  - 02_setup_rls.sql (Row Level Security 정책)
+  - 03_add_gender_to_users.sql (gender 필드 추가)
+  - 04_add_couple_fields.sql (커플 관련 필드 추가)
+  - 05_add_profile_fields.sql (프로필 필드 추가: birth_date, relationship_start_date, marriage_date)
+  - 06_create_users_trigger.sql (auth.users → public.users 자동 생성 트리거)
+  - 07_migrate_existing_users.sql (기존 사용자 데이터 마이그레이션)
 - [✅] RLS 정책 설정
 - [✅] Supabase Flutter SDK 초기화
 - [✅] .env 파일 설정

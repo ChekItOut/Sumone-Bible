@@ -159,25 +159,43 @@ Bible SumOne은 크리스천 커플을 위한 성경 나눔 앱입니다. 매일
 
 #### F-002: 프로필 설정
 **우선순위**: P0
-**설명**: 이름, 성별, 프로필 사진, 관계 단계 설정
+**설명**: 이름, 생년월일, 관계 단계, 사귀기 시작 날짜, 결혼 날짜 설정
 
 **데이터 모델**:
 ```typescript
 interface UserProfile {
   user_id: string;
   name: string;
-  gender: 'male' | 'female';
-  profile_image_url?: string;
+  birth_date: date;
   relationship_stage: 'dating' | 'engaged' | 'married';
+  relationship_start_date: date;
+  marriage_date?: date; // married인 경우만 필수
+  profile_image_url?: string; // TODO: Phase 2
+  gender?: 'male' | 'female'; // TODO: 향후 추가
   created_at: timestamp;
+  updated_at: timestamp;
 }
 ```
 
+**플로우**:
+1. **신규 가입자**: 로그인 후 무조건 ProfileSetup 화면으로 이동 (필수)
+2. **기존 사용자**: 로그인 후 프로필 완료 여부 확인
+   - 완료 (name, birth_date, relationship_stage 모두 설정됨) → Home
+   - 미완료 → ProfileSetup
+3. ProfileSetup에서 정보 입력 후 → Home 진입
+
+**프로필 완료 조건**:
+- `name` NOT NULL
+- `birth_date` NOT NULL
+- `relationship_stage` NOT NULL
+
 **UI/UX**:
-- 이름 입력 필드
-- 성별 선택 (남성/여성 라디오 버튼)
-- 관계 단계 선택 (연애 중/약혼/신혼 드롭다운)
-- 프로필 사진 업로드 (선택사항)
+- 프로필 사진 업로드 (선택사항, Phase 2에서 Supabase Storage 연동)
+- 이름 입력 필드 (최소 2자, 최대 20자)
+- 생년월일 선택 (DatePicker)
+- 관계 단계 선택 (연애 중/약혼함/결혼함 라디오 버튼)
+- 사귀기 시작한 날짜 선택 (DatePicker)
+- 결혼 날짜 선택 (married 선택 시에만 표시, DatePicker)
 
 #### F-003: 커플 매칭
 **우선순위**: P0
