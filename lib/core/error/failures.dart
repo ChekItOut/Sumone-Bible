@@ -129,3 +129,35 @@ class ValidationFailure extends Failure {
 class UnknownFailure extends Failure {
   const UnknownFailure([super.message = '알 수 없는 오류가 발생했습니다.']);
 }
+
+// ============================================================
+// 커플 매칭 관련 에러 (Phase 1.3)
+// ============================================================
+
+/// 커플 관련 에러
+///
+/// 커플 매칭, 초대, 연결, 플랜 설정 등에서 발생하는 에러
+class CoupleFailure extends Failure {
+  const CoupleFailure(super.message);
+
+  /// 사용자 친화적 에러 메시지 생성
+  factory CoupleFailure.notFound() {
+    return const CoupleFailure('커플 정보를 찾을 수 없습니다.');
+  }
+
+  factory CoupleFailure.inviteLinkExpired() {
+    return const CoupleFailure('초대 링크가 만료되었습니다.');
+  }
+
+  factory CoupleFailure.invalidInviteLink() {
+    return const CoupleFailure('유효하지 않은 초대 링크입니다.');
+  }
+
+  factory CoupleFailure.alreadyConnected() {
+    return const CoupleFailure('이미 다른 파트너와 연결되어 있습니다.');
+  }
+
+  factory CoupleFailure.unauthorized() {
+    return const CoupleFailure('이 작업을 수행할 권한이 없습니다.');
+  }
+}

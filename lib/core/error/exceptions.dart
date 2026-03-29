@@ -69,3 +69,47 @@ class ParsingException extends AppException {
 class ValidationException extends AppException {
   const ValidationException(String message) : super(message);
 }
+
+// ============================================================
+// 커플 매칭 관련 예외 (Phase 1.3)
+// ============================================================
+
+/// 커플 정보를 찾을 수 없음
+class NoCoupleException extends AppException {
+  const NoCoupleException({
+    String message = 'Couple not found',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}
+
+/// 초대 링크가 만료됨
+class ExpiredInviteLinkException extends AppException {
+  const ExpiredInviteLinkException({
+    String message = 'Invite link has expired',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}
+
+/// 유효하지 않은 초대 링크
+class InvalidInviteLinkException extends AppException {
+  const InvalidInviteLinkException({
+    String message = 'Invalid invite link',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}
+
+/// 이미 다른 커플과 연결됨
+class AlreadyConnectedException extends AppException {
+  const AlreadyConnectedException({
+    String message = 'Already connected to another couple',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}
+
+/// 권한이 없음 (커플 작업 시)
+class UnauthorizedException extends AppException {
+  const UnauthorizedException({
+    String message = 'Unauthorized operation',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}
