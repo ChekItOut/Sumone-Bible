@@ -55,8 +55,10 @@ app.*.map.json
 
 # ==================== Claude Code 관련 ====================
 # Claude 설정 파일 (로컬 설정, API 키 포함 가능)
-.claude/
+# NOTE: .claude/agents/는 프로젝트 가이드라인이므로 커밋 허용
 .claude/settings.local.json
+.claude/mcp.json
+.claude/projects/
 
 # 프로젝트 가이드라인 (선택적으로 제외)
 CLAUDE.md
@@ -96,3 +98,17 @@ local.properties
 supabase/.env
 
 # NOTE: supabase/migrations/ 폴더는 커밋 필요 (제외하지 않음)
+
+# ==================== E2E 테스트 관련 ====================
+# 현재 테스트 스크린샷 (베이스라인만 Git 추적)
+test/e2e/screenshots/current/
+# QA 리포트 (생성된 결과, Git 무시)
+test/e2e/reports/
+# Flutter 웹 프로세스 PID
+/tmp/flutter_web.pid
+
+# ==================== Node.js 관련 (Playwright MCP) ====================
+# Playwright MCP로 인한 npm 패키지
+node_modules/
+package-lock.json
+package.json

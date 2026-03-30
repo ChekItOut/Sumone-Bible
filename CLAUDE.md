@@ -1249,6 +1249,10 @@ ALTER TABLE users ALTER COLUMN new_field SET NOT NULL;
    - 단위 테스트, 통합 테스트, Widget 테스트, Mock 객체 생성
    - 파일: `.claude/agents/testing-agent.md`
 
+8. **🔍 QA Agent** (`qa-agent`) ⭐ NEW
+   - Playwright MCP 기반 E2E 테스트, Flutter 웹 자동 QA, 접근성 검사, 시각적 회귀 테스트
+   - 파일: `.claude/agents/qa-agent.md`
+
 **📖 각 에이전트의 상세 가이드는 해당 md 파일을 참조하세요!**
 
 ---
@@ -1357,6 +1361,30 @@ Task(
    5. Testing Agent (테스트)
 ```
 
+#### Rule 7: QA 및 E2E 테스트 요청 시
+```
+사용자 요청: "로그인 화면 QA해줘"
+→ QA Agent 자동 호출
+
+사용자 요청: "홈 화면 테스트해줘"
+→ QA Agent 자동 호출
+
+사용자 요청: "접근성 검사해줘"
+→ QA Agent 자동 호출
+
+사용자 요청: "스크린샷 비교해줘"
+→ QA Agent 자동 호출
+```
+
+#### Rule 8: 페이지 구현 완료 시 자동 QA
+```
+사용자 요청: "로그인 화면 구현 완료"
+→ 순차적으로:
+   1. UI/UX Agent (화면 구현)
+   2. QA Agent (자동 QA 수행) ⭐ 자동
+   3. Testing Agent (단위 테스트)
+```
+
 ---
 
 ### 17.5 에이전트 호출 전 체크리스트
@@ -1414,6 +1442,10 @@ Task(
 | Confetti | Animation | "축하 애니메이션 추가해줘" |
 | 단위 테스트 | Testing | "UseCase 테스트 작성해줘" |
 | Widget 테스트 | Testing | "버튼 위젯 테스트 해줘" |
+| QA 자동화 | QA | "로그인 화면 QA 해줘" |
+| E2E 테스트 | QA | "Playwright로 홈 화면 테스트" |
+| 접근성 검사 | QA | "접근성 검사 해줘" |
+| 시각적 회귀 | QA | "스크린샷 비교해줘" |
 
 ---
 
