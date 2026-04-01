@@ -67,8 +67,8 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
       return;
     }
 
-    // TODO: 실제 앱 URL로 변경 필요
-    const baseUrl = 'https://bible-sumone.com';
+    // 딥링크 스킴 사용: biblesumone://couple/connect/{token}
+    const baseUrl = 'biblesumone://couple';
     final fullUrl = inviteLink.getFullUrl(baseUrl);
 
     try {
@@ -105,7 +105,8 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
       return;
     }
 
-    const baseUrl = 'https://bible-sumone.com';
+    // 딥링크 스킴 사용: biblesumone://couple/connect/{token}
+    const baseUrl = 'biblesumone://couple';
     final fullUrl = inviteLink.getFullUrl(baseUrl);
 
     try {
@@ -226,7 +227,8 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
     CoupleState coupleState,
   ) {
     final inviteLink = coupleState.inviteLink!;
-    const baseUrl = 'https://bible-sumone.com';
+    // 딥링크 스킴 사용: biblesumone://couple/connect/{token}
+    const baseUrl = 'biblesumone://couple';
     final fullUrl = inviteLink.getFullUrl(baseUrl);
 
     return Column(

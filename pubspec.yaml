@@ -54,6 +54,7 @@ dependencies:
   url_launcher: ^6.2.2  # 외부 링크
   share_plus: ^7.2.1  # 공유 기능
   image_picker: ^1.0.7  # 프로필 사진
+  app_links: ^6.3.2  # 딥링크 처리 (커플 초대 링크)
 
   # 로깅 & 디버깅
   logger: ^2.0.2
