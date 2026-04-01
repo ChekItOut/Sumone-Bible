@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/utils/logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/couple_provider.dart';
@@ -132,6 +133,7 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
     final coupleState = ref.watch(coupleProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: const CustomAppBar(title: '파트너 초대', showBackButton: true),
       body: SafeArea(
         child: coupleState.isLoading

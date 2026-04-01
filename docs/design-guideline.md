@@ -1688,6 +1688,126 @@ Scaffold(
 
 ---
 
+### 4.15 **CRITICAL: Scaffold 및 AppBar 일관성 규칙** ⚠️
+
+**모든 화면에서 반드시 준수해야 하는 필수 규칙**:
+
+#### Rule 1: Scaffold 배경색 필수 지정
+
+**모든 Scaffold는 명시적으로 `backgroundColor`를 지정해야 합니다.**
+
+```dart
+// ✅ 올바른 예 (필수!)
+Scaffold(
+  backgroundColor: AppTheme.backgroundColor,  // #F1F5F9 (연한 청회색)
+  appBar: ...,
+  body: ...,
+)
+
+// ❌ 잘못된 예 (금지!)
+Scaffold(
+  appBar: ...,
+  body: ...,  // 시스템 테마에 따라 검정색으로 표시될 수 있음!
+)
+```
+
+**왜 중요한가?**:
+- ❌ `backgroundColor` 미지정 시 다크 모드나 시스템 테마에 따라 **검정색 배경**이 표시됨
+- ✅ 명시적 지정으로 **모든 화면에서 일관된 배경색** 보장
+- ✅ 디자인 가이드라인 준수 (#F1F5F9)
+
+#### Rule 2: CustomAppBar 사용 권장
+
+**모든 화면은 `CustomAppBar`를 사용하여 일관성을 유지합니다.**
+
+```dart
+// ✅ 권장 (CustomAppBar)
+Scaffold(
+  backgroundColor: AppTheme.backgroundColor,
+  appBar: CustomAppBar(
+    title: '화면 제목',
+    showBackButton: true,
+  ),
+  body: ...,
+)
+
+// ⚠️ 일반 AppBar 사용 시 (불가피한 경우만)
+// 반드시 backgroundColor, foregroundColor, elevation 명시
+Scaffold(
+  backgroundColor: AppTheme.backgroundColor,
+  appBar: AppBar(
+    backgroundColor: AppTheme.backgroundColor,  // 필수!
+    foregroundColor: AppTheme.textPrimary,      // 필수!
+    elevation: 0,                               // 필수!
+    title: Text('화면 제목'),
+  ),
+  body: ...,
+)
+```
+
+#### Rule 3: 시각적 분리 금지
+
+**AppBar와 배경은 동일한 색상을 사용하여 시각적으로 분리되지 않도록 합니다.**
+
+- ✅ AppBar 배경: `AppTheme.backgroundColor` (#F1F5F9)
+- ✅ Scaffold 배경: `AppTheme.backgroundColor` (#F1F5F9)
+- ✅ Elevation: 0 (그림자 없음)
+
+**결과**: 헤더와 본문이 자연스럽게 연결되어 깔끔하고 통일된 화면 구성
+
+#### Rule 4: 배경 위 텍스트는 검정색
+
+**배경색 위에 표시되는 모든 텍스트는 `textPrimary` (#1A1A1A, 검정색)를 사용합니다.**
+
+```dart
+// ✅ 올바른 예
+Text(
+  '안녕하세요, Daniel Lee님!',
+  style: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppTheme.textPrimary,  // #1A1A1A (검정색)
+  ),
+)
+
+Text(
+  '커플 상태',
+  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+    fontWeight: FontWeight.bold,
+    // color는 기본적으로 textPrimary 적용됨
+  ),
+)
+
+// ❌ 잘못된 예
+Text(
+  '오늘의 말씀',
+  style: TextStyle(
+    color: Colors.white,  // 연한 배경에 흰색 텍스트 (보이지 않음!)
+  ),
+)
+```
+
+#### Rule 5: 프로젝트 전체 일관성 유지
+
+**모든 화면은 동일한 배경색과 AppBar 스타일을 사용해야 합니다.**
+
+**체크리스트**:
+- [ ] Scaffold에 `backgroundColor: AppTheme.backgroundColor` 명시
+- [ ] CustomAppBar 사용 (또는 일반 AppBar에 모든 스타일 명시)
+- [ ] AppBar elevation: 0 (그림자 없음)
+- [ ] 배경 위 텍스트: `textPrimary` (#1A1A1A)
+
+**적용 화면**:
+- ✅ 홈 (Home)
+- ✅ 스플래시 (Splash)
+- ✅ 프로필 설정 (Profile Setup)
+- ✅ 파트너 초대 (Invite Partner)
+- ✅ 커플 관리 (Couple Management)
+- ✅ 일일 말씀 (Daily Verse)
+- ✅ 모든 신규 화면
+
+---
+
 ## 5. 간격 시스템 (Spacing System)
 
 ### 5.1 8px Grid 기반
@@ -1837,27 +1957,35 @@ AnimatedOpacity(
 
 ### 8.1 화면 레이아웃 기본 구조
 
+**⚠️ CRITICAL: 모든 화면은 이 템플릿을 따라야 합니다!**
+
 ```dart
+import 'package:flutter/material.dart';
+import '../../../app/theme.dart';  // 필수!
+import '../../widgets/app_bar/custom_app_bar.dart';  // 권장!
+
 Scaffold(
-  backgroundColor: backgroundColor,  // 앱 배경색
-  appBar: AppBar(
-    backgroundColor: backgroundColor,
-    foregroundColor: textPrimary,
-    elevation: 0,
-    title: Text('화면 제목'),
+  backgroundColor: AppTheme.backgroundColor,  // ✅ 필수! (연한 청회색 #F1F5F9)
+  appBar: CustomAppBar(  // ✅ 권장! (일관성 유지)
+    title: '화면 제목',
+    showBackButton: true,  // 홈 화면은 false
   ),
   body: SingleChildScrollView(
     padding: EdgeInsets.all(16),  // 기본 패딩
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 섹션 1
+        // 섹션 1: 제목
         Text(
           '섹션 제목',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            // color는 자동으로 textPrimary (#1A1A1A) 적용
+          ),
         ),
         SizedBox(height: 12),
 
+        // 섹션 2: 카드
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -1865,18 +1993,44 @@ Scaffold(
           ),
           child: Padding(
             padding: EdgeInsets.all(20),
-            child: ...,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '카드 내용',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppTheme.textPrimary,  // 검정색
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
 
         SizedBox(height: 24),  // 섹션 간 간격
 
-        // 섹션 2
-        ...,
+        // 섹션 3: ...
       ],
     ),
   ),
 )
+```
+
+**필수 체크리스트**:
+- [x] `import '../../../app/theme.dart';` 추가
+- [x] `backgroundColor: AppTheme.backgroundColor` 명시
+- [x] `CustomAppBar` 사용 (또는 일반 AppBar에 모든 스타일 명시)
+- [x] 배경 위 텍스트는 `AppTheme.textPrimary` (#1A1A1A, 검정색)
+
+**일반 AppBar 사용 시 (불가피한 경우)**:
+```dart
+appBar: AppBar(
+  backgroundColor: AppTheme.backgroundColor,  // 필수!
+  foregroundColor: AppTheme.textPrimary,      // 필수!
+  elevation: 0,                               // 필수!
+  title: Text('화면 제목'),
+),
 ```
 
 ### 8.2 버튼 그룹

@@ -7,6 +7,7 @@ import '../../../core/utils/logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/couple_provider.dart';
 import '../../providers/couple_state.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/base_card.dart';
 import '../../widgets/loading/loading_indicator.dart';
@@ -67,8 +68,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: const Text('Bible SumOne'),
+      appBar: CustomAppBar(
+        title: 'Bible SumOne',
+        showBackButton: false,
         centerTitle: true,
         actions: [
           // 커플 관리 버튼 (커플 연결 시에만 표시)
