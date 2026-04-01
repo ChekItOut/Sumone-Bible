@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/theme.dart';
 import '../../../core/utils/logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/couple_provider.dart';
@@ -10,6 +9,7 @@ import '../../providers/couple_state.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/cards/base_card.dart';
 import '../../widgets/loading/loading_indicator.dart';
+import '../couple/widgets/couple_status_card.dart';
 
 /// 홈 화면
 ///
@@ -51,9 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       await ref.read(coupleProvider.notifier).loadCouple(user.id);
     } else {
       // 이 경고가 나타나면 안 됨 (SplashScreen에서 이미 체크함)
-      logger.error(
-        'HomeScreen: 사용자가 로그인되어 있지 않음! 라우팅 오류 가능성',
-      );
+      logger.error('HomeScreen: 사용자가 로그인되어 있지 않음! 라우팅 오류 가능성');
       // 안전하게 온보딩으로 리다이렉트
       if (mounted) {
         context.go('/onboarding');
@@ -140,73 +138,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         const SizedBox(height: 12),
 
         if (coupleState.isConnected)
-          // 연결됨: 커플 정보 카드
-          _buildCoupleConnectedCard(context, coupleState)
+          // 연결됨: CoupleStatusCard 위젯 재사용
+          Column(
+            children: [
+              CoupleStatusCard(
+                couple: coupleState.couple!,
+                onManageTap: () => context.push('/couple/manage'),
+              ),
+              // 플랜 미설정 시 안내 및 버튼 추가
+              if (!coupleState.couple!.hasPlan) ...[
+                const SizedBox(height: 16),
+                BaseCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.lightbulb_outline,
+                          size: 48,
+                          color: Colors.amber[700],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          '함께 읽을 플랜을 설정하세요',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '성경 읽기 플랜을 설정하면\n매일 새로운 말씀을 받아볼 수 있습니다',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: Colors.grey[600]),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        PrimaryButton(
+                          text: '플랜 설정하기',
+                          onPressed: () => context.push('/couple/plan'),
+                          icon: Icons.book,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          )
         else
           // 미연결: 초대 버튼
           _buildCoupleNotConnectedCard(context),
       ],
-    );
-  }
-
-  /// 커플 연결됨 카드
-  Widget _buildCoupleConnectedCard(
-    BuildContext context,
-    CoupleState coupleState,
-  ) {
-    final couple = coupleState.couple!;
-
-    return BaseCard(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.favorite, color: AppTheme.primaryColor, size: 24),
-                const SizedBox(width: 8),
-                Text(
-                  '파트너와 연결되었습니다',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '관계 단계: ${couple.relationshipStageText}',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '연결일: ${_formatDate(couple.createdAt)}',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-            ),
-            if (couple.hasPlan) ...[
-              const SizedBox(height: 8),
-              Text(
-                '플랜: ${couple.dailyVersePlan!.description}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => context.push('/couple/manage'),
-                  child: const Text('커플 관리'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -284,10 +266,5 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
-  }
-
-  /// 날짜 포맷팅
-  String _formatDate(DateTime date) {
-    return '${date.year}년 ${date.month}월 ${date.day}일';
   }
 }
