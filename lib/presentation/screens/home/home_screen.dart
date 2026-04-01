@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme.dart';
 import '../../../core/utils/logger.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/couple_provider.dart';
@@ -65,6 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final coupleState = ref.watch(coupleProvider);
 
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
         title: const Text('Bible SumOne'),
         centerTitle: true,
