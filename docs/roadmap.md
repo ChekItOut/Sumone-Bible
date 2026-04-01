@@ -1378,23 +1378,31 @@ class GptApiDatasource {
 - [✅] 프로필 설정 (이름, 관계 단계)
 - [✅] 상태 저장 (Supabase Auth user_metadata)
 
-#### Task 1.3: 커플 매칭 (수정됨)
-- [ ] InvitePartnerScreen 플로우 수정 (Home에서 접근)
-- [ ] ConnectCoupleScreen 플로우 수정 (플랜 화면으로 리다이렉트)
-- [ ] **CoupleManagementScreen 구현 (NEW)**
+#### Task 1.3: 커플 매칭 ✅
+- [✅] InvitePartnerScreen 플로우 수정 (Home에서 접근)
+- [✅] ConnectCoupleScreen 플로우 수정 (플랜 화면으로 리다이렉트)
+- [✅] **CoupleManagementScreen 구현 (NEW)**
   - 커플 연결 상태 표시
   - 파트너 초대/연결 버튼
   - 파트너 해제 기능
   - Daily Verse 플랜 변경 버튼
-- [ ] **DailyVersePlanScreen 구현 (NEW)**
+- [✅] **DailyVersePlanScreen 구현 (NEW)**
   - 하루 분량 선택 (절/장 단위)
   - 시작 성경 선택
   - 플랜 미리보기 동적 생성
   - Supabase `couples.daily_verse_plan` 저장
-- [ ] 파트너 초대 링크 생성
-- [ ] 초대 링크 공유 (share_plus)
-- [ ] 초대 수락 플로우
-- [ ] 커플 연결 (couples 테이블)
+- [✅] 파트너 초대 링크 생성
+- [✅] 초대 링크 공유 (share_plus)
+- [✅] 초대 수락 플로우
+- [✅] 커플 연결 (couples 테이블)
+- [✅] **HomeScreen 리팩토링 (추가)**
+  - CoupleStatusCard 위젯 재사용
+  - 플랜 미설정 시 안내 및 버튼 추가
+- [✅] **딥링크 처리 구현 (추가)**
+  - app_links 패키지 통합
+  - Android/iOS 딥링크 설정
+  - biblesumone:// 스킴 처리
+  - 초대 링크 클릭 시 앱 자동 실행
 
 ---
 
