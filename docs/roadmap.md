@@ -1408,12 +1408,12 @@ class GptApiDatasource {
 
 ### Phase 2: 일일 말씀 시스템 (Week 3-5, 기간 연장)
 
-#### Task 2.1: 로컬 성경 데이터 통합
-- [ ] BibleDataService 구현 (로컬 JSON 기반)
-- [ ] 성경 구절 조회 기능 (assets/data/bible.json)
-- [ ] 주제별 구절 매핑 (verse_topics.json)
-- [ ] 메모리 캐싱 및 최적화
-- [ ] 에러 핸들링
+#### Task 2.1: 로컬 성경 데이터 통합 ✅
+- [✅] BibleDataService 구현 (로컬 JSON 기반) → LocalBibleDataSource
+- [✅] 성경 구절 조회 기능 (assets/data/bible.json)
+- [✅] 주제별 구절 매핑 (verse_topics.json)
+- [✅] 메모리 캐싱 및 최적화
+- [✅] 에러 핸들링
 
 #### Task 2.2: AI 질문 생성 (하이브리드 전략)
 - [ ] GeminiApiDatasource 구현

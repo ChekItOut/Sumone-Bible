@@ -113,3 +113,15 @@ class UnauthorizedException extends AppException {
     dynamic originalError,
   }) : super(message, originalError: originalError);
 }
+
+// ============================================================
+// 성경 데이터 관련 예외 (Phase 2.1)
+// ============================================================
+
+/// 성경 데이터 관련 예외
+class BibleDataException extends AppException {
+  const BibleDataException({
+    String message = 'Bible data operation failed',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}

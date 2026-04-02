@@ -94,6 +94,7 @@ flutter:
     - assets/icons/
     - assets/animations/
     - assets/data/bible.json  # 한글 성경 JSON (4.9MB)
+    - assets/data/verse_topics.json  # 주제별 성경 구절 매핑 (Phase 2.1)
     - assets/_test/  # 테스트용 에셋
     - .env
 
