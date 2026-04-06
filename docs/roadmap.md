@@ -1427,11 +1427,11 @@ class GptApiDatasource {
 - [✅] 질문 품질 필터링
 - [✅] 베타 테스트용 목회자 검토 시스템
 
-#### Task 2.3: Supabase Edge Function (수정됨)
-- [ ] generate-daily-verse 함수 작성 (커플별 플랜 기반)
-- [ ] Cron Job 설정 (매일 자정) 또는 실시간 생성
-- [ ] 플랜 업데이트 로직 (current_book, current_chapter, current_verse)
-- [ ] 테스트 및 배포
+#### Task 2.3: Supabase Edge Function (수정됨) ✅
+- [✅] generate-daily-verse 함수 작성 (커플별 플랜 기반)
+- [✅] Cron Job 설정 (매일 자정) 또는 실시간 생성
+- [✅] 플랜 업데이트 로직 (current_book, current_chapter, current_verse)
+- [✅] 테스트 및 배포
 
 #### Task 2.4: UI 구현 (수정됨)
 - [ ] **HomeScreen 재구성 (NEW)**
