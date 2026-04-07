@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart'; // kDebugMode
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -74,16 +75,19 @@ class AppRouter {
           return DailyVerseScreen(verseId: verseId);
         },
       ),
-      GoRoute(
-        path: '/holy-fire-test',
-        name: 'holy-fire-test',
-        builder: (context, state) => const HolyFireTestScreen(),
-      ),
-      GoRoute(
-        path: '/firebase-auth-test',
-        name: 'firebase-auth-test',
-        builder: (context, state) => const FirebaseAuthTestScreen(),
-      ),
+      // 개발 모드에서만 테스트 화면 활성화
+      if (kDebugMode) ...[
+        GoRoute(
+          path: '/holy-fire-test',
+          name: 'holy-fire-test',
+          builder: (context, state) => const HolyFireTestScreen(),
+        ),
+        GoRoute(
+          path: '/firebase-auth-test',
+          name: 'firebase-auth-test',
+          builder: (context, state) => const FirebaseAuthTestScreen(),
+        ),
+      ],
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(
