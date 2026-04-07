@@ -364,10 +364,10 @@ class SupabaseAuthDataSource {
       print('📊 [Supabase] birth_date: ${profileData['birth_date']}');
 
       // UPSERT: user_id가 존재하면 UPDATE, 없으면 INSERT
-      final response = await _client.from('users').upsert(
-            profileData,
-            onConflict: 'user_id',
-          ).select();
+      final response = await _client
+          .from('users')
+          .upsert(profileData, onConflict: 'user_id')
+          .select();
 
       print('✅ [Supabase] public.users 업데이트 성공');
       print('📝 [Supabase] 응답: $response');

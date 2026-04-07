@@ -29,21 +29,13 @@ class VerseExtractor {
 
     try {
       // 1. 각 구절에 점수 부여
-      final scoredVerses = verses
-          .asMap()
-          .entries
-          .map((entry) {
-            final index = entry.key;
-            final verse = entry.value;
-            final score = _calculateImportanceScore(verse);
+      final scoredVerses = verses.asMap().entries.map((entry) {
+        final index = entry.key;
+        final verse = entry.value;
+        final score = _calculateImportanceScore(verse);
 
-            return _ScoredVerse(
-              verse: verse,
-              score: score,
-              originalIndex: index,
-            );
-          })
-          .toList();
+        return _ScoredVerse(verse: verse, score: score, originalIndex: index);
+      }).toList();
 
       // 2. 점수 높은 순으로 정렬
       scoredVerses.sort((a, b) => b.score.compareTo(a.score));

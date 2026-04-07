@@ -13,11 +13,7 @@ class HolyFireWidget extends StatefulWidget {
   final String imagePath;
   final double size;
 
-  const HolyFireWidget({
-    super.key,
-    required this.imagePath,
-    this.size = 150,
-  });
+  const HolyFireWidget({super.key, required this.imagePath, this.size = 150});
 
   @override
   State<HolyFireWidget> createState() => _HolyFireWidgetState();
@@ -51,13 +47,9 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
       vsync: this,
     )..repeat(reverse: true);
 
-    _floatAnimation = Tween<double>(
-      begin: -10,
-      end: 10,
-    ).animate(CurvedAnimation(
-      parent: _floatController,
-      curve: Curves.easeInOut,
-    ));
+    _floatAnimation = Tween<double>(begin: -10, end: 10).animate(
+      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
+    );
 
     // 2. Pulse Animation (맥동)
     _pulseController = AnimationController(
@@ -65,13 +57,9 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
       vsync: this,
     )..repeat(reverse: true);
 
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     // 3. Shake Animation (흔들림)
     _shakeController = AnimationController(
@@ -79,13 +67,9 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
       vsync: this,
     );
 
-    _shakeAnimation = Tween<double>(
-      begin: 0,
-      end: 0,
-    ).animate(CurvedAnimation(
-      parent: _shakeController,
-      curve: Curves.elasticOut,
-    ));
+    _shakeAnimation = Tween<double>(begin: 0, end: 0).animate(
+      CurvedAnimation(parent: _shakeController, curve: Curves.elasticOut),
+    );
 
     // ✅ 수정 1: Shake 완료 후 각도 초기화
     _shakeController.addStatusListener((status) {
@@ -105,13 +89,9 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
       vsync: this,
     )..repeat(reverse: true);
 
-    _glowAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _glowController,
-      curve: Curves.easeInOut,
-    ));
+    _glowAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    );
 
     // 5. Return Animation (제자리 복귀)
     _returnController = AnimationController(
@@ -119,13 +99,10 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
       vsync: this,
     );
 
-    _returnAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _returnController,
-      curve: Curves.easeOutBack,
-    ));
+    _returnAnimation = Tween<Offset>(begin: Offset.zero, end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _returnController, curve: Curves.easeOutBack),
+        );
   }
 
   @override
@@ -140,13 +117,9 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
 
   /// Shake 애니메이션 트리거
   void _triggerShake() {
-    _shakeAnimation = Tween<double>(
-      begin: -15,
-      end: 15,
-    ).animate(CurvedAnimation(
-      parent: _shakeController,
-      curve: Curves.elasticOut,
-    ));
+    _shakeAnimation = Tween<double>(begin: -15, end: 15).animate(
+      CurvedAnimation(parent: _shakeController, curve: Curves.elasticOut),
+    );
 
     _shakeController
       ..reset()
@@ -166,13 +139,13 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
     Future.delayed(const Duration(seconds: 2), () {
       if (!mounted) return;
 
-      _returnAnimation = Tween<Offset>(
-        begin: _dragOffset,
-        end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: _returnController,
-        curve: Curves.easeOutBack,
-      ));
+      _returnAnimation = Tween<Offset>(begin: _dragOffset, end: Offset.zero)
+          .animate(
+            CurvedAnimation(
+              parent: _returnController,
+              curve: Curves.easeOutBack,
+            ),
+          );
 
       _returnController.reset();
       _returnController.forward().then((_) {
@@ -204,8 +177,8 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
           final currentOffset = _isDragging
               ? _dragOffset
               : (_returnController.isAnimating
-                  ? _returnAnimation.value
-                  : Offset.zero);
+                    ? _returnAnimation.value
+                    : Offset.zero);
 
           return Transform.translate(
             // 드래그 오프셋
@@ -251,10 +224,7 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
                   Color(0xFFFF6B35), // 진한 주황색
                   BlendMode.srcATop,
                 ),
-                child: Image.asset(
-                  widget.imagePath,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(widget.imagePath, fit: BoxFit.contain),
               ),
             ),
           ),
@@ -273,10 +243,7 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
                   Color(0xFFFF8C42), // 중간 주황색
                   BlendMode.srcATop,
                 ),
-                child: Image.asset(
-                  widget.imagePath,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(widget.imagePath, fit: BoxFit.contain),
               ),
             ),
           ),
@@ -295,19 +262,13 @@ class _HolyFireWidgetState extends State<HolyFireWidget>
                   Color(0xFFFFA500), // 밝은 주황색
                   BlendMode.srcATop,
                 ),
-                child: Image.asset(
-                  widget.imagePath,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(widget.imagePath, fit: BoxFit.contain),
               ),
             ),
           ),
 
           // Original Image: 원본 이미지
-          Image.asset(
-            widget.imagePath,
-            fit: BoxFit.contain,
-          ),
+          Image.asset(widget.imagePath, fit: BoxFit.contain),
         ],
       ),
     );

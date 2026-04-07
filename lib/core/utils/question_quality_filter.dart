@@ -15,7 +15,9 @@ class QuestionQualityFilter {
   ///
   /// Returns: 검사 결과 (QualityCheckResult)
   QualityCheckResult checkQuality(String question) {
-    _logger.i('🔍 질문 품질 검사: ${question.substring(0, question.length > 30 ? 30 : question.length)}...');
+    _logger.i(
+      '🔍 질문 품질 검사: ${question.substring(0, question.length > 30 ? 30 : question.length)}...',
+    );
 
     final issues = <String>[];
     int score = 100; // 기본 100점
@@ -93,15 +95,7 @@ class QuestionQualityFilter {
   /// 커플 대화 적합성 검사
   bool _isCoupleConversationSuitable(String question) {
     // 긍정적 키워드
-    final positiveKeywords = [
-      '우리',
-      '서로',
-      '함께',
-      '관계',
-      '사랑',
-      '믿음',
-      '기도',
-    ];
+    final positiveKeywords = ['우리', '서로', '함께', '관계', '사랑', '믿음', '기도'];
 
     for (final keyword in positiveKeywords) {
       if (question.contains(keyword)) {
@@ -110,12 +104,7 @@ class QuestionQualityFilter {
     }
 
     // 단독 질문 패턴 (부정적)
-    final negativePatterns = [
-      '당신은',
-      '너는',
-      '나는',
-      '혼자',
-    ];
+    final negativePatterns = ['당신은', '너는', '나는', '혼자'];
 
     for (final pattern in negativePatterns) {
       if (question.contains(pattern)) {

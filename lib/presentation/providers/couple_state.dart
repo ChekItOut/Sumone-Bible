@@ -27,43 +27,43 @@ class CoupleState {
 
   /// 초기 상태
   factory CoupleState.initial() => const CoupleState(
-        isLoading: false,
-        couple: null,
-        inviteLink: null,
-        error: null,
-      );
+    isLoading: false,
+    couple: null,
+    inviteLink: null,
+    error: null,
+  );
 
   /// 로딩 상태
   factory CoupleState.loading() => const CoupleState(
-        isLoading: true,
-        couple: null,
-        inviteLink: null,
-        error: null,
-      );
+    isLoading: true,
+    couple: null,
+    inviteLink: null,
+    error: null,
+  );
 
   /// 커플 로드 완료 상태
   factory CoupleState.loaded(Couple couple) => CoupleState(
-        isLoading: false,
-        couple: couple,
-        inviteLink: null,
-        error: null,
-      );
+    isLoading: false,
+    couple: couple,
+    inviteLink: null,
+    error: null,
+  );
 
   /// 초대 링크 생성 완료 상태
   factory CoupleState.inviteLinkCreated(InviteLink inviteLink) => CoupleState(
-        isLoading: false,
-        couple: null,
-        inviteLink: inviteLink,
-        error: null,
-      );
+    isLoading: false,
+    couple: null,
+    inviteLink: inviteLink,
+    error: null,
+  );
 
   /// 에러 상태
   factory CoupleState.error(String message) => CoupleState(
-        isLoading: false,
-        couple: null,
-        inviteLink: null,
-        error: message,
-      );
+    isLoading: false,
+    couple: null,
+    inviteLink: null,
+    error: message,
+  );
 
   /// copyWith 메서드 (상태 업데이트)
   CoupleState copyWith({

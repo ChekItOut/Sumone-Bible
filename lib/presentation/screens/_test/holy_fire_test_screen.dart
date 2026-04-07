@@ -15,19 +15,13 @@ class HolyFireTestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('🔥 성령의 불 캐릭터 테스트'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('🔥 성령의 불 캐릭터 테스트'), centerTitle: true),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.purple.shade50,
-              Colors.blue.shade50,
-            ],
+            colors: [Colors.purple.shade50, Colors.blue.shade50],
           ),
         ),
         child: SafeArea(
@@ -39,18 +33,18 @@ class HolyFireTestScreen extends StatelessWidget {
                 Text(
                   '성령의 불 캐릭터',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
                 ),
                 const SizedBox(height: 8),
 
                 // 설명
                 Text(
                   '정적 이미지 1개 + Flutter 애니메이션',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade700,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
                 ),
                 const SizedBox(height: 40),
 
@@ -81,16 +75,23 @@ class HolyFireTestScreen extends StatelessWidget {
                     children: [
                       Text(
                         '🎨 적용된 애니메이션',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 12),
                       _buildAnimationItem('Float', '위아래로 둥실둥실 움직임'),
                       _buildAnimationItem('Pulse', '크기가 커졌다 작아지는 맥동'),
                       _buildAnimationItem('Glow', '테두리가 진한 주황색으로 반짝임'),
-                      _buildAnimationItem('Shake', '캐릭터를 탭하면 흔들림!', highlight: true),
-                      _buildAnimationItem('Drag', '드래그로 이동, 2초 후 자동 복귀!', highlight: true),
+                      _buildAnimationItem(
+                        'Shake',
+                        '캐릭터를 탭하면 흔들림!',
+                        highlight: true,
+                      ),
+                      _buildAnimationItem(
+                        'Drag',
+                        '드래그로 이동, 2초 후 자동 복귀!',
+                        highlight: true,
+                      ),
                     ],
                   ),
                 ),
@@ -102,9 +103,9 @@ class HolyFireTestScreen extends StatelessWidget {
                   child: Text(
                     '💡 이 모든 효과는 정적 이미지 1개만으로 구현되었습니다.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade600,
-                          fontStyle: FontStyle.italic,
-                        ),
+                      color: Colors.grey.shade600,
+                      fontStyle: FontStyle.italic,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -116,7 +117,11 @@ class HolyFireTestScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnimationItem(String name, String description, {bool highlight = false}) {
+  Widget _buildAnimationItem(
+    String name,
+    String description, {
+    bool highlight = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -133,16 +138,15 @@ class HolyFireTestScreen extends StatelessWidget {
           Expanded(
             child: RichText(
               text: TextSpan(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade800,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
                 children: [
                   TextSpan(
                     text: '$name: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: highlight ? Colors.deepPurple : Colors.grey.shade800,
+                      color: highlight
+                          ? Colors.deepPurple
+                          : Colors.grey.shade800,
                     ),
                   ),
                   TextSpan(text: description),

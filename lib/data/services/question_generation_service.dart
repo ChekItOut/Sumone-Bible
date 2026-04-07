@@ -122,9 +122,7 @@ class QuestionGenerationService {
     return await _geminiDataSource.generateQuestion(
       verseText: keyText,
       relationshipStage: relationshipStage,
-      context: topic != null
-          ? '주제: $topic (긴 구절 중 핵심만 추출)'
-          : '긴 구절 중 핵심만 추출',
+      context: topic != null ? '주제: $topic (긴 구절 중 핵심만 추출)' : '긴 구절 중 핵심만 추출',
     );
   }
 

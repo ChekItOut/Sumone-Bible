@@ -55,7 +55,6 @@ class AppTheme {
     ),
 
     scaffoldBackgroundColor: backgroundColor, // 연한 회색/핑크 배경
-
     // ==================== 텍스트 테마 ====================
     // TODO: 폰트 파일 추가 후 fontFamily 활성화
     textTheme: const TextTheme(
@@ -167,10 +166,7 @@ class AppTheme {
           width: 2,
         ),
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 16,
-      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       hintStyle: const TextStyle(color: textSecondary),
     ),
 
@@ -273,22 +269,15 @@ class AppTheme {
         backgroundColor: primaryLight,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
 
     cardTheme: CardThemeData(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: surfaceDark,
     ),
 
@@ -303,10 +292,7 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: primaryLight, width: 2),
       ),
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 16,
-        horizontal: 16,
-      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       hintStyle: const TextStyle(color: textSecondaryDark),
     ),
 

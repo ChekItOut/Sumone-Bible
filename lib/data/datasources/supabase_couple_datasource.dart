@@ -43,22 +43,16 @@ class SupabaseCoupleDataSource {
 
       return InviteLinkModel.fromJson(response);
     } on PostgrestException catch (e) {
-      throw DatabaseException(
-        '초대 링크 생성 실패',
-        code: e.code,
-        originalError: e,
-      );
+      throw DatabaseException('초대 링크 생성 실패', code: e.code, originalError: e);
     } catch (e) {
-      throw NetworkException(
-        message: '초대 링크 생성 중 네트워크 오류',
-        originalError: e,
-      );
+      throw NetworkException(message: '초대 링크 생성 중 네트워크 오류', originalError: e);
     }
   }
 
   /// 랜덤 토큰 생성 (32자)
   String _generateToken() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
     return List.generate(32, (_) => chars[random.nextInt(chars.length)]).join();
   }
@@ -87,18 +81,14 @@ class SupabaseCoupleDataSource {
           .maybeSingle();
 
       if (inviteResponse == null) {
-        throw const InvalidInviteLinkException(
-          message: '유효하지 않은 초대 링크입니다',
-        );
+        throw const InvalidInviteLinkException(message: '유효하지 않은 초대 링크입니다');
       }
 
       final inviteLink = InviteLinkModel.fromJson(inviteResponse);
 
       // 2. 만료 확인
       if (inviteLink.isExpired) {
-        throw const ExpiredInviteLinkException(
-          message: '초대 링크가 만료되었습니다',
-        );
+        throw const ExpiredInviteLinkException(message: '초대 링크가 만료되었습니다');
       }
 
       final inviterId = inviteLink.inviterId;
@@ -111,9 +101,7 @@ class SupabaseCoupleDataSource {
           .single();
 
       if (accepterUser['couple_id'] != null) {
-        throw const AlreadyConnectedException(
-          message: '이미 다른 파트너와 연결되어 있습니다',
-        );
+        throw const AlreadyConnectedException(message: '이미 다른 파트너와 연결되어 있습니다');
       }
 
       // 4. 이미 연결된 사용자인지 확인 (inviter)
@@ -162,16 +150,9 @@ class SupabaseCoupleDataSource {
     } on AlreadyConnectedException {
       rethrow;
     } on PostgrestException catch (e) {
-      throw DatabaseException(
-        '초대 수락 실패',
-        code: e.code,
-        originalError: e,
-      );
+      throw DatabaseException('초대 수락 실패', code: e.code, originalError: e);
     } catch (e) {
-      throw NetworkException(
-        message: '초대 수락 중 네트워크 오류',
-        originalError: e,
-      );
+      throw NetworkException(message: '초대 수락 중 네트워크 오류', originalError: e);
     }
   }
 
@@ -196,9 +177,7 @@ class SupabaseCoupleDataSource {
       final coupleId = userResponse['couple_id'] as String?;
 
       if (coupleId == null) {
-        throw const NoCoupleException(
-          message: '커플 정보를 찾을 수 없습니다',
-        );
+        throw const NoCoupleException(message: '커플 정보를 찾을 수 없습니다');
       }
 
       // 2. couples 테이블에서 커플 정보 조회
@@ -214,20 +193,11 @@ class SupabaseCoupleDataSource {
     } on PostgrestException catch (e) {
       // couple_id는 있는데 couples 테이블에 데이터가 없는 경우 (데이터 불일치)
       if (e.code == 'PGRST116') {
-        throw const NoCoupleException(
-          message: '커플 정보를 찾을 수 없습니다',
-        );
+        throw const NoCoupleException(message: '커플 정보를 찾을 수 없습니다');
       }
-      throw DatabaseException(
-        '커플 정보 조회 실패',
-        code: e.code,
-        originalError: e,
-      );
+      throw DatabaseException('커플 정보 조회 실패', code: e.code, originalError: e);
     } catch (e) {
-      throw NetworkException(
-        message: '커플 정보 조회 중 네트워크 오류',
-        originalError: e,
-      );
+      throw NetworkException(message: '커플 정보 조회 중 네트워크 오류', originalError: e);
     }
   }
 
@@ -257,35 +227,23 @@ class SupabaseCoupleDataSource {
       final user2Id = coupleResponse['user2_id'] as String;
 
       if (userId != user1Id && userId != user2Id) {
-        throw const UnauthorizedException(
-          message: '커플 연결을 해제할 권한이 없습니다',
-        );
+        throw const UnauthorizedException(message: '커플 연결을 해제할 권한이 없습니다');
       }
 
       // 2. users 테이블 UPDATE (두 사용자의 couple_id = null)
-      await _supabase
-          .from('users')
-          .update({'couple_id': null})
-          .inFilter('user_id', [user1Id, user2Id]);
+      await _supabase.from('users').update({'couple_id': null}).inFilter(
+        'user_id',
+        [user1Id, user2Id],
+      );
 
       // 3. couples 테이블 DELETE (CASCADE로 관련 데이터도 삭제)
-      await _supabase
-          .from('couples')
-          .delete()
-          .eq('couple_id', coupleId);
+      await _supabase.from('couples').delete().eq('couple_id', coupleId);
     } on UnauthorizedException {
       rethrow;
     } on PostgrestException catch (e) {
-      throw DatabaseException(
-        '커플 연결 해제 실패',
-        code: e.code,
-        originalError: e,
-      );
+      throw DatabaseException('커플 연결 해제 실패', code: e.code, originalError: e);
     } catch (e) {
-      throw NetworkException(
-        message: '커플 연결 해제 중 네트워크 오류',
-        originalError: e,
-      );
+      throw NetworkException(message: '커플 연결 해제 중 네트워크 오류', originalError: e);
     }
   }
 
@@ -307,25 +265,16 @@ class SupabaseCoupleDataSource {
       // couples 테이블 UPDATE (daily_verse_plan JSONB 필드)
       final response = await _supabase
           .from('couples')
-          .update({
-            'daily_verse_plan': plan.toJson(),
-          })
+          .update({'daily_verse_plan': plan.toJson()})
           .eq('couple_id', coupleId)
           .select()
           .single();
 
       return CoupleModel.fromJson(response);
     } on PostgrestException catch (e) {
-      throw DatabaseException(
-        '플랜 업데이트 실패',
-        code: e.code,
-        originalError: e,
-      );
+      throw DatabaseException('플랜 업데이트 실패', code: e.code, originalError: e);
     } catch (e) {
-      throw NetworkException(
-        message: '플랜 업데이트 중 네트워크 오류',
-        originalError: e,
-      );
+      throw NetworkException(message: '플랜 업데이트 중 네트워크 오류', originalError: e);
     }
   }
 }

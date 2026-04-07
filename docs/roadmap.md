@@ -1433,15 +1433,15 @@ class GptApiDatasource {
 - [✅] 플랜 업데이트 로직 (current_book, current_chapter, current_verse)
 - [✅] 테스트 및 배포
 
-#### Task 2.4: UI 구현 (수정됨)
-- [ ] **HomeScreen 재구성 (NEW)**
+#### Task 2.4: UI 구현 (수정됨) ✅
+- [✅] **HomeScreen 재구성 (NEW)**
   - 커플 상태 섹션 추가
   - 주간 캘린더 UI 추가
   - 성령의 불 캐릭터 배치
   - 오늘의 말씀 카드
-- [ ] 오늘의 말씀 상세 화면
-- [ ] 성경 구절 표시 (Noto Serif KR)
-- [ ] 질문 카드 UI
+- [✅] 오늘의 말씀 상세 화면
+- [✅] 성경 구절 표시 (Pretendard 폰트)
+- [✅] 질문 카드 UI
 
 ---
 
@@ -1974,3 +1974,31 @@ echo "SUPABASE_ANON_KEY=your_key" >> .env
 **최종 업데이트**: 2026-03-28
 **작성자**: Product & Dev Team
 **변경사항**: Phase 2.5 추가 (성경 읽기 시스템), 탭바 네비게이션, 캘린더 기능 확장
+## Codex Status Update (2026-04-07)
+
+Task 2.4 implementation status:
+
+### 구현 완료 ✅
+- [✅] HomeScreen restructure (완료)
+  - Couple status section
+  - Weekly calendar UI (WeeklyCalendar 위젯)
+  - Holy Fire placeholder (HolyFireWidget)
+  - Daily verse card (DailyVerseCard + VerseProvider 연동)
+- [✅] Daily verse detail screen (DailyVerseScreen)
+  - VerseText 위젯 (Pretendard 폰트)
+  - QuestionCard 위젯
+- [✅] Entity/Model/Provider 구현
+  - DailyVerse Entity
+  - DailyVerseModel
+  - VerseProvider + VerseState
+- [✅] Route activation (/verse/daily, /verse/:verseId)
+
+### 해결된 이슈 ✅
+- [✅] pastor_review_service.dart - Supabase v2 API 적용 완료
+  - FetchOptions 제거 → .count() 메서드 사용
+  - PostgrestResponse.count 필드 사용
+
+### 검증 대기 ⏳
+- [ ] `flutter analyze` 통과 확인
+- [ ] `dart format .` 적용
+- [ ] 기존 플로우 회귀 테스트

@@ -31,10 +31,7 @@ class DisconnectCoupleParams {
   final String coupleId;
   final String userId;
 
-  const DisconnectCoupleParams({
-    required this.coupleId,
-    required this.userId,
-  });
+  const DisconnectCoupleParams({required this.coupleId, required this.userId});
 
   @override
   bool operator ==(Object other) {

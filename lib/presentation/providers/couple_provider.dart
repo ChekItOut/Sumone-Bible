@@ -49,17 +49,14 @@ class CoupleNotifier extends StateNotifier<CoupleState> {
 
     final result = await _getCoupleUseCase.call(userId);
 
-    result.fold(
-      (failure) {
-        // 커플 정보가 없는 경우는 에러가 아니라 정상 상태
-        if (failure.message.contains('찾을 수 없습니다')) {
-          state = CoupleState.initial();
-        } else {
-          state = state.copyWith(isLoading: false, error: failure.message);
-        }
-      },
-      (couple) => state = CoupleState.loaded(couple),
-    );
+    result.fold((failure) {
+      // 커플 정보가 없는 경우는 에러가 아니라 정상 상태
+      if (failure.message.contains('찾을 수 없습니다')) {
+        state = CoupleState.initial();
+      } else {
+        state = state.copyWith(isLoading: false, error: failure.message);
+      }
+    }, (couple) => state = CoupleState.loaded(couple));
   }
 
   /// 초대 링크 생성
@@ -154,7 +151,9 @@ class CoupleNotifier extends StateNotifier<CoupleState> {
 }
 
 /// CoupleProvider 전역 인스턴스
-final coupleProvider = StateNotifierProvider<CoupleNotifier, CoupleState>((ref) {
+final coupleProvider = StateNotifierProvider<CoupleNotifier, CoupleState>((
+  ref,
+) {
   final repository = ref.read(coupleRepositoryProvider);
   return CoupleNotifier(repository);
 });

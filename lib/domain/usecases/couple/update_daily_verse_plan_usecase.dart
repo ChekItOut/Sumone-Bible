@@ -20,7 +20,9 @@ class UpdateDailyVersePlanUseCase {
   /// Returns:
   /// - Right(Couple): 업데이트 성공
   /// - Left(Failure): 업데이트 실패
-  Future<Either<Failure, Couple>> call(UpdateDailyVersePlanParams params) async {
+  Future<Either<Failure, Couple>> call(
+    UpdateDailyVersePlanParams params,
+  ) async {
     return await repository.updateDailyVersePlan(
       coupleId: params.coupleId,
       plan: params.plan,

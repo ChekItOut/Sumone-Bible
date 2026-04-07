@@ -32,10 +32,7 @@ class AcceptInviteParams {
   final String token;
   final String accepterId;
 
-  const AcceptInviteParams({
-    required this.token,
-    required this.accepterId,
-  });
+  const AcceptInviteParams({required this.token, required this.accepterId});
 
   @override
   bool operator ==(Object other) {

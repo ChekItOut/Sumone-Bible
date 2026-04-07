@@ -32,14 +32,18 @@ class PastorReviewService {
     _logger.i('📝 목회자 검토 제출: $question');
 
     try {
-      final response = await _supabase.from('question_reviews').insert({
-        'verse_id': verseId,
-        'question': question,
-        'generation_method': generationMethod,
-        'status': 'pending', // 검토 대기
-        'metadata': metadata ?? {},
-        'submitted_at': DateTime.now().toIso8601String(),
-      }).select().single();
+      final response = await _supabase
+          .from('question_reviews')
+          .insert({
+            'verse_id': verseId,
+            'question': question,
+            'generation_method': generationMethod,
+            'status': 'pending', // 검토 대기
+            'metadata': metadata ?? {},
+            'submitted_at': DateTime.now().toIso8601String(),
+          })
+          .select()
+          .single();
 
       final questionId = response['id'] as String;
       _logger.i('✅ 검토 제출 완료: $questionId');
@@ -68,12 +72,15 @@ class PastorReviewService {
     _logger.i('✅ 질문 검토: $questionId, 승인=$approved');
 
     try {
-      await _supabase.from('question_reviews').update({
-        'status': approved ? 'approved' : 'rejected',
-        'reviewer_id': pastorId,
-        'feedback': feedback,
-        'reviewed_at': DateTime.now().toIso8601String(),
-      }).eq('id', questionId);
+      await _supabase
+          .from('question_reviews')
+          .update({
+            'status': approved ? 'approved' : 'rejected',
+            'reviewer_id': pastorId,
+            'feedback': feedback,
+            'reviewed_at': DateTime.now().toIso8601String(),
+          })
+          .eq('id', questionId);
 
       _logger.i('✅ 검토 완료');
       return true;
@@ -150,25 +157,30 @@ class PastorReviewService {
     _logger.i('📊 검토 통계 조회');
 
     try {
-      final pending = await _supabase
+      // Supabase v2.x: .count() 메서드 사용
+      final pendingResponse = await _supabase
           .from('question_reviews')
-          .select('id', const FetchOptions(count: CountOption.exact))
-          .eq('status', 'pending');
+          .select('id')
+          .eq('status', 'pending')
+          .count();
 
-      final approved = await _supabase
+      final approvedResponse = await _supabase
           .from('question_reviews')
-          .select('id', const FetchOptions(count: CountOption.exact))
-          .eq('status', 'approved');
+          .select('id')
+          .eq('status', 'approved')
+          .count();
 
-      final rejected = await _supabase
+      final rejectedResponse = await _supabase
           .from('question_reviews')
-          .select('id', const FetchOptions(count: CountOption.exact))
-          .eq('status', 'rejected');
+          .select('id')
+          .eq('status', 'rejected')
+          .count();
 
+      // PostgrestResponse.count 필드 사용 (non-nullable int)
       final stats = ReviewStats(
-        pending: pending.count ?? 0,
-        approved: approved.count ?? 0,
-        rejected: rejected.count ?? 0,
+        pending: pendingResponse.count,
+        approved: approvedResponse.count,
+        rejected: rejectedResponse.count,
       );
 
       _logger.i('✅ 통계 조회 완료: $stats');

@@ -27,8 +27,7 @@ class ProfileSetupScreen extends ConsumerStatefulWidget {
   const ProfileSetupScreen({super.key});
 
   @override
-  ConsumerState<ProfileSetupScreen> createState() =>
-      _ProfileSetupScreenState();
+  ConsumerState<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
 }
 
 class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
@@ -216,8 +215,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
         'name': _nameController.text.trim(),
         'relationship_stage': _selectedRelationshipStage,
         'birth_date': _birthDate!.toIso8601String().split('T')[0], // DATE 형식
-        'relationship_start_date':
-            _relationshipStartDate!.toIso8601String().split('T')[0],
+        'relationship_start_date': _relationshipStartDate!
+            .toIso8601String()
+            .split('T')[0],
         if (_selectedRelationshipStage == 'married' && _marriageDate != null)
           'marriage_date': _marriageDate!.toIso8601String().split('T')[0],
         'created_at': now.toIso8601String(), // INSERT 시 필요
@@ -288,16 +288,16 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 // 안내 메시지
                 Text(
                   '거의 다 왔어요!',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: Colors.black,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.headlineLarge?.copyWith(color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '파트너와 함께 사용할 프로필을 설정해주세요',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.black87,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: Colors.black87),
                 ),
 
                 const SizedBox(height: 32),
@@ -476,13 +476,13 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                     children: [
                       Text(
                         '관계 단계',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       ..._relationshipStages.entries.map((entry) {
-                        final isSelected = _selectedRelationshipStage == entry.key;
+                        final isSelected =
+                            _selectedRelationshipStage == entry.key;
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12),
@@ -568,7 +568,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                           _relationshipStartDate = date;
                         });
                       },
-                      initialDate: DateTime.now().subtract(const Duration(days: 365)),
+                      initialDate: DateTime.now().subtract(
+                        const Duration(days: 365),
+                      ),
                       firstDate: DateTime(2000),
                       lastDate: DateTime.now(),
                     ),

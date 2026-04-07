@@ -30,8 +30,9 @@ final questionQualityFilterProvider = Provider<QuestionQualityFilter>((ref) {
 });
 
 /// QuestionGenerationService Provider
-final questionGenerationServiceProvider =
-    Provider<QuestionGenerationService>((ref) {
+final questionGenerationServiceProvider = Provider<QuestionGenerationService>((
+  ref,
+) {
   final geminiDataSource = ref.watch(geminiApiDataSourceProvider);
   final verseExtractor = ref.watch(verseExtractorProvider);
   final questionTemplates = ref.watch(questionTemplatesProvider);
@@ -60,75 +61,80 @@ final pastorReviewServiceProvider = Provider<PastorReviewService>((ref) {
 ///   error: (err, stack) => Text('오류: $err'),
 /// );
 /// ```
-final generateQuestionProvider = FutureProvider.family<String, QuestionGenerationParams>(
-  (ref, params) async {
-    final service = ref.watch(questionGenerationServiceProvider);
-    final qualityFilter = ref.watch(questionQualityFilterProvider);
-    final reviewService = ref.watch(pastorReviewServiceProvider);
+final generateQuestionProvider =
+    FutureProvider.family<String, QuestionGenerationParams>((
+      ref,
+      params,
+    ) async {
+      final service = ref.watch(questionGenerationServiceProvider);
+      final qualityFilter = ref.watch(questionQualityFilterProvider);
+      final reviewService = ref.watch(pastorReviewServiceProvider);
 
-    // 1. 승인된 질문이 있는지 먼저 확인 (베타 테스트)
-    if (params.verseId != null) {
-      final approvedQuestion =
-          await reviewService.getApprovedQuestion(params.verseId!);
-      if (approvedQuestion != null) {
-        return approvedQuestion;
-      }
-    }
-
-    // 2. 새로운 질문 생성
-    final generatedQuestion = await service.generateQuestion(
-      verses: params.verses,
-      relationshipStage: params.relationshipStage,
-      topic: params.topic,
-      bookName: params.bookName,
-    );
-
-    // 3. 품질 검사
-    final qualityResult = qualityFilter.checkQuality(generatedQuestion);
-
-    if (!qualityResult.isValid) {
-      // 품질 미달 시 개선 시도
-      final improvedQuestion = qualityFilter.improveQuestion(generatedQuestion);
-
-      // 재검사
-      final recheck = qualityFilter.checkQuality(improvedQuestion);
-      if (recheck.isValid) {
-        // 검토 제출 (비동기, 결과 대기 안 함)
-        if (params.verseId != null) {
-          _submitForReviewInBackground(
-            reviewService: reviewService,
-            verseId: params.verseId!,
-            question: improvedQuestion,
-            verses: params.verses,
-          );
+      // 1. 승인된 질문이 있는지 먼저 확인 (베타 테스트)
+      if (params.verseId != null) {
+        final approvedQuestion = await reviewService.getApprovedQuestion(
+          params.verseId!,
+        );
+        if (approvedQuestion != null) {
+          return approvedQuestion;
         }
-
-        return improvedQuestion;
-      } else {
-        // 여전히 미달이면 템플릿 사용
-        return ref
-            .watch(questionTemplatesProvider)
-            .generateTemplateQuestion(
-              topic: params.topic,
-              relationshipStage: params.relationshipStage,
-              bookName: params.bookName,
-            );
       }
-    }
 
-    // 4. 검토 제출 (백그라운드)
-    if (params.verseId != null) {
-      _submitForReviewInBackground(
-        reviewService: reviewService,
-        verseId: params.verseId!,
-        question: generatedQuestion,
+      // 2. 새로운 질문 생성
+      final generatedQuestion = await service.generateQuestion(
         verses: params.verses,
+        relationshipStage: params.relationshipStage,
+        topic: params.topic,
+        bookName: params.bookName,
       );
-    }
 
-    return generatedQuestion;
-  },
-);
+      // 3. 품질 검사
+      final qualityResult = qualityFilter.checkQuality(generatedQuestion);
+
+      if (!qualityResult.isValid) {
+        // 품질 미달 시 개선 시도
+        final improvedQuestion = qualityFilter.improveQuestion(
+          generatedQuestion,
+        );
+
+        // 재검사
+        final recheck = qualityFilter.checkQuality(improvedQuestion);
+        if (recheck.isValid) {
+          // 검토 제출 (비동기, 결과 대기 안 함)
+          if (params.verseId != null) {
+            _submitForReviewInBackground(
+              reviewService: reviewService,
+              verseId: params.verseId!,
+              question: improvedQuestion,
+              verses: params.verses,
+            );
+          }
+
+          return improvedQuestion;
+        } else {
+          // 여전히 미달이면 템플릿 사용
+          return ref
+              .watch(questionTemplatesProvider)
+              .generateTemplateQuestion(
+                topic: params.topic,
+                relationshipStage: params.relationshipStage,
+                bookName: params.bookName,
+              );
+        }
+      }
+
+      // 4. 검토 제출 (백그라운드)
+      if (params.verseId != null) {
+        _submitForReviewInBackground(
+          reviewService: reviewService,
+          verseId: params.verseId!,
+          question: generatedQuestion,
+          verses: params.verses,
+        );
+      }
+
+      return generatedQuestion;
+    });
 
 /// 백그라운드 검토 제출 (Fire and Forget)
 Future<void> _submitForReviewInBackground({
@@ -143,8 +149,8 @@ Future<void> _submitForReviewInBackground({
     final method = verseCount <= 5
         ? 'gemini_full'
         : verseCount <= 50
-            ? 'gemini_key'
-            : 'template';
+        ? 'gemini_key'
+        : 'template';
 
     await reviewService.submitForReview(
       verseId: verseId,

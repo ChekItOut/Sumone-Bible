@@ -60,9 +60,9 @@ class GeminiApiDataSource {
           'contents': [
             {
               'parts': [
-                {'text': prompt}
-              ]
-            }
+                {'text': prompt},
+              ],
+            },
           ],
           'generationConfig': {
             'temperature': 0.7,
@@ -76,7 +76,9 @@ class GeminiApiDataSource {
       // 응답 파싱
       if (response.statusCode == 200) {
         final question = _parseResponse(response.data);
-        _logger.i('✅ Gemini API 성공: ${question.substring(0, question.length > 50 ? 50 : question.length)}...');
+        _logger.i(
+          '✅ Gemini API 성공: ${question.substring(0, question.length > 50 ? 50 : question.length)}...',
+        );
         return question;
       } else {
         throw GeminiApiException(
@@ -99,11 +101,13 @@ class GeminiApiDataSource {
     String? context,
   }) {
     // 관계 단계별 컨텍스트
-    final stageContext = {
-      'dating': '연애 중인',
-      'engaged': '약혼한',
-      'married': '결혼한',
-    }[relationshipStage] ?? '크리스천';
+    final stageContext =
+        {
+          'dating': '연애 중인',
+          'engaged': '약혼한',
+          'married': '결혼한',
+        }[relationshipStage] ??
+        '크리스천';
 
     return '''
 당신은 크리스천 커플을 위한 성경 공부 가이드입니다.

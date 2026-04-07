@@ -17,9 +17,8 @@ import '../models/daily_verse_plan_model.dart';
 class CoupleRepositoryImpl implements CoupleRepository {
   final SupabaseCoupleDataSource _dataSource;
 
-  CoupleRepositoryImpl({
-    required SupabaseCoupleDataSource dataSource,
-  }) : _dataSource = dataSource;
+  CoupleRepositoryImpl({required SupabaseCoupleDataSource dataSource})
+    : _dataSource = dataSource;
 
   @override
   Future<Either<Failure, InviteLink>> createInviteLink(String userId) async {
@@ -83,10 +82,7 @@ class CoupleRepositoryImpl implements CoupleRepository {
     required String userId,
   }) async {
     try {
-      await _dataSource.disconnectCouple(
-        coupleId: coupleId,
-        userId: userId,
-      );
+      await _dataSource.disconnectCouple(coupleId: coupleId, userId: userId);
       return const Right(unit);
     } on UnauthorizedException {
       return Left(CoupleFailure.unauthorized());
