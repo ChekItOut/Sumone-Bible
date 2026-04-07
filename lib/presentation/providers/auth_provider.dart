@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/app_config.dart';
@@ -21,7 +23,11 @@ import 'auth_state.dart';
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   if (AppConfig.useFirebase) {
     // Firebase 사용
-    final firebaseDataSource = FirebaseAuthDataSource();
+    // Web 플랫폼일 경우 Google Client ID 전달
+    final webClientId = kIsWeb ? dotenv.env['GOOGLE_CLIENT_ID_WEB'] : null;
+    final firebaseDataSource = FirebaseAuthDataSource(
+      webClientId: webClientId,
+    );
     return AuthRepositoryImpl(firebaseDataSource: firebaseDataSource);
   } else {
     // Supabase 사용 (현재)

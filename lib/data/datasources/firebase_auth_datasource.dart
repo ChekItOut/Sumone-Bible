@@ -17,9 +17,14 @@ class FirebaseAuthDataSource {
   FirebaseAuthDataSource({
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    String? webClientId,
   }) : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-       _googleSignIn =
-           googleSignIn ?? GoogleSignIn(scopes: ['email', 'profile']);
+       _googleSignIn = googleSignIn ??
+           GoogleSignIn(
+             scopes: ['email', 'profile'],
+             // Web용 clientId 설정 (Web 플랫폼에서만 필요)
+             clientId: webClientId,
+           );
 
   /// 현재 로그인한 사용자 가져오기
   ///
