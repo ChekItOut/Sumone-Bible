@@ -464,11 +464,16 @@ service cloud.firestore {
   }
   ```
 
-#### Task 1.4: 테스트
-- [ ] 이메일 로그인 테스트
-- [ ] Google 로그인 테스트
-- [ ] 로그아웃 테스트
-- [ ] Auth State Changes 테스트
+#### Task 1.4: 테스트 ✅
+- [✅] 단위 테스트 작성 (`test/data/datasources/firebase_auth_datasource_test.dart`)
+- [✅] 테스트 화면 구현 (`lib/presentation/screens/_test/firebase_auth_test_screen.dart`)
+- [✅] AppConfig.useFirebase = true 설정
+- [ ] 수동 테스트 수행:
+  - [ ] 이메일 로그인 테스트
+  - [ ] 이메일 회원가입 테스트
+  - [ ] Google 로그인 테스트
+  - [ ] 로그아웃 테스트
+  - [ ] Auth State Changes 테스트
 
 ---
 

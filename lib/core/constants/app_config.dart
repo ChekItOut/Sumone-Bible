@@ -4,9 +4,9 @@
 class AppConfig {
   /// Firebase 사용 여부
   ///
-  /// - true: Firebase 사용 (마이그레이션 완료 후)
-  /// - false: Supabase 사용 (현재)
-  static const bool useFirebase = false;
+  /// - true: Firebase 사용 (Phase 1 테스트 중 🔥)
+  /// - false: Supabase 사용
+  static const bool useFirebase = true; // Phase 1 테스트: Firebase 활성화!
 
   /// 디버그 모드
   static const bool isDebug = true;

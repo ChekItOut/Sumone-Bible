@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../presentation/screens/_test/firebase_auth_test_screen.dart';
 import '../presentation/screens/_test/holy_fire_test_screen.dart';
 import '../presentation/screens/couple/connect_couple_screen.dart';
 import '../presentation/screens/couple/couple_management_screen.dart';
@@ -77,6 +78,11 @@ class AppRouter {
         path: '/holy-fire-test',
         name: 'holy-fire-test',
         builder: (context, state) => const HolyFireTestScreen(),
+      ),
+      GoRoute(
+        path: '/firebase-auth-test',
+        name: 'firebase-auth-test',
+        builder: (context, state) => const FirebaseAuthTestScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
