@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // flutterfire configure 실행 후 생성됨
 import 'package:logger/logger.dart';
 import 'app/app.dart';
 import 'data/datasources/local_bible_datasource.dart';
+import 'core/constants/app_config.dart';
 
 /// Bible SumOne 앱 진입점
 ///
@@ -12,8 +15,9 @@ import 'data/datasources/local_bible_datasource.dart';
 /// 1. Flutter 바인딩 초기화
 /// 2. 환경 변수 로드 (.env)
 /// 3. Supabase 초기화 ✅ Phase 0.2 완료
-/// 4. Bible 데이터 초기화 ✅ Phase 2.1 완료
-/// 5. Riverpod ProviderScope로 앱 실행
+/// 4. Firebase 초기화 🔄 Phase 0 진행 중
+/// 5. Bible 데이터 초기화 ✅ Phase 2.1 완료
+/// 6. Riverpod ProviderScope로 앱 실행
 void main() async {
   final logger = Logger();
 
@@ -43,10 +47,14 @@ void main() async {
     // 앱은 계속 실행 (오프라인 기능 제한)
   }
 
-  // TODO: Phase 5.1 - Firebase 초기화
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  // Firebase 초기화 (Phase 0)
+  // NOTE: firebase_options.dart는 'flutterfire configure' 명령어로 생성됩니다
+  if (AppConfig.useFirebase) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    logger.i('✅ Firebase 초기화 완료');
+  }
 
   // 앱 실행
   runApp(const ProviderScope(child: BibleSumOneApp()));
