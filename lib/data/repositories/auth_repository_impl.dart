@@ -39,17 +39,12 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// 현재 활성화된 DataSource 가져오기
-  ///
-  /// AppConfig.useFirebase에 따라 Firebase 또는 Supabase DataSource 반환
-  dynamic get _dataSource {
-    return AppConfig.useFirebase ? _firebaseDataSource! : _supabaseDataSource!;
-  }
-
   @override
   Future<Either<Failure, User>> getCurrentUser() async {
     try {
-      final userModel = await _dataSource.getCurrentUser();
+      final userModel = AppConfig.useFirebase
+          ? await _firebaseDataSource!.getCurrentUser()
+          : await _supabaseDataSource!.getCurrentUser();
       return Right(userModel.toEntity());
     } on AuthException catch (e) {
       return Left(AuthFailure.fromCode(e.code ?? 'unknown'));
@@ -66,10 +61,15 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      final userModel = await _dataSource.signInWithEmail(
-        email: email,
-        password: password,
-      );
+      final userModel = AppConfig.useFirebase
+          ? await _firebaseDataSource!.signInWithEmail(
+              email: email,
+              password: password,
+            )
+          : await _supabaseDataSource!.signInWithEmail(
+              email: email,
+              password: password,
+            );
       return Right(userModel.toEntity());
     } on AuthException catch (e) {
       return Left(AuthFailure.fromCode(e.code ?? 'unknown'));
@@ -83,7 +83,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, User>> signInWithGoogle() async {
     try {
-      final userModel = await _dataSource.signInWithGoogle();
+      final userModel = AppConfig.useFirebase
+          ? await _firebaseDataSource!.signInWithGoogle()
+          : await _supabaseDataSource!.signInWithGoogle();
       return Right(userModel.toEntity());
     } on AuthException catch (e) {
       return Left(AuthFailure.fromCode(e.code ?? 'unknown'));
@@ -100,10 +102,15 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      final userModel = await _dataSource.signUpWithEmail(
-        email: email,
-        password: password,
-      );
+      final userModel = AppConfig.useFirebase
+          ? await _firebaseDataSource!.signUpWithEmail(
+              email: email,
+              password: password,
+            )
+          : await _supabaseDataSource!.signUpWithEmail(
+              email: email,
+              password: password,
+            );
       return Right(userModel.toEntity());
     } on AuthException catch (e) {
       return Left(AuthFailure.fromCode(e.code ?? 'unknown'));
@@ -117,7 +124,11 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, Unit>> signOut() async {
     try {
-      await _dataSource.signOut();
+      if (AppConfig.useFirebase) {
+        await _firebaseDataSource!.signOut();
+      } else {
+        await _supabaseDataSource!.signOut();
+      }
       return const Right(unit);
     } on AuthException catch (e) {
       return Left(AuthFailure(e.message));
@@ -128,8 +139,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<User?> authStateChanges() {
-    return _dataSource.authStateChanges().map<User?>((userModel) {
-      return userModel?.toEntity();
-    });
+    if (AppConfig.useFirebase) {
+      return _firebaseDataSource!.authStateChanges().map<User?>((userModel) {
+        return userModel?.toEntity();
+      });
+    } else {
+      return _supabaseDataSource!.authStateChanges().map<User?>((userModel) {
+        return userModel?.toEntity();
+      });
+    }
   }
 }
