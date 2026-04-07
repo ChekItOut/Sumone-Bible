@@ -46,7 +46,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // 인증 상태 변경 구독
   StreamSubscription? _authStateSubscription;
 
-  AuthNotifier(this._repository) : super(AuthState.initial()) {
+  AuthNotifier(this._repository) : super(AuthState.unauthenticated()) {
     // UseCases 초기화
     _getCurrentUserUseCase = GetCurrentUserUseCase(_repository);
     _signInUseCase = SignInUseCase(_repository);
@@ -55,10 +55,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _signOutUseCase = SignOutUseCase(_repository);
 
     // 인증 상태 변경 리스닝
+    // NOTE: authStateChanges 스트림이 자동으로 현재 상태를 전달하므로
+    // checkAuthStatus() 호출 불필요
     _listenToAuthStateChanges();
-
-    // 앱 시작 시 현재 인증 상태 확인
-    checkAuthStatus();
   }
 
   /// 인증 상태 변경 리스닝
