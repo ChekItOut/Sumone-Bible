@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../core/error/exceptions.dart';
@@ -88,46 +89,21 @@ class FirebaseAuthDataSource {
 
   /// Google OAuth로 로그인
   ///
-  /// google_sign_in 패키지를 사용하여 Google Sign-In 실행 후
-  /// Firebase에 인증 정보 전달
+  /// Web: Firebase Auth의 signInWithPopup 사용
+  /// Native: google_sign_in 패키지 사용
   ///
   /// Throws:
   /// - [AuthException]: 로그인 실패 또는 취소
   /// - [NetworkException]: 네트워크 연결 실패
   Future<UserModel> signInWithGoogle() async {
     try {
-      // 1. Google Sign In 플로우 시작
-      final googleUser = await _googleSignIn.signIn();
-
-      if (googleUser == null) {
-        throw const AuthException(
-          'Google sign in was cancelled',
-          code: 'sign-in-cancelled',
-        );
+      if (kIsWeb) {
+        // Web 플랫폼: Firebase Auth의 signInWithPopup 사용
+        return await _signInWithGoogleWeb();
+      } else {
+        // Native 플랫폼: google_sign_in 패키지 사용
+        return await _signInWithGoogleNative();
       }
-
-      // 2. Google 인증 정보 가져오기
-      final googleAuth = await googleUser.authentication;
-
-      // 3. Firebase 인증 정보 생성
-      final credential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // 4. Firebase에 로그인
-      final userCredential = await _firebaseAuth.signInWithCredential(
-        credential,
-      );
-
-      if (userCredential.user == null) {
-        throw const AuthException(
-          'Google sign in failed - no user returned',
-          code: 'sign-in-failed',
-        );
-      }
-
-      return UserModel.fromFirebaseUser(userCredential.user!);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthException(
         _mapFirebaseErrorMessage(e.code),
@@ -139,6 +115,67 @@ class FirebaseAuthDataSource {
       if (e is NetworkException) rethrow;
       throw AuthException('Google sign in failed', originalError: e);
     }
+  }
+
+  /// Web 플랫폼용 Google 로그인 (signInWithPopup)
+  Future<UserModel> _signInWithGoogleWeb() async {
+    // Google Auth Provider 생성
+    final googleProvider = firebase_auth.GoogleAuthProvider();
+
+    // 한국어 로케일 설정
+    googleProvider.setCustomParameters({
+      'prompt': 'select_account',
+    });
+
+    // Popup을 통한 로그인
+    final userCredential = await _firebaseAuth.signInWithPopup(
+      googleProvider,
+    );
+
+    if (userCredential.user == null) {
+      throw const AuthException(
+        'Google sign in failed - no user returned',
+        code: 'sign-in-failed',
+      );
+    }
+
+    return UserModel.fromFirebaseUser(userCredential.user!);
+  }
+
+  /// Native 플랫폼용 Google 로그인 (google_sign_in 패키지)
+  Future<UserModel> _signInWithGoogleNative() async {
+    // 1. Google Sign In 플로우 시작
+    final googleUser = await _googleSignIn.signIn();
+
+    if (googleUser == null) {
+      throw const AuthException(
+        'Google sign in was cancelled',
+        code: 'sign-in-cancelled',
+      );
+    }
+
+    // 2. Google 인증 정보 가져오기
+    final googleAuth = await googleUser.authentication;
+
+    // 3. Firebase 인증 정보 생성
+    final credential = firebase_auth.GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // 4. Firebase에 로그인
+    final userCredential = await _firebaseAuth.signInWithCredential(
+      credential,
+    );
+
+    if (userCredential.user == null) {
+      throw const AuthException(
+        'Google sign in failed - no user returned',
+        code: 'sign-in-failed',
+      );
+    }
+
+    return UserModel.fromFirebaseUser(userCredential.user!);
   }
 
   /// 이메일/비밀번호로 회원가입
