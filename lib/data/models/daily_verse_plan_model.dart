@@ -72,6 +72,36 @@ class DailyVersePlanModel extends DailyVersePlan {
     );
   }
 
+  /// Firestore 맵으로부터 DailyVersePlanModel 생성
+  ///
+  /// Firestore couples.dailyVersePlan 필드 데이터 파싱 (camelCase)
+  factory DailyVersePlanModel.fromFirestore(Map<String, dynamic> data) {
+    return DailyVersePlanModel(
+      startBook: data['startBook'] as String,
+      dailyAmount: data['dailyAmount'] as int,
+      dailyAmountType: data['dailyAmountType'] as String,
+      currentBook: data['currentBook'] as String,
+      currentChapter: data['currentChapter'] as int,
+      currentVerse: data['currentVerse'] as int,
+      startedAt: (data['startedAt'] as dynamic).toDate(),
+    );
+  }
+
+  /// DailyVersePlanModel을 Firestore 맵 형식으로 변환
+  ///
+  /// Firestore couples.dailyVersePlan 필드에 저장하기 위한 형식 (camelCase)
+  Map<String, dynamic> toFirestore() {
+    return {
+      'startBook': startBook,
+      'dailyAmount': dailyAmount,
+      'dailyAmountType': dailyAmountType,
+      'currentBook': currentBook,
+      'currentChapter': currentChapter,
+      'currentVerse': currentVerse,
+      'startedAt': startedAt,
+    };
+  }
+
   @override
   DailyVersePlanModel copyWith({
     String? startBook,

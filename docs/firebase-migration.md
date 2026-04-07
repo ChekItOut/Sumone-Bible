@@ -494,17 +494,18 @@ service cloud.firestore {
   - bibleCache
   - inviteLinks
 
-#### Task 2.2: Firestore Security Rules 배포
-- [ ] `firestore.rules` 파일 생성
-- [ ] 위에서 정의한 Security Rules 복사
+#### Task 2.2: Firestore Security Rules 배포 ✅
+- [✅] `firestore.rules` 파일 생성
+- [✅] 위에서 정의한 Security Rules 복사
 - [ ] 배포:
   ```bash
   firebase deploy --only firestore:rules
   ```
+  **NOTE**: 배포는 Firebase CLI 로그인 후 수동 실행 필요
 
-#### Task 2.3: FirebaseCoupleDataSource 구현
-- [ ] 파일 생성: `lib/data/datasources/firebase_couple_datasource.dart`
-- [ ] 구현 내용:
+#### Task 2.3: FirebaseCoupleDataSource 구현 ✅
+- [✅] 파일 생성: `lib/data/datasources/firebase_couple_datasource.dart`
+- [✅] 구현 내용:
   ```dart
   class FirebaseCoupleDataSource {
     Future<InviteLinkModel> createInviteLink(String userId);
@@ -514,10 +515,11 @@ service cloud.firestore {
     Future<CoupleModel> updateDailyVersePlan({required String coupleId, required DailyVersePlanModel plan});
   }
   ```
+- [✅] Models에 `fromFirestore`/`toFirestore` 메서드 추가 완료
 
-#### Task 2.4: FirebaseVerseDataSource 구현
-- [ ] 파일 생성: `lib/data/datasources/firebase_verse_datasource.dart`
-- [ ] 구현 내용:
+#### Task 2.4: FirebaseVerseDataSource 구현 ✅
+- [✅] 파일 생성: `lib/data/datasources/firebase_verse_datasource.dart`
+- [✅] 구현 내용:
   ```dart
   class FirebaseVerseDataSource {
     Future<DailyVerseModel> getTodayVerse();
@@ -526,6 +528,8 @@ service cloud.firestore {
     Stream<List<ResponseModel>> watchResponses(String verseId, String coupleId);
   }
   ```
+- [✅] Response Entity 및 ResponseModel 생성 완료
+- [✅] VerseNotFoundException 추가 완료
 
 #### Task 2.5: Repository 수정
 - [ ] `CoupleRepositoryImpl` 수정 (Feature Flag 추가)

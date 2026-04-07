@@ -79,6 +79,43 @@ class CoupleModel extends Couple {
     );
   }
 
+  /// Firestore 문서로부터 CoupleModel 생성
+  ///
+  /// Firestore couples 컬렉션 문서 데이터 파싱 (camelCase)
+  factory CoupleModel.fromFirestore(Map<String, dynamic> data, String docId) {
+    // dailyVersePlan 필드 파싱 (nullable)
+    DailyVersePlanModel? plan;
+    if (data['dailyVersePlan'] != null) {
+      plan = DailyVersePlanModel.fromFirestore(
+        data['dailyVersePlan'] as Map<String, dynamic>,
+      );
+    }
+
+    return CoupleModel(
+      coupleId: docId,
+      user1Id: data['user1Id'] as String,
+      user2Id: data['user2Id'] as String,
+      relationshipStage: data['relationshipStage'] as String?,
+      dailyVersePlan: plan,
+      createdAt: (data['createdAt'] as dynamic).toDate(),
+    );
+  }
+
+  /// CoupleModel을 Firestore 문서 형식으로 변환
+  ///
+  /// Firestore couples 컬렉션에 저장하기 위한 형식 (camelCase)
+  Map<String, dynamic> toFirestore() {
+    return {
+      'user1Id': user1Id,
+      'user2Id': user2Id,
+      'relationshipStage': relationshipStage,
+      'dailyVersePlan': dailyVersePlan != null
+          ? DailyVersePlanModel.fromEntity(dailyVersePlan!).toFirestore()
+          : null,
+      'createdAt': createdAt,
+    };
+  }
+
   @override
   CoupleModel copyWith({
     String? coupleId,

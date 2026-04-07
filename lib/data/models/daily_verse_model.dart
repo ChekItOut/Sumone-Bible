@@ -84,6 +84,45 @@ class DailyVerseModel extends DailyVerse {
     );
   }
 
+  /// Firestore 문서로부터 DailyVerseModel 생성
+  ///
+  /// Firestore dailyVerses 컬렉션 문서 데이터 파싱 (camelCase)
+  factory DailyVerseModel.fromFirestore(Map<String, dynamic> data, String docId) {
+    return DailyVerseModel(
+      verseId: docId,
+      date: DateTime.parse(data['date'] as String),
+      bibleBook: data['bibleBook'] as String,
+      chapter: data['chapter'] as int,
+      verseStart: data['verseStart'] as int,
+      verseEnd: data['verseEnd'] as int?,
+      textKorean: data['textKorean'] as String,
+      textEnglish: data['textEnglish'] as String?,
+      questionKorean: data['questionKorean'] as String,
+      questionEnglish: data['questionEnglish'] as String?,
+      topic: data['topic'] as String?,
+      createdAt: (data['createdAt'] as dynamic).toDate(),
+    );
+  }
+
+  /// DailyVerseModel을 Firestore 문서 형식으로 변환
+  ///
+  /// Firestore dailyVerses 컬렉션에 저장하기 위한 형식 (camelCase)
+  Map<String, dynamic> toFirestore() {
+    return {
+      'date': _formatDate(date),
+      'bibleBook': bibleBook,
+      'chapter': chapter,
+      'verseStart': verseStart,
+      'verseEnd': verseEnd,
+      'textKorean': textKorean,
+      'textEnglish': textEnglish,
+      'questionKorean': questionKorean,
+      'questionEnglish': questionEnglish,
+      'topic': topic,
+      'createdAt': createdAt,
+    };
+  }
+
   static String _formatDate(DateTime date) {
     final year = date.year.toString().padLeft(4, '0');
     final month = date.month.toString().padLeft(2, '0');

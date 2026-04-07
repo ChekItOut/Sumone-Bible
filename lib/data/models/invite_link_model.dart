@@ -67,6 +67,33 @@ class InviteLinkModel extends InviteLink {
     );
   }
 
+  /// Firestore 문서로부터 InviteLinkModel 생성
+  ///
+  /// Firestore inviteLinks 컬렉션 문서 데이터 파싱 (camelCase)
+  factory InviteLinkModel.fromFirestore(Map<String, dynamic> data, String docId) {
+    return InviteLinkModel(
+      inviteId: docId,
+      inviterId: data['inviterId'] as String,
+      token: data['token'] as String,
+      isUsed: data['isUsed'] as bool,
+      createdAt: (data['createdAt'] as dynamic).toDate(),
+      expiresAt: (data['expiresAt'] as dynamic).toDate(),
+    );
+  }
+
+  /// InviteLinkModel을 Firestore 문서 형식으로 변환
+  ///
+  /// Firestore inviteLinks 컬렉션에 저장하기 위한 형식 (camelCase)
+  Map<String, dynamic> toFirestore() {
+    return {
+      'inviterId': inviterId,
+      'token': token,
+      'isUsed': isUsed,
+      'createdAt': createdAt,
+      'expiresAt': expiresAt,
+    };
+  }
+
   @override
   InviteLinkModel copyWith({
     String? inviteId,

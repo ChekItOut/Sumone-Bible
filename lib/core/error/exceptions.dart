@@ -125,3 +125,11 @@ class BibleDataException extends AppException {
     dynamic originalError,
   }) : super(message, originalError: originalError);
 }
+
+/// 일일 말씀을 찾을 수 없음
+class VerseNotFoundException extends AppException {
+  const VerseNotFoundException({
+    String message = 'Daily verse not found',
+    dynamic originalError,
+  }) : super(message, originalError: originalError);
+}

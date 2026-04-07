@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getCoupleId(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data.coupleId;
+    }
+
+    function isPartner(userId) {
+      let coupleId = getCoupleId(request.auth.uid);
+      let partnerCoupleId = getCoupleId(userId);
+      return coupleId != null && coupleId == partnerCoupleId;
+    }
+
+    // users 컬렉션
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isPartner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false; // 삭제 금지
+    }
+
+    // couples 컬렉션
+    match /couples/{coupleId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.user1Id == request.auth.uid ||
+         resource.data.user2Id == request.auth.uid);
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() &&
+        (resource.data.user1Id == request.auth.uid ||
+         resource.data.user2Id == request.auth.uid);
+      allow delete: if isAuthenticated() &&
+        (resource.data.user1Id == request.auth.uid ||
+         resource.data.user2Id == request.auth.uid);
+    }
+
+    // dailyVerses 컬렉션 (읽기 전용)
+    match /dailyVerses/{verseId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Function에서만 쓰기
+    }
+
+    // responses 컬렉션
+    match /responses/{responseId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.userId == request.auth.uid ||
+         isPartner(resource.data.userId));
+      allow create: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() &&
+        resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() &&
+        resource.data.userId == request.auth.uid;
+    }
+
+    // dailyProgress 컬렉션
+    match /dailyProgress/{progressId} {
+      allow read: if isAuthenticated() &&
+        getCoupleId(request.auth.uid) == resource.data.coupleId;
+      allow write: if isAuthenticated() &&
+        getCoupleId(request.auth.uid) == request.resource.data.coupleId;
+    }
+
+    // streaks 컬렉션
+    match /streaks/{coupleId} {
+      allow read: if isAuthenticated() &&
+        getCoupleId(request.auth.uid) == coupleId;
+      allow write: if isAuthenticated() &&
+        getCoupleId(request.auth.uid) == coupleId;
+    }
+
+    // bibleCache 컬렉션 (읽기 전용)
+    match /bibleCache/{cacheId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Function에서만 쓰기
+    }
+
+    // inviteLinks 컬렉션
+    match /inviteLinks/{inviteId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.inviterId == request.auth.uid ||
+         request.query.token == resource.data.token);
+      allow create: if isAuthenticated() &&
+        request.resource.data.inviterId == request.auth.uid;
+      allow update: if isAuthenticated(); // 초대 수락 시 누구나
+      allow delete: if false;
+    }
+  }
+}
