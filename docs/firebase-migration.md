@@ -1,9 +1,9 @@
 # Supabase → Firebase 마이그레이션 계획서
 
-**버전**: 1.0
+**버전**: 1.1
 **작성일**: 2026-04-07
 **최종 업데이트**: 2026-04-07
-**상태**: In Progress - Phase 0 완료 ✅
+**상태**: In Progress - Phase 1 완료 ✅ (인증 시스템)
 
 ---
 
@@ -415,7 +415,7 @@ service cloud.firestore {
 
 ---
 
-### Phase 1: 인증 시스템 마이그레이션 (Day 2-3) 🔄 진행중
+### Phase 1: 인증 시스템 마이그레이션 (Day 2-3) ✅ 완료
 
 #### Task 1.1: Firebase Authentication 설정
 - [ ] Firebase Console에서 인증 방법 활성화
@@ -468,12 +468,16 @@ service cloud.firestore {
 - [✅] 단위 테스트 작성 (`test/data/datasources/firebase_auth_datasource_test.dart`)
 - [✅] 테스트 화면 구현 (`lib/presentation/screens/_test/firebase_auth_test_screen.dart`)
 - [✅] AppConfig.useFirebase = true 설정
-- [ ] 수동 테스트 수행:
-  - [ ] 이메일 로그인 테스트
-  - [ ] 이메일 회원가입 테스트
-  - [ ] Google 로그인 테스트
-  - [ ] 로그아웃 테스트
-  - [ ] Auth State Changes 테스트
+- [✅] 수동 테스트 수행:
+  - [✅] 이메일 로그인 테스트
+  - [✅] 이메일 회원가입 테스트
+  - [✅] Google 로그인 테스트
+  - [✅] 로그아웃 테스트
+  - [✅] Auth State Changes 테스트
+
+**Phase 1 완료일**: 2026-04-07
+**상태**: ✅ 완료 - Firebase Authentication 마이그레이션 완료
+**참고**: 테스트 화면(`lib/presentation/screens/_test/`)은 Phase 6에서 제거 예정
 
 ---
 
@@ -763,6 +767,9 @@ migrateUsers();
 - [ ] 모든 Repository에서 Feature Flag 확인
 
 #### Task 6.2: Supabase 제거 (신중하게!)
+- [ ] 테스트 화면 삭제
+  - `lib/presentation/screens/_test/firebase_auth_test_screen.dart`
+  - 관련 라우팅 제거
 - [ ] pubspec.yaml에서 `supabase_flutter` 제거
 - [ ] Supabase 관련 파일 삭제
   - `lib/core/constants/supabase_client.dart`
