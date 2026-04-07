@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/constants/app_config.dart';
+import '../../data/datasources/firebase_auth_datasource.dart';
 import '../../data/datasources/supabase_auth_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -15,9 +17,17 @@ import 'auth_state.dart';
 /// AuthRepository Provider
 ///
 /// Repository 싱글톤 제공
+/// Feature Flag에 따라 Supabase 또는 Firebase DataSource 사용
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final dataSource = SupabaseAuthDataSource();
-  return AuthRepositoryImpl(dataSource: dataSource);
+  if (AppConfig.useFirebase) {
+    // Firebase 사용
+    final firebaseDataSource = FirebaseAuthDataSource();
+    return AuthRepositoryImpl(firebaseDataSource: firebaseDataSource);
+  } else {
+    // Supabase 사용 (현재)
+    final supabaseDataSource = SupabaseAuthDataSource();
+    return AuthRepositoryImpl(supabaseDataSource: supabaseDataSource);
+  }
 });
 
 /// AuthProvider (StateNotifier)

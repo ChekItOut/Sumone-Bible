@@ -415,7 +415,7 @@ service cloud.firestore {
 
 ---
 
-### Phase 1: 인증 시스템 마이그레이션 (Day 2-3)
+### Phase 1: 인증 시스템 마이그레이션 (Day 2-3) 🔄 진행중
 
 #### Task 1.1: Firebase Authentication 설정
 - [ ] Firebase Console에서 인증 방법 활성화
@@ -426,9 +426,9 @@ service cloud.firestore {
   - Android (SHA-1 추가)
   - iOS
 
-#### Task 1.2: FirebaseAuthDataSource 구현
-- [ ] 파일 생성: `lib/data/datasources/firebase_auth_datasource.dart`
-- [ ] 구현 내용:
+#### Task 1.2: FirebaseAuthDataSource 구현 ✅
+- [✅] 파일 생성: `lib/data/datasources/firebase_auth_datasource.dart`
+- [✅] 구현 내용:
   ```dart
   class FirebaseAuthDataSource {
     Future<UserModel> getCurrentUser();
@@ -442,9 +442,11 @@ service cloud.firestore {
   }
   ```
 
-#### Task 1.3: AuthRepository 수정
-- [ ] 파일 수정: `lib/data/repositories/auth_repository_impl.dart`
-- [ ] Supabase/Firebase 병행 사용 (Feature Flag 패턴)
+#### Task 1.3: AuthRepository 수정 ✅
+- [✅] 파일 수정: `lib/data/repositories/auth_repository_impl.dart`
+- [✅] Supabase/Firebase 병행 사용 (Feature Flag 패턴)
+- [✅] UserModel에 `fromFirebaseUser` 메서드 추가
+- [✅] Provider에서 Feature Flag 기반 DataSource 주입
   ```dart
   class AuthRepositoryImpl implements AuthRepository {
     final FirebaseAuthDataSource _firebaseDataSource;

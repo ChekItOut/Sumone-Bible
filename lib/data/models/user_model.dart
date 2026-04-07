@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../../domain/entities/user.dart';
@@ -35,6 +36,25 @@ class UserModel extends User {
           ? DateTime.parse(supabaseUser.lastSignInAt!)
           : null,
       emailVerified: supabaseUser.emailConfirmedAt != null,
+    );
+  }
+
+  /// Firebase Auth User로부터 UserModel 생성
+  ///
+  /// Firebase Auth의 User 객체를 앱 내부의 User Entity로 변환
+  /// NOTE: Firebase는 user metadata를 Firestore에 별도 저장하므로
+  /// 이 메서드는 기본 인증 정보만 포함
+  factory UserModel.fromFirebaseUser(firebase_auth.User firebaseUser) {
+    return UserModel(
+      id: firebaseUser.uid,
+      email: firebaseUser.email ?? '',
+      name: firebaseUser.displayName,
+      photoUrl: firebaseUser.photoURL,
+      relationshipStage: null, // Firestore에서 별도 로드 필요
+      coupleId: null, // Firestore에서 별도 로드 필요
+      createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+      lastSignInAt: firebaseUser.metadata.lastSignInTime,
+      emailVerified: firebaseUser.emailVerified,
     );
   }
 
