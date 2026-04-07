@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
+import '../../../core/constants/app_config.dart';
 import '../../../core/constants/supabase_client.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/auth_state.dart';
@@ -55,6 +56,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
+
+    // 🔥 Firebase 사용 중: 테스트 화면으로 이동 (Phase 1 테스트용)
+    if (AppConfig.useFirebase) {
+      context.go('/firebase-auth-test');
+      return;
+    }
 
     // 인증 상태 확인
     final authState = ref.read(authProvider);
