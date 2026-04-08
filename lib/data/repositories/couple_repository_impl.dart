@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 
+import '../../core/constants/app_config.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/couple.dart';
 import '../../domain/entities/daily_verse_plan.dart';
 import '../../domain/entities/invite_link.dart';
 import '../../domain/repositories/couple_repository.dart';
+import '../datasources/firebase_couple_datasource.dart';
 import '../datasources/supabase_couple_datasource.dart';
 import '../models/daily_verse_plan_model.dart';
 
@@ -14,16 +16,37 @@ import '../models/daily_verse_plan_model.dart';
 /// CoupleRepository 인터페이스 구현
 /// DataSource를 사용하여 실제 데이터 작업 수행
 /// Exception → Failure 변환 및 에러 핸들링
+///
+/// Feature Flag 패턴을 사용하여 Supabase/Firebase 병행 운영
 class CoupleRepositoryImpl implements CoupleRepository {
-  final SupabaseCoupleDataSource _dataSource;
+  final SupabaseCoupleDataSource? _supabaseDataSource;
+  final FirebaseCoupleDataSource? _firebaseDataSource;
 
-  CoupleRepositoryImpl({required SupabaseCoupleDataSource dataSource})
-    : _dataSource = dataSource;
+  CoupleRepositoryImpl({
+    SupabaseCoupleDataSource? supabaseDataSource,
+    FirebaseCoupleDataSource? firebaseDataSource,
+  }) : _supabaseDataSource = supabaseDataSource,
+       _firebaseDataSource = firebaseDataSource {
+    // Feature Flag에 따라 DataSource가 제공되었는지 확인
+    if (AppConfig.useFirebase) {
+      assert(
+        _firebaseDataSource != null,
+        'FirebaseCoupleDataSource must be provided when useFirebase is true',
+      );
+    } else {
+      assert(
+        _supabaseDataSource != null,
+        'SupabaseCoupleDataSource must be provided when useFirebase is false',
+      );
+    }
+  }
 
   @override
   Future<Either<Failure, InviteLink>> createInviteLink(String userId) async {
     try {
-      final inviteLink = await _dataSource.createInviteLink(userId);
+      final inviteLink = AppConfig.useFirebase
+          ? await _firebaseDataSource!.createInviteLink(userId)
+          : await _supabaseDataSource!.createInviteLink(userId);
       return Right(inviteLink.toEntity());
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));
@@ -40,10 +63,15 @@ class CoupleRepositoryImpl implements CoupleRepository {
     required String accepterId,
   }) async {
     try {
-      final couple = await _dataSource.acceptInvite(
-        token: token,
-        accepterId: accepterId,
-      );
+      final couple = AppConfig.useFirebase
+          ? await _firebaseDataSource!.acceptInvite(
+              token: token,
+              accepterId: accepterId,
+            )
+          : await _supabaseDataSource!.acceptInvite(
+              token: token,
+              accepterId: accepterId,
+            );
       return Right(couple.toEntity());
     } on ExpiredInviteLinkException {
       return Left(CoupleFailure.inviteLinkExpired());
@@ -63,7 +91,9 @@ class CoupleRepositoryImpl implements CoupleRepository {
   @override
   Future<Either<Failure, Couple>> getCouple(String userId) async {
     try {
-      final couple = await _dataSource.getCouple(userId);
+      final couple = AppConfig.useFirebase
+          ? await _firebaseDataSource!.getCouple(userId)
+          : await _supabaseDataSource!.getCouple(userId);
       return Right(couple.toEntity());
     } on NoCoupleException {
       return Left(CoupleFailure.notFound());
@@ -82,7 +112,17 @@ class CoupleRepositoryImpl implements CoupleRepository {
     required String userId,
   }) async {
     try {
-      await _dataSource.disconnectCouple(coupleId: coupleId, userId: userId);
+      if (AppConfig.useFirebase) {
+        await _firebaseDataSource!.disconnectCouple(
+          coupleId: coupleId,
+          userId: userId,
+        );
+      } else {
+        await _supabaseDataSource!.disconnectCouple(
+          coupleId: coupleId,
+          userId: userId,
+        );
+      }
       return const Right(unit);
     } on UnauthorizedException {
       return Left(CoupleFailure.unauthorized());
@@ -101,10 +141,15 @@ class CoupleRepositoryImpl implements CoupleRepository {
     required DailyVersePlan plan,
   }) async {
     try {
-      final couple = await _dataSource.updateDailyVersePlan(
-        coupleId: coupleId,
-        plan: DailyVersePlanModel.fromEntity(plan),
-      );
+      final couple = AppConfig.useFirebase
+          ? await _firebaseDataSource!.updateDailyVersePlan(
+              coupleId: coupleId,
+              plan: DailyVersePlanModel.fromEntity(plan),
+            )
+          : await _supabaseDataSource!.updateDailyVersePlan(
+              coupleId: coupleId,
+              plan: DailyVersePlanModel.fromEntity(plan),
+            );
       return Right(couple.toEntity());
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));

@@ -531,9 +531,9 @@ service cloud.firestore {
 - [✅] Response Entity 및 ResponseModel 생성 완료
 - [✅] VerseNotFoundException 추가 완료
 
-#### Task 2.5: Repository 수정
-- [ ] `CoupleRepositoryImpl` 수정 (Feature Flag 추가)
-- [ ] `VerseRepositoryImpl` 생성 및 구현
+#### Task 2.5: Repository 수정 ✅
+- [✅] `CoupleRepositoryImpl` 수정 (Feature Flag 추가)
+- [✅] `VerseRepositoryImpl` 생성 및 구현
 
 #### Task 2.6: Provider 수정
 - [ ] `CoupleProvider` 수정

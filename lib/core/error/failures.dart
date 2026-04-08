@@ -161,3 +161,27 @@ class CoupleFailure extends Failure {
     return const CoupleFailure('이 작업을 수행할 권한이 없습니다.');
   }
 }
+
+// ============================================================
+// 말씀 관련 에러 (Phase 2)
+// ============================================================
+
+/// 말씀 관련 에러
+///
+/// 일일 말씀 조회, 답변 제출 등에서 발생하는 에러
+class VerseFailure extends Failure {
+  const VerseFailure(super.message);
+
+  /// 사용자 친화적 에러 메시지 생성
+  factory VerseFailure.notFound([String? customMessage]) {
+    return VerseFailure(customMessage ?? '오늘의 말씀을 찾을 수 없습니다.');
+  }
+
+  factory VerseFailure.responseNotFound() {
+    return const VerseFailure('답변을 찾을 수 없습니다.');
+  }
+
+  factory VerseFailure.invalidContent() {
+    return const VerseFailure('답변 내용이 유효하지 않습니다.');
+  }
+}
