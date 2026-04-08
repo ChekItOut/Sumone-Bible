@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 
+import '../../core/constants/app_config.dart';
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../domain/entities/daily_verse.dart';
 import '../../domain/entities/response.dart';
 import '../../domain/repositories/verse_repository.dart';
 import '../datasources/firebase_verse_datasource.dart';
+import '../datasources/supabase_verse_datasource.dart';
 
 /// 말씀 Repository 구현 (Data Layer)
 ///
@@ -13,17 +15,30 @@ import '../datasources/firebase_verse_datasource.dart';
 /// DataSource를 사용하여 실제 데이터 작업 수행
 /// Exception → Failure 변환 및 에러 핸들링
 ///
-/// NOTE: 현재는 Firebase만 지원 (Supabase는 추후 추가 예정)
+/// Feature Flag (AppConfig.useFirebase)에 따라 Firebase 또는 Supabase 사용
 class VerseRepositoryImpl implements VerseRepository {
-  final FirebaseVerseDataSource _firebaseDataSource;
+  final FirebaseVerseDataSource? _firebaseDataSource;
+  final SupabaseVerseDataSource? _supabaseDataSource;
+  final bool _useFirebase = AppConfig.useFirebase;
 
-  VerseRepositoryImpl({required FirebaseVerseDataSource firebaseDataSource})
-    : _firebaseDataSource = firebaseDataSource;
+  VerseRepositoryImpl({
+    FirebaseVerseDataSource? firebaseDataSource,
+    SupabaseVerseDataSource? supabaseDataSource,
+  }) : _firebaseDataSource = firebaseDataSource,
+       _supabaseDataSource = supabaseDataSource {
+    // 최소 하나의 DataSource는 필요
+    assert(
+      _firebaseDataSource != null || _supabaseDataSource != null,
+      'At least one DataSource must be provided',
+    );
+  }
 
   @override
   Future<Either<Failure, DailyVerse>> getTodayVerse() async {
     try {
-      final verseModel = await _firebaseDataSource.getTodayVerse();
+      final verseModel = _useFirebase
+          ? await _firebaseDataSource!.getTodayVerse()
+          : await _supabaseDataSource!.getTodayVerse();
       return Right(verseModel.toEntity());
     } on VerseNotFoundException catch (e) {
       return Left(VerseFailure.notFound(e.message));
@@ -42,10 +57,9 @@ class VerseRepositoryImpl implements VerseRepository {
     int limit,
   ) async {
     try {
-      final verseModels = await _firebaseDataSource.getVerseHistory(
-        coupleId,
-        limit,
-      );
+      final verseModels = _useFirebase
+          ? await _firebaseDataSource!.getVerseHistory(coupleId, limit)
+          : await _supabaseDataSource!.getVerseHistory(coupleId, limit);
       final verses = verseModels.map((model) => model.toEntity()).toList();
       return Right(verses);
     } on DatabaseException catch (e) {
@@ -65,12 +79,21 @@ class VerseRepositoryImpl implements VerseRepository {
     required String content,
   }) async {
     try {
-      await _firebaseDataSource.submitResponse(
-        verseId: verseId,
-        userId: userId,
-        coupleId: coupleId,
-        content: content,
-      );
+      if (_useFirebase) {
+        await _firebaseDataSource!.submitResponse(
+          verseId: verseId,
+          userId: userId,
+          coupleId: coupleId,
+          content: content,
+        );
+      } else {
+        await _supabaseDataSource!.submitResponse(
+          verseId: verseId,
+          userId: userId,
+          coupleId: coupleId,
+          content: content,
+        );
+      }
       return const Right(unit);
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));
@@ -87,8 +110,11 @@ class VerseRepositoryImpl implements VerseRepository {
     String coupleId,
   ) {
     try {
-      return _firebaseDataSource
-          .watchResponses(verseId, coupleId)
+      final stream = _useFirebase
+          ? _firebaseDataSource!.watchResponses(verseId, coupleId)
+          : _supabaseDataSource!.watchResponses(verseId, coupleId);
+
+      return stream
           .map<Either<Failure, List<Response>>>((responseModels) {
             final responses = responseModels
                 .map((model) => model.toEntity())
@@ -119,10 +145,15 @@ class VerseRepositoryImpl implements VerseRepository {
     required String userId,
   }) async {
     try {
-      final responseModel = await _firebaseDataSource.getMyResponse(
-        verseId: verseId,
-        userId: userId,
-      );
+      final responseModel = _useFirebase
+          ? await _firebaseDataSource!.getMyResponse(
+              verseId: verseId,
+              userId: userId,
+            )
+          : await _supabaseDataSource!.getMyResponse(
+              verseId: verseId,
+              userId: userId,
+            );
 
       if (responseModel == null) {
         return const Right(null);

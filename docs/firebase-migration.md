@@ -535,10 +535,10 @@ service cloud.firestore {
 - [✅] `CoupleRepositoryImpl` 수정 (Feature Flag 추가)
 - [✅] `VerseRepositoryImpl` 생성 및 구현
 
-#### Task 2.6: Provider 수정
-- [ ] `CoupleProvider` 수정
-- [ ] `VerseProvider` 수정
-- [ ] `QuestionGenerationProvider` 수정
+#### Task 2.6: Provider 수정 ✅
+- [✅] `CoupleProvider` 수정 (이미 완료됨)
+- [✅] `VerseProvider` 수정
+- [✅] `QuestionGenerationProvider` 확인 (현재 상태 유지)
 
 #### Task 2.7: 테스트
 - [ ] 커플 생성/조회 테스트

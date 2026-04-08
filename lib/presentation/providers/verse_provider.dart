@@ -1,35 +1,106 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/supabase_client.dart';
+import '../../core/constants/app_config.dart';
 import '../../core/utils/logger.dart';
-import '../../data/models/daily_verse_model.dart';
-import '../../domain/entities/daily_verse.dart';
+import '../../data/datasources/firebase_verse_datasource.dart';
+import '../../data/datasources/supabase_verse_datasource.dart';
+import '../../data/repositories/verse_repository_impl.dart';
+import '../../domain/repositories/verse_repository.dart';
 import 'verse_state.dart';
 
-class VerseNotifier extends StateNotifier<VerseState> {
-  VerseNotifier() : super(VerseState.initial());
+/// VerseRepository Provider
+///
+/// Repository 싱글톤 제공
+/// Feature Flag에 따라 Firebase 또는 Supabase DataSource 사용
+final verseRepositoryProvider = Provider<VerseRepository>((ref) {
+  if (AppConfig.useFirebase) {
+    // Firebase 사용
+    final firebaseDataSource = FirebaseVerseDataSource();
+    return VerseRepositoryImpl(firebaseDataSource: firebaseDataSource);
+  } else {
+    // Supabase 사용
+    final supabaseDataSource = SupabaseVerseDataSource();
+    return VerseRepositoryImpl(supabaseDataSource: supabaseDataSource);
+  }
+});
 
+/// VerseProvider (StateNotifier)
+///
+/// 말씀 상태를 관리하고, 말씀 조회 등의 작업 수행
+class VerseNotifier extends StateNotifier<VerseState> {
+  final VerseRepository _repository;
+
+  VerseNotifier(this._repository) : super(VerseState.initial());
+
+  /// 대시보드 데이터 로드 (오늘의 말씀 + 주간 말씀)
+  ///
+  /// [coupleId] 커플 ID (Edge Function 호출용)
   Future<void> loadDashboardData({required String coupleId}) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      DailyVerse? todayVerse = await _fetchTodayVerse();
-      var weeklyVerses = await _fetchWeeklyVerses();
+      // 1. 오늘의 말씀 조회
+      final todayVerseResult = await _repository.getTodayVerse();
 
-      if (todayVerse == null && coupleId.isNotEmpty) {
-        final generated = await _tryGenerateTodayVerse();
-        if (generated) {
-          todayVerse = await _fetchTodayVerse();
-          weeklyVerses = await _fetchWeeklyVerses();
-        }
-      }
+      // 2. 주간 말씀 조회 (최근 7일)
+      final weeklyVersesResult = await _repository.getVerseHistory(coupleId, 7);
 
-      state = state.copyWith(
-        isLoading: false,
-        todayVerse: todayVerse,
-        selectedVerse: todayVerse,
-        weeklyVerses: weeklyVerses,
-        error: todayVerse == null ? 'Today\'s verse is not ready yet.' : null,
+      // 3. 결과 처리
+      todayVerseResult.fold(
+        (failure) {
+          // 오늘의 말씀이 없는 경우
+          logger.warning(
+            'VerseNotifier: 오늘의 말씀을 찾을 수 없습니다 - ${failure.message}',
+          );
+
+          weeklyVersesResult.fold(
+            (weeklyFailure) {
+              // 주간 말씀도 실패
+              state = state.copyWith(
+                isLoading: false,
+                error: 'Failed to load the verse. Please try again shortly.',
+              );
+            },
+            (weeklyVerses) {
+              // 주간 말씀만 성공
+              state = state.copyWith(
+                isLoading: false,
+                todayVerse: null,
+                selectedVerse: null,
+                weeklyVerses: weeklyVerses,
+                error: 'Today\'s verse is not ready yet.',
+              );
+            },
+          );
+        },
+        (todayVerse) {
+          // 오늘의 말씀 성공
+          weeklyVersesResult.fold(
+            (weeklyFailure) {
+              // 주간 말씀 실패 (오늘 말씀만 표시)
+              logger.warning(
+                'VerseNotifier: 주간 말씀 조회 실패 - ${weeklyFailure.message}',
+              );
+              state = state.copyWith(
+                isLoading: false,
+                todayVerse: todayVerse,
+                selectedVerse: todayVerse,
+                weeklyVerses: [],
+                error: null,
+              );
+            },
+            (weeklyVerses) {
+              // 모두 성공
+              state = state.copyWith(
+                isLoading: false,
+                todayVerse: todayVerse,
+                selectedVerse: todayVerse,
+                weeklyVerses: weeklyVerses,
+                error: null,
+              );
+            },
+          );
+        },
       );
     } catch (error) {
       logger.error(
@@ -43,89 +114,32 @@ class VerseNotifier extends StateNotifier<VerseState> {
     }
   }
 
+  /// 특정 말씀 조회 (ID 기반)
+  ///
+  /// [verseId] 말씀 ID
+  ///
+  /// NOTE: 현재 Repository에는 ID 기반 조회 메서드가 없으므로
+  /// 임시로 주석 처리. 필요시 Repository에 메서드 추가 필요.
   Future<void> loadVerseById(String verseId) async {
     state = state.copyWith(isLoading: true, error: null);
 
-    try {
-      final response = await supabase
-          .from('daily_verses')
-          .select()
-          .eq('verse_id', verseId)
-          .maybeSingle();
-
-      final verse = response == null
-          ? null
-          : DailyVerseModel.fromJson(response).toEntity();
-
-      state = state.copyWith(
-        isLoading: false,
-        selectedVerse: verse,
-        error: verse == null ? 'Could not find the selected verse.' : null,
-      );
-    } catch (error) {
-      logger.error('VerseNotifier: failed to load verse detail', error: error);
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Failed to load verse details.',
-      );
-    }
+    // TODO: Repository에 getVerseById 메서드 추가 필요
+    // 현재는 기능 사용하지 않으므로 에러 처리만
+    logger.warning('VerseNotifier: loadVerseById는 아직 지원되지 않습니다');
+    state = state.copyWith(
+      isLoading: false,
+      error: 'This feature is not yet supported.',
+    );
   }
 
-  Future<DailyVerse?> _fetchTodayVerse() async {
-    final response = await supabase
-        .from('daily_verses')
-        .select()
-        .eq('date', _formatDate(DateTime.now()))
-        .maybeSingle();
-
-    if (response == null) {
-      return null;
-    }
-
-    return DailyVerseModel.fromJson(response).toEntity();
-  }
-
-  Future<List<DailyVerse>> _fetchWeeklyVerses() async {
-    final today = DateTime.now();
-    final startDate = today.subtract(const Duration(days: 6));
-
-    final response = await supabase
-        .from('daily_verses')
-        .select()
-        .gte('date', _formatDate(startDate))
-        .lte('date', _formatDate(today))
-        .order('date');
-
-    return response
-        .map((row) => DailyVerseModel.fromJson(row).toEntity())
-        .toList();
-  }
-
-  Future<bool> _tryGenerateTodayVerse() async {
-    try {
-      state = state.copyWith(isGenerating: true);
-      logger.info('VerseNotifier: invoking generate-daily-verse function');
-      await supabase.functions.invoke(
-        'generate-daily-verse',
-        body: {'triggeredBy': 'app'},
-      );
-      return true;
-    } catch (error) {
-      logger.warning('VerseNotifier: edge function failed - $error');
-      return false;
-    } finally {
-      state = state.copyWith(isGenerating: false);
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    final year = date.year.toString().padLeft(4, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '$year-$month-$day';
+  /// 에러 메시지 초기화
+  void clearError() {
+    state = state.copyWith(error: null);
   }
 }
 
+/// VerseProvider 전역 인스턴스
 final verseProvider = StateNotifierProvider<VerseNotifier, VerseState>((ref) {
-  return VerseNotifier();
+  final repository = ref.read(verseRepositoryProvider);
+  return VerseNotifier(repository);
 });
