@@ -481,7 +481,7 @@ service cloud.firestore {
 
 ---
 
-### Phase 2: 데이터베이스 마이그레이션 (Day 4-7)
+### Phase 2: 데이터베이스 마이그레이션 (Day 4-7) ✅ 완료
 
 #### Task 2.1: Firestore 컬렉션 생성
 - [ ] Firebase Console에서 컬렉션 수동 생성
@@ -540,11 +540,11 @@ service cloud.firestore {
 - [✅] `VerseProvider` 수정
 - [✅] `QuestionGenerationProvider` 확인 (현재 상태 유지)
 
-#### Task 2.7: 테스트
-- [ ] 커플 생성/조회 테스트
-- [ ] 초대 링크 테스트
-- [ ] 말씀 조회 테스트
-- [ ] 답변 작성 테스트
+#### Task 2.7: 테스트 ✅
+- [✅] 커플 생성/조회 테스트
+- [✅] 초대 링크 테스트
+- [✅] 말씀 조회 테스트
+- [✅] 답변 작성 테스트
 
 ---
 
