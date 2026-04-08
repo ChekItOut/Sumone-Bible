@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/constants/app_config.dart';
+import '../../data/datasources/firebase_couple_datasource.dart';
 import '../../data/datasources/supabase_couple_datasource.dart';
 import '../../data/repositories/couple_repository_impl.dart';
 import '../../domain/entities/daily_verse_plan.dart';
@@ -14,9 +16,17 @@ import 'couple_state.dart';
 /// CoupleRepository Provider
 ///
 /// Repository 싱글톤 제공
+/// Feature Flag에 따라 Firebase 또는 Supabase DataSource 사용
 final coupleRepositoryProvider = Provider<CoupleRepository>((ref) {
-  final dataSource = SupabaseCoupleDataSource();
-  return CoupleRepositoryImpl(dataSource: dataSource);
+  if (AppConfig.useFirebase) {
+    // Firebase 사용
+    final firebaseDataSource = FirebaseCoupleDataSource();
+    return CoupleRepositoryImpl(firebaseDataSource: firebaseDataSource);
+  } else {
+    // Supabase 사용
+    final supabaseDataSource = SupabaseCoupleDataSource();
+    return CoupleRepositoryImpl(supabaseDataSource: supabaseDataSource);
+  }
 });
 
 /// CoupleProvider (StateNotifier)
